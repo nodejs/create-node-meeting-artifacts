@@ -1,0 +1,20 @@
+{
+  "name": "create-node-meeting-artifacts",
+  "version": "0.0.1",
+  "description": "Creates issue and minutes doc for node meeting",
+  "main": "index.js",
+  "dependencies": {
+    "github": "^11.0.0",
+    "google-auth-wrapper": "^0.5.0",
+    "google-calendar": "^1.3.2",
+    "make-node-meeting": "^1.0.11",
+    "properties-parser": "^0.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node create-node-meeting-artifacts.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
