@@ -2,7 +2,7 @@ CALENDAR_FILTER="Node.js TSC Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="TSC"
-GROUP_NAME="Node.js Foundation Technical Steering Committee (TSC)"
+GROUP_NAME="Technical Steering Committee (TSC)"
 JOINING_INSTRUCTIONS="
 
 Uberconference; participants should have the link & numbers, contact me if you don't.
