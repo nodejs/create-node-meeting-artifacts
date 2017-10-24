@@ -1,37 +1,8 @@
 CALENDAR_FILTER="Node.js TSC Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
-USER="mhdawson"
-REPO="temp-testing"
+USER="nodejs"
+REPO="TSC"
 GROUP_NAME="Node.js Foundation Technical Steering Committee (TSC)"
-INVITEES="* Anna Henningsen @addaleax (TSC)
-* Ben Noordhuis @bnoordhuis (TSC)
-* Сковорода Никита Андреевич @ChALkeR (TSC)
-* Colin Ihrig @cjihrig (TSC)
-* Evan Lucas @evanlucas (TSC)
-* Franziska Hinkelmann @fhinkel (TSC)
-* Jeremiah Senkpiel @Fishrock123 (TSC)
-* Fedor Indutny @indutny (TSC)
-* James M Snell @jasnell (TSC)
-* Joyee Cheung @joyeecheung (TSC)
-* Matteo Collina @mcollina (TSC)
-* Michael Dawson @mhdawson (TSC)
-* Brian White @mscdex (TSC)
-* Myles Borins @MylesBorins (TSC)
-* Ali Ijaz Sheikh @ofrobots (TSC)
-* Rod Vagg @rvagg (TSC)
-* MichaëZasso @targos (TSC)
-* Sakthipriyan Vairamani @thefourtheye (TSC)
-* Trevor Norris @trevnorris (TSC)
-* Rich Trott @Trott (TSC)
-* Josh Gavant @joshgav (TSC)
-
-### Observers
-* Bradley Meck @bmeck (GoDaddy/TC39)
-* Tracy Hinds @hackygolucky (Node.js Foundation Education Community Manager)
-* Kaitlyn Barnard @kbarnard10 (Node.js Foundation Newsletter Curator)
-* Mark Hinkle @mrhinkle (Node.js Foundation Executive Director)
-* William Kapke @williamkapke (Node.js Community Board representative)
-"
 JOINING_INSTRUCTIONS="
 
 Uberconference; participants should have the link & numbers, contact me if you don't.

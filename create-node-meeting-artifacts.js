@@ -8,6 +8,7 @@ const ghauth = require('ghauth');
 const parser = require('properties-parser');
 const gcal = require('google-calendar');
 const googleAuth = require('google-auth-wrapper');
+const gdriveWrapper = require('google-drive-wrapper');
  
 const authOptions = { configName: 'iojs-tools', scopes: [ 'user', 'repo'  ] };
 const repos       = [];
@@ -31,6 +32,12 @@ ghauth(authOptions, (err, authData) => {
 
     // read in the configuration for the meeting
     const meetingGroup = 'TSC';
+    const invited = fs.readFileSync(path.join('templates',
+                                              'invited_' +
+                                              meetingGroup)).toString();
+    const observers = fs.readFileSync(path.join('templates',
+                                      'observers_' +
+                                       meetingGroup)).toString();
     const baseMeetingInfo = fs.readFileSync(path.join('templates',
                                                       'meeting_base_' +
                                                        meetingGroup));
@@ -59,7 +66,14 @@ ghauth(authOptions, (err, authData) => {
         // extract the time and complete the meeting info for make-node-meeting
         const meetingTime = (new Date(events[0].start.dateTime)).toISOString();
         const meetingInfo = baseMeetingInfo.toString() +
-                            'MEETING_TIME="' + meetingTime + '"';
+                            'MEETING_TIME="' + meetingTime + '"\n' +
+                            'INVITEES="' +
+                            invited + 
+                            '\n' +
+                            '### Observers\n' +
+                            observers +
+                            '"';
+
         fs.writeFileSync(
             path.join(process.env.HOME,
                       '.make-node-meeting/' + meetingGroup + '.sh'),
@@ -75,13 +89,58 @@ ghauth(authOptions, (err, authData) => {
         const title = issueLines[1];
         newIssue = issueLines.splice(4).join('\n');
 
-        // create the issue in github
-        github.issues.create({
-          owner: meetingProperties.USER.replace(/"/g, ''),
-          repo: meetingProperties.REPO.replace(/"/g, ''),
-          title: title,
-          body: newIssue.toString(),
-          assignee: "mhdawson"
+
+        // create the minutes document
+        const agendaInfo = child_process.spawnSync(
+            'node',
+            ['node_modules/node-meeting-agenda/node-meeting-agenda.js',
+              meetingGroup +  '-agenda' ]).stdout.toString();
+        let minutesDoc =  fs.readFileSync(path.join('templates',
+                                                    'minutes_base_' +
+                                                     meetingGroup)).toString();
+
+        minutesDoc = minutesDoc.replace('$TITLE$', title);
+        minutesDoc = minutesDoc.replace('$AGENDA_CONTENT$', agendaInfo);
+        minutesDoc = minutesDoc.replace('$INVITED$', invited);
+        minutesDoc = minutesDoc.replace('$OBSERVERS$', observers);
+        const minutesDocName = path.join(__dirname, 'minutes_temp.txt');
+        fs.writeFileSync( minutesDocName, minutesDoc);
+
+        // upload the minutes doc
+        const wrapper = new gdriveWrapper(googleAuthToken, google, 'dummy' );
+        wrapper.getMetaForFilename('/nodejs-meetings', function(err, parentMeta) {
+          if (err !== null) {
+            console.log('Directory called "nodejs-meetings" does not exist, exiting');
+            process.exit(-1);
+          }
+
+          wrapper.uploadFile(title, minutesDocName,
+                             { parent: parentMeta.id,
+                               compress: false,
+                               encrypt: false,
+                               convert: true,
+                               mimeType: 'application/vnd.google-apps.document' },
+                             function(err, meta) {
+            if (err !== null) {
+              console.log('Failed to upload minutes file');
+              console.log(err);
+            } else {
+              // create the issue in github
+              newIssue = newIssue.toString().replace(
+                  /\* \*\*Minutes Google Doc\*\*: <>/,
+                  '* Minutes Google Doc: <https://docs.google.com/document/d/' + meta.id + '/edit>');
+              newIssue = newIssue.replace(/\* _Previous Minutes Google Doc: <>_/,'');
+/*              github.issues.create({
+                owner: meetingProperties.USER.replace(/"/g, ''),
+                repo: meetingProperties.REPO.replace(/"/g, ''),
+                title: title,
+                body: newIssue,
+                assignee: "mhdawson"
+              });
+*/
+console.log(newIssue);
+            }
+          });
         });
       }
     });

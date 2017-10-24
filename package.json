@@ -8,7 +8,9 @@
     "github": "^11.0.0",
     "google-auth-wrapper": "^0.5.0",
     "google-calendar": "^1.3.2",
+    "google-drive-wrapper": "^0.6.0",
     "make-node-meeting": "^1.0.11",
+    "node-meeting-agenda": "^1.0.4",
     "properties-parser": "^0.3.1"
   },
   "devDependencies": {},
