@@ -14,3 +14,14 @@ as described in: https://github.com/mhdawson/google-auth-wrapper.
 Will add more documentation, when I have time.
 
 Currently I'm testing out for generation of the  Node.js TSC meetings.
+
+
+NOTE: The following must be commented out of make-node-meeting
+
+
+```
+echo -n "Previous Meeting Minutes Google Docs URL: "
+read prev_doc_url
+echo -n "This Meeting Minutes Google Docs URL: "
+read curr_doc_url
+```
