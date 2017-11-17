@@ -9,6 +9,7 @@ const parser = require('properties-parser');
 const gcal = require('google-calendar');
 const googleAuth = require('google-auth-wrapper');
 const gdriveWrapper = require('google-drive-wrapper');
+const meetingGroup = process.argv[2] || 'TSC';
  
 const authOptions = { configName: 'iojs-tools', scopes: [ 'user', 'repo'  ] };
 const repos       = [];
@@ -31,7 +32,6 @@ ghauth(authOptions, (err, authData) => {
     // ok all authenticated
 
     // read in the configuration for the meeting
-    const meetingGroup = 'TSC';
     const invited = fs.readFileSync(path.join('templates',
                                               'invited_' +
                                               meetingGroup)).toString();
