@@ -15,9 +15,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "tsc-meeting": "node create-node-meeting-artifacts.js TSC",
-    "benchmarking-meeting": "node create-node-meeting-artifacts.js Benchmarking"
+    "benchmarking-meeting": "node create-node-meeting-artifacts.js Benchmarking",
+    "release-meeting": "node create-node-meeting-artifacts.js Release",
+    "all": "npm run tsc-meeting && npm run benchmarking-meeting && npm run release-meeting"
   },
   "author": "",
   "license": "MIT"
