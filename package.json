@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Creates issue and minutes doc for node meeting",
   "main": "index.js",
+  "bin": {
+    "create-meeting": "./bin/create-meeting"
+  },
   "dependencies": {
     "ghauth": "^3.2.1",
     "github": "^11.0.0",
