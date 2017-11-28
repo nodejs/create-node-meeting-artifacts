@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Creates issue and minutes doc for node meeting",
   "main": "index.js",
+  "bin": {
+    "create-meeting": "./bin/create-meeting"
+  },
   "dependencies": {
     "ghauth": "^3.2.1",
     "github": "^11.0.0",
@@ -15,9 +18,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "tsc-meeting": "node create-node-meeting-artifacts.js TSC",
-    "benchmarking-meeting": "node create-node-meeting-artifacts.js Benchmarking"
+    "benchmarking-meeting": "node create-node-meeting-artifacts.js Benchmarking",
+    "release-meeting": "node create-node-meeting-artifacts.js Release",
+    "all": "npm run tsc-meeting && npm run benchmarking-meeting && npm run release-meeting"
   },
   "author": "",
   "license": "MIT"

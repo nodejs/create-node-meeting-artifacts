@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+'use strict';
+
+const path = require('path');
+const { spawn } = require('child_process');
+
+let group = process.argv[2];
+if(group === undefined) {
+  console.error('please pass in group as a argument');
+  process.exit(1);
+}
+group = group.toLowerCase() + '-meeting';
+
+spawn('npm', [ 'run', group ], { stdio: 'inherit' });
