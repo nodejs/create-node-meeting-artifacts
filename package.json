@@ -18,7 +18,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "tsc-meeting": "node create-node-meeting-artifacts.js TSC",
+    "tsc-meeting": "node create-node-meeting-artifacts.js tsc",
     "benchmarking-meeting": "node create-node-meeting-artifacts.js Benchmarking",
     "release-meeting": "node create-node-meeting-artifacts.js Release",
     "all": "npm run tsc-meeting && npm run benchmarking-meeting && npm run release-meeting"

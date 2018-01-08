@@ -9,7 +9,7 @@ const parser = require('properties-parser');
 const gcal = require('google-calendar');
 const googleAuth = require('google-auth-wrapper');
 const gdriveWrapper = require('google-drive-wrapper');
-const meetingGroup = process.argv[2] || 'TSC';
+const meetingGroup = process.argv[2] || 'tsc';
  
 const authOptions = { configName: 'iojs-tools', scopes: [ 'user', 'repo'  ] };
 const repos       = [];
