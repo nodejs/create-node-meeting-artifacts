@@ -43,6 +43,11 @@ ghauth(authOptions, (err, authData) => {
                                                        meetingGroup));
     const meetingProperties = parser.parse(baseMeetingInfo);
 
+    var meetingGroupForTag = meetingGroup;
+    if (meetingProperties.AGENDA_TAG) {
+      meetingGroupForTag = meetingProperties.AGENDA_TAG.replace('-agenda', '');
+    }
+
     // find the next meeting instance in the google calendar. We assume 1 meeting
     // in the next week
     const calendar = google.calendar('v3');
@@ -76,13 +81,13 @@ ghauth(authOptions, (err, authData) => {
 
         fs.writeFileSync(
             path.join(process.env.HOME,
-                      '.make-node-meeting/' + meetingGroup + '.sh'),
+                      '.make-node-meeting/' + meetingGroupForTag + '.sh'),
                       meetingInfo);
 
         // generate the meeting issue content with make-node-meeting1
         var newIssue = child_process.spawnSync(
             path.join(__dirname, 'node_modules/make-node-meeting/make-node-meeting.sh'),
-            [ meetingGroup ]).stdout.toString();
+            [ meetingGroupForTag ]).stdout.toString();
 
         // parse out the title
         const issueLines = newIssue.split('\n');
@@ -94,7 +99,7 @@ ghauth(authOptions, (err, authData) => {
         const agendaInfo = child_process.spawnSync(
             'node',
             ['node_modules/node-meeting-agenda/node-meeting-agenda.js',
-              meetingGroup +  '-agenda' ]).stdout.toString();
+              meetingGroupForTag +  '-agenda' ]).stdout.toString();
         let minutesDoc =  fs.readFileSync(path.join('templates',
                                                     'minutes_base_' +
                                                      meetingGroup)).toString();
