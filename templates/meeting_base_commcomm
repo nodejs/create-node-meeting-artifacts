@@ -1,0 +1,10 @@
+CALENDAR_FILTER="Node.js Community Committee"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="community-committee"
+GROUP_NAME="Community Committee"
+JOINING_INSTRUCTIONS="
+
+* link for participants: Will be added a few minutes before meeting starts
+* For those who just want to watch: 
+* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
