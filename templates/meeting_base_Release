@@ -1,4 +1,4 @@
-CALENDAR_FILTER="Release Team Meeting"
+CALENDAR_FILTER="Node.js Release Team Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="Release"
