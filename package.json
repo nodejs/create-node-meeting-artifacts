@@ -22,7 +22,8 @@
     "benchmarking-meeting": "node create-node-meeting-artifacts.js benchmarking",
     "release-meeting": "node create-node-meeting-artifacts.js Release",
     "cc-meeting": "node create-node-meeting-artifacts.js commcomm",
-    "all": "npm run tsc-meeting && npm run benchmarking-meeting && npm run release-meeting && npm run cc-meeting"
+    "diag": "node create-node-meeting-artifacts.js diag",
+    "all": "npm run tsc-meeting && npm run benchmarking-meeting && npm run release-meeting && npm run cc-meeting && npm run diag"
   },
   "author": "",
   "license": "MIT"
