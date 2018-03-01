@@ -11,7 +11,7 @@ Re-uses make-node-meeting for much of the content generation.
 The hardest part to get going is doing the google auth setup
 as described in: https://github.com/mhdawson/google-auth-wrapper.
 
-Will add more documentation, when I have time.
+Basic documentation for each of the templates lives in [TEMPLATES_DOCUMENTATION.md](./TEMPLATES_DOCUMENTATION.md)
 
 Currently I'm testing out for generation of the  Node.js TSC meetings.
 
