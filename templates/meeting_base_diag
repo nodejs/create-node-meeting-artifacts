@@ -3,8 +3,8 @@ CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="Diagnostics"
 GROUP_NAME="Diagnostics WorkGroup"
-JOINING_INSTRUCTIONS="
 AGENDA_TAG=diag
+JOINING_INSTRUCTIONS="
 
 * link for participants: Will be added a few minutes before meeting starts
 * For those who just want to watch: 
