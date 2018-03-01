@@ -4,7 +4,7 @@ USER="nodejs"
 REPO="Diagnostics"
 GROUP_NAME="Diagnostics WorkGroup"
 JOINING_INSTRUCTIONS="
-AGENDA_TAG="diag"
+AGENDA_TAG=diag
 
 * link for participants: Will be added a few minutes before meeting starts
 * For those who just want to watch: 
