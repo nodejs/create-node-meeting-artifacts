@@ -1,0 +1,11 @@
+CALENDAR_FILTER="Node.js Website Redesign Meeting"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="website-redesign"
+GROUP_NAME="Website Redesign Strategic Initiative"
+AGENDA_TAG=wr-agenda
+JOINING_INSTRUCTIONS="
+
+* link for participants: Will be added a few minutes before meeting starts
+* For those who just want to watch:
+* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
