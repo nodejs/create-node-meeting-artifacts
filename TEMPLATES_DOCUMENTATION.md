@@ -1,4 +1,4 @@
-This document contains empty versions of each template needed to successfully create meeting artifacts for a Committee, Working Group, Initiative, or Team.
+This document contains empty versions of each template needed to successfully create meeting artifacts for a Committee, Working Group, Initiative, or Team. These documents need to go in the [/templates](./templates) directory in this repository.
 
 There are only four variables in the documents that _need_ to be changed:
 
