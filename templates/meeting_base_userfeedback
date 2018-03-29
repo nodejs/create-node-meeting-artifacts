@@ -3,7 +3,7 @@ CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="nodejs/user-feedback"
 GROUP_NAME="User Feedback"
-AGENDA_TAG=cc-agenda
+AGENDA_TAG=neuf-agenda
 JOINING_INSTRUCTIONS="
 
 * link for participants: Will be added a few minutes before meeting starts
