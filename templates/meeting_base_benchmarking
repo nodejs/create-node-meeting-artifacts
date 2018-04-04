@@ -1,7 +1,7 @@
 CALENDAR_FILTER="Benchmarking WG Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
-REPO="Benchmarking"
+REPO="benchmarking"
 GROUP_NAME="Benchmarking WorkGroup"
 JOINING_INSTRUCTIONS="
 
