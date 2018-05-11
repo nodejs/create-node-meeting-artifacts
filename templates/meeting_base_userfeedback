@@ -1,4 +1,4 @@
-CALENDAR_FILTER="Node.js End User Feedback Meeting"
+CALENDAR_FILTER="Node.js User Feedback Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="user-feedback"
