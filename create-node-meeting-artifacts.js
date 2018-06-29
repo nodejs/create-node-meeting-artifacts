@@ -75,7 +75,7 @@ ghauth(authOptions, (err, authData) => {
                             'INVITEES="' +
                             invited + 
                             '\n' +
-                            '### Observers\n' +
+                            '### Observers/Guests\n' +
                             observers +
                             '"';
 
