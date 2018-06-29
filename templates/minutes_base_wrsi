@@ -2,7 +2,7 @@
 
 ## Links
 
-* **Recording**: 
+* **Recording**:
 * **GitHub Issue**: $GITHUB_ISSUE$
 * **Minutes Google Doc**: $MINUTES_DOC$
 
@@ -10,13 +10,12 @@
 
 $INVITED$
 $OBSERVERS$
-*Members and Observers: In order to facilitate attendance tracking, don't hesitate do add yourselves to the minutes doc*
 
 ## Agenda
 
 ## Announcements
- 
-*Extracted from **cc-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
+
+*Extracted from **wr-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
 
 $AGENDA_CONTENT$
 
