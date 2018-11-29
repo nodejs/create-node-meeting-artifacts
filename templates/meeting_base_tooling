@@ -1,0 +1,10 @@
+CALENDAR_FILTER="Tooling Group Meeting"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="tooling"
+GROUP_NAME="Tooling Group"
+JOINING_INSTRUCTIONS="
+
+* link for participants: NEED_ZOOM_LINK
+* For those who just want to watch: https://www.youtube.com/c/nodejs+foundation/live
+* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
