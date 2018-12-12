@@ -1,0 +1,10 @@
+CALENDAR_FILTER="Package Maintenance"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="package-maintenance"
+GROUP_NAME="Package Maintenance Team"
+JOINING_INSTRUCTIONS="
+
+* link for participants: https://zoom.us/j/431077278
+* For those who just want to watch: https://www.youtube.com/c/nodejs+foundation/live
+* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
