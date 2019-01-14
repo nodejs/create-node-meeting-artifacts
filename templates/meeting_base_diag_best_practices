@@ -1,0 +1,11 @@
+CALENDAR_FILTER="Diagnostics Best Practices Content Definition Meeting"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="diagnostics"
+GROUP_NAME="Diagnostics WorkGroup"
+AGENDA_TAG=diag-best-practices-agenda
+JOINING_INSTRUCTIONS="
+
+* link for participants: Will be added a few minutes before meeting starts
+* For those who just want to watch: 
+* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
