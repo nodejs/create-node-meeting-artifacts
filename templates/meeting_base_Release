@@ -1,10 +1,18 @@
-CALENDAR_FILTER="Node.js Release Team Meeting"
+CALENDAR_FILTER="Node.js Release Working Group Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="Release"
 GROUP_NAME="Release WorkGroup"
 JOINING_INSTRUCTIONS="
 
-* link for participants: Will be added a few minutes before meeting starts
-* For those who just want to watch: 
-* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
+Join URL: https://zoom.us/j/337123806
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure 
+"
