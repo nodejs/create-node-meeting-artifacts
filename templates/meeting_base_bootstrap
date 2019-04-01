@@ -1,0 +1,23 @@
+CALENDAR_FILTER="Joint Foundation Bootstrap Team Meeting"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="openjs-foundation"
+GITHUB_ORG="openjs-foundation"
+HOST="OpenJS Foundation"
+REPO="bootstrap"
+GROUP_NAME="Bootstrap Team"
+JOINING_INSTRUCTIONS="
+
+* link for participants: Zoom link: https://zoom.us/j/611357642
+* For those who just want to watch: https://www.youtube.com/c/nodejs+foundation/live
+
+---
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure yet
+"
