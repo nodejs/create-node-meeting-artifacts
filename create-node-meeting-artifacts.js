@@ -14,6 +14,8 @@ const meetingGroup = process.argv[2] || 'tsc';
 const authOptions = { configName: 'iojs-tools', scopes: [ 'user', 'repo'  ] };
 const repos       = [];
 
+let githubOrg = 'nodejs';
+
 const github = new GitHubApi({
 });
 
@@ -48,6 +50,10 @@ ghauth(authOptions, (err, authData) => {
       meetingGroupForTag = meetingProperties.AGENDA_TAG.replace('-agenda', '');
     }
 
+    if (meetingProperties.GITHUB_ORG) {
+      githubOrg = meetingProperties.GITHUB_ORG.replace(/"/g, '');
+    }
+
     // find the next meeting instance in the google calendar. We assume 1 meeting
     // in the next week
     const calendar = google.calendar('v3');
@@ -55,7 +61,8 @@ ghauth(authOptions, (err, authData) => {
       auth: googleAuthToken,
       calendarId: meetingProperties.CALENDAR_ID.replace(/"/g, ''),
       timeMin: (new Date()).toISOString(),
-      timeMax: (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
+     // timeMax: (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
+      timeMax: (new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)).toISOString(),
       singleEvents: true,
       q: meetingProperties.CALENDAR_FILTER.replace(/"/g, ''),
       maxResults: 1,
@@ -84,7 +91,7 @@ ghauth(authOptions, (err, authData) => {
                       '.make-node-meeting/' + meetingGroupForTag + '.sh'),
                       meetingInfo);
 
-        // generate the meeting issue content with make-node-meeting1
+        // generate the meeting issue content with make-node-meeting
         var newIssue = child_process.spawnSync(
             path.join(__dirname, 'node_modules/make-node-meeting/make-node-meeting.sh'),
             [ meetingGroupForTag ]).stdout.toString();
@@ -99,7 +106,7 @@ ghauth(authOptions, (err, authData) => {
         const agendaInfo = child_process.spawnSync(
             'node',
             ['node_modules/node-meeting-agenda/node-meeting-agenda.js',
-              meetingGroupForTag +  '-agenda' ]).stdout.toString();
+              meetingGroupForTag +  '-agenda', githubOrg]).stdout.toString();
         let minutesDoc =  fs.readFileSync(path.join('templates',
                                                     'minutes_base_' +
                                                      meetingGroup)).toString();
