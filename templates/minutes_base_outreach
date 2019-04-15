@@ -1,0 +1,29 @@
+# $TITLE$
+
+## Links
+
+* **Recording**: 
+* **GitHub Issue**: $GITHUB_ISSUE$
+* **Minutes Google Doc**: $MINUTES_DOC$
+
+## Present
+
+$INVITED$
+$OBSERVERS$
+*Members and Observers: In order to facilitate attendance tracking, don't hesitate do add yourselves to the minutes doc*
+
+## Agenda
+
+## Announcements
+
+*Extracted from **outreach-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
+
+$AGENDA_CONTENT$
+
+## Q&A, Other
+
+## Upcoming Meetings
+
+* **Node.js Foundation Calendar**: https://nodejs.org/calendar
+
+Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
