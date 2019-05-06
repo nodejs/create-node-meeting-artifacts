@@ -1,0 +1,10 @@
+CALENDAR_FILTER="Node.js Africa Leadership Meeting"
+CALENDAR_ID="0e0ou9mn2fr4on0aacmlljkvpk@group.calendar.google.com"
+USER="nodejsafrica"
+REPO="admin"
+GROUP_NAME="leadership"
+AGENDA_TAG=leadershp-agenda
+JOINING_INSTRUCTIONS="
+
+* Link for participants: https://zoom.us/j/526318636
+* For those who just want to watch: https://www.youtube.com/nodejs-foundation"
