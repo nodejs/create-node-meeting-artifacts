@@ -1,14 +1,14 @@
-CALENDAR_FILTER="Joint Foundation Bootstrap Team Meeting"
+CALENDAR_FILTER="OpenJS Foundation Cross Project Council"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="openjs-foundation"
 GITHUB_ORG="openjs-foundation"
 HOST="OpenJS Foundation"
-REPO="bootstrap"
-GROUP_NAME="Bootstrap Team"
+REPO="cross-project-council"
+GROUP_NAME="Cross Project Council"
 JOINING_INSTRUCTIONS="
 
-* link for participants: Zoom link: https://zoom.us/j/779273015
-* For those who just want to watch: https://www.youtube.com/c/nodejs+foundation/live
+* link for participants: Zoom link: Coming Soon
+* For those who just want to watch: https://livestream.openjsf.org
 
 ---
 
