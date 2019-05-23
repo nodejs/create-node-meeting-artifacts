@@ -1,0 +1,19 @@
+# $TITLE$
+
+## Links
+
+* **Recording**:  
+* **GitHub Issue**: $GITHUB_ISSUE$
+* **Minutes Google Doc**: $MINUTES_DOC$
+
+## Present
+
+$INVITED$
+
+## Agenda
+
+## Announcements
+ 
+*Extracted from **modules-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
+
+$AGENDA_CONTENT$
