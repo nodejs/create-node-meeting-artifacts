@@ -7,4 +7,11 @@ AGENDA_TAG=leadershp-agenda
 JOINING_INSTRUCTIONS="
 
 * Link for participants: https://zoom.us/j/526318636
+* We stream our conference call straight to YouTube so anyone can listen to it live.
+  It should start playing at https://www.youtube.com/c/nodejs+africa/live when we turn it on.
+  There's usually a short cat-herding time at the start of the meeting and then occasionally we
+  have some quick private business to attend to before we can start recording & streaming.
+  So be patient and it should show up.
+* For those who just want to watch: https://www.youtube.com/nodejs-africa"
 * For those who just want to watch: https://www.youtube.com/nodejs-foundation"
+
