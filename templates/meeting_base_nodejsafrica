@@ -1,6 +1,8 @@
 CALENDAR_FILTER="Node.js Africa Membership/Leadership"
 CALENDAR_ID="node.js.africa@gmail.com"
 USER="nodejsafrica"
+GITHUB_ORG="nodejsafrica"
+HOST="Node.js Africa Team"
 REPO="admin"
 GROUP_NAME="leadership"
 AGENDA_TAG=leadershp-agenda
@@ -13,5 +15,4 @@ JOINING_INSTRUCTIONS="
   have some quick private business to attend to before we can start recording & streaming.
   So be patient and it should show up.
 * For those who just want to watch: https://www.youtube.com/nodejs-africa"
-* For those who just want to watch: https://www.youtube.com/nodejs-foundation"
 
