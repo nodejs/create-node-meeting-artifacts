@@ -1,11 +1,23 @@
 CALENDAR_FILTER="Node.js Website Redesign Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
-REPO="website-redesign"
+REPO="nodejs.dev"
 GROUP_NAME="Website Redesign Strategic Initiative"
 AGENDA_TAG=wr-agenda
 JOINING_INSTRUCTIONS="
 
-* link for participants: https://zoom.us/j/679487717
+* Video conference link for participants: https://zoom.us/j/679487717
 * For those who just want to watch:
-* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
+* Past meetings: https://www.youtube.com/channel/UCQPYJluYC_sn_Qz_XE-YbTQ/search?query=website+redesign
+
+---
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure yet
+"
