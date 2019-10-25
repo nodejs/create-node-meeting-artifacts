@@ -2,7 +2,7 @@
 
 ## Links
 
-* **Recording**:  
+* **Recording**:
 * **GitHub Issue**: $GITHUB_ISSUE$
 
 ## Present
@@ -13,7 +13,7 @@ $OBSERVERS$
 ## Agenda
 
 ### Announcements
- 
+
 *Extracted from **cross-project-council-agenda** labeled issues and pull requests from the **openjs-foundation org** prior to the meeting.
 
 $AGENDA_CONTENT$
@@ -22,7 +22,7 @@ $AGENDA_CONTENT$
 
 ## Upcoming Meetings
 
-* **Calendar**: https://nodejs.org/calendar
+* **Calendar**: https://calendar.openjsf.org
 
 Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
 
