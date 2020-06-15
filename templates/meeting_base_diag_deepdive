@@ -1,9 +1,9 @@
-CALENDAR_FILTER="Diagnostics Best Practices Content Definition Meeting"
+CALENDAR_FILTER="Diagnostics Deep Dive Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="diagnostics"
-GROUP_NAME="Diagnostics Best Practices"
-AGENDA_TAG=diag-best-practices-agenda
+GROUP_NAME="Diagnostics Deep Dive"
+AGENDA_TAG=diag-deepdive-agenda
 JOINING_INSTRUCTIONS="
 
 * link for participants: https://zoom.us/j/466707925
