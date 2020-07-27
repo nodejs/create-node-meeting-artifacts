@@ -1,7 +1,7 @@
 CALENDAR_FILTER="Node.js Next 10 years"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
-REPO="next10"
+REPO="next-10"
 GROUP_NAME="Next 10 Years team"
 JOINING_INSTRUCTIONS="
 
