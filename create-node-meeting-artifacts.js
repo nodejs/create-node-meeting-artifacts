@@ -6,13 +6,12 @@ const child_process = require('child_process');
 const GitHubApi = require("github");
 const ghauth = require('ghauth');
 const parser = require('properties-parser');
-const gcal = require('google-calendar');
 const googleAuth = require('google-auth-wrapper');
-const gdriveWrapper = require('google-drive-wrapper');
+const {createGitHubIssueCallback} = require('./lib/create-gh-issue');
+
 const meetingGroup = process.argv[2] || 'tsc';
  
 const authOptions = { configName: 'iojs-tools', scopes: [ 'user', 'repo'  ] };
-const repos       = [];
 
 let githubOrg = 'nodejs';
 
@@ -45,7 +44,9 @@ ghauth(authOptions, (err, authData) => {
                                                        meetingGroup));
     const meetingProperties = parser.parse(baseMeetingInfo);
 
-    var meetingGroupForTag = meetingGroup;
+    const uploader = meetingProperties.USE_HACKMD ? require('./lib/hackmd') : require('./lib/google-docs');
+
+    let meetingGroupForTag = meetingGroup;
     if (meetingProperties.AGENDA_TAG) {
       meetingGroupForTag = meetingProperties.AGENDA_TAG.replace('-agenda', '');
     }
@@ -116,41 +117,20 @@ ghauth(authOptions, (err, authData) => {
         minutesDoc = minutesDoc.replace('$OBSERVERS$', observers);
         const minutesDocName = path.join(__dirname, 'minutes_temp.txt');
         fs.writeFileSync( minutesDocName, minutesDoc);
-
-        // upload the minutes doc
-        const wrapper = new gdriveWrapper(googleAuthToken, google, 'dummy' );
-        wrapper.getMetaForFilename('/nodejs-meetings', function(err, parentMeta) {
-          if (err !== null) {
-            console.log('Directory called "nodejs-meetings" does not exist, exiting');
-            process.exit(-1);
+        
+        const githubIssueCallback = createGitHubIssueCallback(title, newIssue, meetingProperties, (err) => {
+          if (err) {
+            console.log('Failed with error:');
+            console.log(err);
+            process.exitCode = 1;
+            return;
           }
-
-          wrapper.uploadFile(title, minutesDocName,
-                             { parent: parentMeta.id,
-                               compress: false,
-                               encrypt: false,
-                               convert: true,
-                               mimeType: 'application/vnd.google-apps.document' },
-                             function(err, meta) {
-            if (err !== null) {
-              console.log('Failed to upload minutes file');
-              console.log(err);
-            } else {
-              // create the issue in github
-              newIssue = newIssue.toString().replace(
-                  /\* \*\*Minutes Google Doc\*\*: <>/,
-                  '* Minutes Google Doc: <https://docs.google.com/document/d/' + meta.id + '/edit>');
-              newIssue = newIssue.replace(/\* _Previous Minutes Google Doc: <>_/,'');
-                github.issues.create({
-                owner: meetingProperties.USER.replace(/"/g, ''),
-                repo: meetingProperties.REPO.replace(/"/g, ''),
-                title: title,
-                body: newIssue,
-                assignee: "mhdawson"
-              });
-            }
-          });
+          console.log('Success');
         });
+
+        uploader.upload(minutesDocName, {
+          title, newIssue, meetingProperties, googleAuthToken, googleApi
+        }, githubIssueCallback);
       }
     });
   });
