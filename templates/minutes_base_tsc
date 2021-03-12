@@ -16,7 +16,7 @@ $OBSERVERS$
 ### Announcements
 
 ### CPC and Board Meeting Updates
- 
+
 *Extracted from **tsc-agenda** labeled issues and pull requests from the **nodejs org** prior to the meeting.
 
 $AGENDA_CONTENT$
@@ -25,7 +25,6 @@ $AGENDA_CONTENT$
 
 ## Upcoming Meetings
 
-* **Node.js Foundation Calendar**: https://nodejs.org/calendar
+* **Node.js Foundation Calendar**: <https://nodejs.org/calendar>
 
 Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
-

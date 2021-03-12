@@ -6,5 +6,5 @@ GROUP_NAME="Outreach"
 AGENDA_TAG=outreach-agenda
 JOINING_INSTRUCTIONS="
 
-* Link for participants: https://zoom.us/j/526318636
-* For those who just want to watch: https://www.youtube.com/nodejs-foundation"
+* Link for participants: <https://zoom.us/j/526318636>
+* For those who just want to watch: <https://www.youtube.com/nodejs-foundation>"

@@ -2,7 +2,7 @@
 
 ## Links
 
-* **Recording**: 
+* **Recording**:
 * **GitHub Issue**: $GITHUB_ISSUE$
 * **Minutes Google Doc**: $MINUTES_DOC$
 
@@ -19,8 +19,8 @@ $OBSERVERS$
 ### Initiative updates
 
 ### CPC and Board Meeting Updates
- 
-### Issues and PRs 
+
+### Issues and PRs
 
 *Extracted from **cc-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
 
@@ -30,6 +30,6 @@ $AGENDA_CONTENT$
 
 ### Upcoming Meetings
 
-* **Node.js Foundation Calendar**: https://nodejs.org/calendar
+* **Node.js Foundation Calendar**: <https://nodejs.org/calendar>
 
 Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.

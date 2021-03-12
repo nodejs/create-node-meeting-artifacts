@@ -14,12 +14,12 @@ $OBSERVERS$
 ## Agenda
 
 ## Announcements
- 
+
 *Extracted from **package-maintenance-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
 
 $AGENDA_CONTENT$
 
-## Project Board Review (maybe, if time permits).
+## Project Board Review (maybe, if time permits)
 
 Ask participants about the state of [Project Board](https://github.com/nodejs/package-maintenance/projects/1) and necessary changes if time permits.
 
@@ -27,7 +27,6 @@ Ask participants about the state of [Project Board](https://github.com/nodejs/pa
 
 ## Upcoming Meetings
 
-* **Node.js Foundation Calendar**: https://nodejs.org/calendar
+* **Node.js Foundation Calendar**: <https://nodejs.org/calendar>
 
 Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
-

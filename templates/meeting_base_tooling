@@ -5,6 +5,6 @@ REPO="tooling"
 GROUP_NAME="Tooling Group"
 JOINING_INSTRUCTIONS="
 
-* link for participants: https://zoom.us/j/113867470
-* For those who just want to watch: https://www.youtube.com/c/nodejs+foundation/live
-* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
+* link for participants: <https://zoom.us/j/113867470>
+* For those who just want to watch: <https://www.youtube.com/c/nodejs+foundation/live>
+* youtube admin page: <https://www.youtube.com/my_live_events?filter=scheduled>"
