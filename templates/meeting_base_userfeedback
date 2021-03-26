@@ -6,10 +6,10 @@ GROUP_NAME="User Feedback"
 AGENDA_TAG=user-feedback-agenda
 JOINING_INSTRUCTIONS="
 
-* link for participants: https://zoom.us/j/353642832
+* link for participants: <https://zoom.us/j/353642832>
 * We stream our conference call straight to YouTube so anyone can listen to it live.
-  It should start playing at https://www.youtube.com/c/nodejs+foundation/live when we turn it on.
+  It should start playing at <https://www.youtube.com/c/nodejs+foundation/live> when we turn it on.
   There's usually a short cat-herding time at the start of the meeting and then occasionally we
   have some quick private business to attend to before we can start recording & streaming.
   So be patient and it should show up.
-* youtube admin page: https://www.youtube.com/my_live_events?filter=scheduled"
+* youtube admin page: <https://www.youtube.com/my_live_events?filter=scheduled>"
