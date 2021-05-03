@@ -2,7 +2,7 @@ This document contains empty versions of each template needed to successfully cr
 
 There are only four variables in the documents that _need_ to be changed:
 
-- **`<name>`:** The name of the Committee, Working Group, Initiative, or Team that meeting artifacts are being creatd for.
+- **`<name>`:** The name of the Committee, Working Group, Initiative, or Team that meeting artifacts are being created for.
 - **`<shortname>`:** The abbreviated or shortened name for a group, used in each filename to connect associated files together.
 - **`<team_name>`:** The name of the GitHub team in the Node.js org.
 - **`<calendar event name>`:** The name of calendar events that mark the group's meeting date/time.
