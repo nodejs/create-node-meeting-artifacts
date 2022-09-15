@@ -17,6 +17,8 @@ $OBSERVERS$
 
 *Extracted from **security-wg-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
 
+- [ ] Vulnerability Review - https://github.com/nodejs/nodejs-dependency-vuln-assessments/issues
+
 $AGENDA_CONTENT$
 
 ## Q&A, Other
