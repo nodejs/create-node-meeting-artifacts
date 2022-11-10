@@ -8,6 +8,7 @@ There are only four variables in the documents that _need_ to be changed:
 - **`<calendar event name>`:** The name of calendar events that mark the group's meeting date/time.
 - **`<repo>`:** The repository of the group.
 - **`<agenda-label>`:** The label for which to search the Node.js GitHub organization, to add items to the group's agenda.
+- **`<issue-label>`:** an optional label for the created issue itself.
 - **`<observer>`:** Name of an observer in a group's meetings.
 
 # Invited
