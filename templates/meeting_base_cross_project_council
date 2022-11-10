@@ -7,6 +7,7 @@ HOST="OpenJS Foundation"
 REPO="cross-project-council"
 GROUP_NAME="Cross Project Council"
 AGENDA_TAG=cross-project-council-agenda
+ISSUE_LABEL=cpc-meeting
 JOINING_INSTRUCTIONS="
 
 link for participants: Zoom link: <https://zoom.us/j/920010234>
