@@ -141,12 +141,14 @@ ghauth(authOptions, (err, authData) => {
                   /\* \*\*Minutes Google Doc\*\*: <>/,
                   '* Minutes Google Doc: <https://docs.google.com/document/d/' + meta.id + '/edit>');
               newIssue = newIssue.replace(/\* _Previous Minutes Google Doc: <>_/,'');
+              let issueLabel = (meetingProperties.ISSUE_LABEL || '').replace(/"/g, '');
                 github.issues.create({
                 owner: meetingProperties.USER.replace(/"/g, ''),
                 repo: meetingProperties.REPO.replace(/"/g, ''),
                 title: title,
                 body: newIssue,
-                assignee: "mhdawson"
+                assignee: "mhdawson",
+                labels: issueLabel ? [issueLabel] : undefined
               });
             }
           });
