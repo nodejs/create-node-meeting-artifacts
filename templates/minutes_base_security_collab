@@ -1,0 +1,27 @@
+# $TITLE$
+
+## Links
+
+* **Recording**:
+* **GitHub Issue**: $GITHUB_ISSUE$
+
+## Present
+
+$INVITED$
+$OBSERVERS$
+
+## Agenda
+
+### Announcements
+
+*Extracted from **security-agenda** labeled issues and pull requests from the **openjs-foundation org** prior to the meeting.
+
+$AGENDA_CONTENT$
+
+## Q&A, Other
+
+## Upcoming Meetings
+
+* **Calendar**: <https://calendar.openjsf.org>
+
+Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
