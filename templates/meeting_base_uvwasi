@@ -1,0 +1,11 @@
+CALENDAR_FILTER="Node.js uvwasi team meeting"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="uvwasi"
+GROUP_NAME="uvwasi team"
+AGENDA_TAG=uvwasi-agenda
+JOINING_INSTRUCTIONS="
+
+* link for participants: <https://zoom.us/j/91612484369>
+* For those who just want to watch:
+* youtube admin page: <https://www.youtube.com/my_live_events?filter=scheduled>"
