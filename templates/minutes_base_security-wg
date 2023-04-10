@@ -18,6 +18,7 @@ $OBSERVERS$
 *Extracted from **security-wg-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
 
 - [ ] Vulnerability Review - https://github.com/nodejs/nodejs-dependency-vuln-assessments/issues
+- [ ] OpenSSF Scorecard Monitor Review - https://github.com/nodejs/security-wg/issues?q=is%3Aissue+OpenSSF+Scorecard+Report+Updated%21+
 
 $AGENDA_CONTENT$
 
