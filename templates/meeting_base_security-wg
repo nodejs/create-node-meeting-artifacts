@@ -2,7 +2,7 @@ CALENDAR_FILTER="Security-WG meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="security-wg"
-GROUP_NAME="Security WorkGroup"
+GROUP_NAME="Security team"
 JOINING_INSTRUCTIONS="https://zoom.us/j/92309450775
 
 * link for participants: <>
