@@ -16,20 +16,36 @@ $OBSERVERS$
 
 ### Board Meeting Updates
 
+- https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-board
+
+### Staff Updates
+
+- https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-legal-info
+- https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-staff-update
+- https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-website-update
+
 *Extracted from **cross-project-council-agenda** labeled issues and pull requests from the **openjs-foundation org** prior to the meeting.
 
 $AGENDA_CONTENT$
 
-## Next week's working session
+### Next week's working session
 
 Are there any initiatives or agenda items that we should use a working session to further progress on?
+- https://github.com/openjs-foundation/cross-project-council/labels/cpc-working-session
 
-## Dates and Reminders
+###  
 
-Please review regularly our list of dates and reminders:
-https://github.com/openjs-foundation/cross-project-council/blob/main/Dates-and-Reminders.md
+Are there any issues we would need to review?
 
-## Q&A, Other
+### Regular reviews
+
+Please review regularly our list of dates and reminders, our quarterly review issues, and check the list of issues that can be closed:
+
+- https://github.com/openjs-foundation/cross-project-council/blob/main/Dates-and-Reminders.md
+- https://github.com/openjs-foundation/cross-project-council/labels/cpc-quartely-review
+- https://github.com/openjs-foundation/cross-project-council/labels/cpc-can-issue-be-closed
+
+### Q&A, Other
 
 ## Upcoming Meetings
 
