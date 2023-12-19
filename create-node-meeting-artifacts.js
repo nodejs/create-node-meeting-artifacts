@@ -63,8 +63,8 @@ ghauth(authOptions, (err, authData) => {
       timeMin: (new Date()).toISOString(),
       timeMax: (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
       singleEvents: true,
-      q: meetingProperties.CALENDAR_FILTER.replace(/"/g, ''),
-      maxResults: 1,
+      q: meetingProperties.CALENDAR_FILTER.replace(/"/g, '').replace(/ /g, '.'),
+      maxResults: 2,
     }, (err, response) => {
       if (err) {
         throw err;
