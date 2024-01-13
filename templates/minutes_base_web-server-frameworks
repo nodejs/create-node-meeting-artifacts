@@ -1,0 +1,27 @@
+# $TITLE$
+
+## Links
+
+* **Recording**:  
+* **GitHub Issue**: $GITHUB_ISSUE$
+
+## Present
+
+$INVITED$
+$OBSERVERS$
+
+## Agenda
+
+## Announcements
+
+* Extracted from **web-server-frameworks-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
+
+$AGENDA_CONTENT$
+
+## Q&A, Other
+
+## Upcoming Meetings
+
+* **Node.js Project Calendar**: <https://nodejs.org/calendar>
+
+Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
