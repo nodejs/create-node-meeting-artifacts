@@ -1,0 +1,11 @@
+CALENDAR_FILTER="Web Server Frameworks"
+CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+USER="nodejs"
+REPO="web-server-frameworks"
+GROUP_NAME="Web Server Frameworks"
+JOINING_INSTRUCTIONS="
+
+* link for participants: <https://zoom.us/j/96287211361>
+
+* For those who just want to watch: We stream our conference call straight to YouTube so anyone can listen to it live, it should start playing at <https://www.youtube.com/c/nodejs+foundation/live> when we turn it on. There's usually a short cat-herding time at the start of the meeting and then occasionally we have some quick private business to attend to before we can start recording & streaming. So be patient and it should show up.
+* youtube admin page: <https://www.youtube.com/my_live_events?filter=scheduled>"
