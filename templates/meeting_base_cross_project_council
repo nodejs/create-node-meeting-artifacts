@@ -10,7 +10,7 @@ AGENDA_TAG=cross-project-council-agenda
 ISSUE_LABEL=cpc-meeting
 JOINING_INSTRUCTIONS="
 
-link for participants: Zoom link: <https://zoom.us/j/920010234>
+link for participants: Please refer to the <a href="https://calendar.openjsf.org">OpenJS public calendar</a> for meeting link
 
 * For those who just want to watch: <https://livestream.openjsf.org>
 
