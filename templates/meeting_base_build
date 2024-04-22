@@ -2,6 +2,7 @@ CALENDAR_FILTER="Build WG Meeting"
 CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="build"
+AGENDA_TAG=build-agenda
 GROUP_NAME="Build WorkGroup"
 JOINING_INSTRUCTIONS="
 
