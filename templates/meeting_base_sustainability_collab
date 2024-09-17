@@ -1,0 +1,23 @@
+CALENDAR_FILTER="Sustainability Collaboration Space"
+CALENDAR_ID="linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g@group.calendar.google.com"
+USER="openjs-foundation"
+GITHUB_ORG="openjs-foundation"
+HOST="OpenJS Foundation"
+REPO="sustainability-collab-space"
+GROUP_NAME="Sustainability Collaboration Space"
+AGENDA_TAG=sustainability-agenda 
+JOINING_INSTRUCTIONS="
+
+link for participants: <https://zoom-lfx.platform.linuxfoundation.org/meeting/97342926119?password=39c25254-e7a3-4830-be8e-d54d63234bfb>
+
+---
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure yet
+"
