@@ -11,4 +11,7 @@ if(group === undefined) {
 }
 group = group.toLowerCase() + '-meeting';
 
-spawn('npm', [ 'run', group ], { stdio: 'inherit' });
+spawn('npm', ['run', group], {
+  stdio: 'inherit',
+  cwd: path.join(__dirname, '..')
+});
