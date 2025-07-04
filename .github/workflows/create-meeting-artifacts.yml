@@ -1,0 +1,70 @@
+name: Create Meeting Artifacts
+
+on:
+  # Run every Monday at 10 AM UTC (adjust as needed)
+  schedule:
+    - cron: '0 10 * * 1'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      meeting_group:
+        description: 'Meeting group to create artifacts for'
+        required: true
+        type: choice
+        options:
+          - uvwasi
+          - tsc
+          - build
+          - diag
+          - diag_deepdive
+          - typescript
+          - Release
+          - cross_project_council
+          - modules
+          - tooling
+          - security-wg
+          - next-10
+          - package-maintenance
+          - package_metadata_interop
+          - ecosystem_report
+          - sustainability_collab
+          - standards
+          - security_collab
+          - loaders
+          - web-server-frameworks
+
+jobs:
+  create-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create meeting artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
+        run: node create-node-meeting-artifacts.mjs ${{ github.event.inputs.meeting_group }}
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: meeting-artifacts-${{ github.event.inputs.meeting_group || 'tsc' }}
+          path: |
+            ~/.make-node-meeting/
+            minutes_temp.txt
+          retention-days: 7
+          if-no-files-found: ignore
