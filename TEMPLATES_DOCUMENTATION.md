@@ -1,6 +1,8 @@
 This document contains empty versions of each template needed to successfully create meeting artifacts for a Committee, Working Group, Initiative, or Team. These documents need to go in the [/templates](./templates) directory in this repository.
 
-There are only four variables in the documents that _need_ to be changed:
+## Template Variables
+
+There are several variables in the documents that need to be configured:
 
 - **`<name>`:** The name of the Committee, Working Group, Initiative, or Team that meeting artifacts are being created for.
 - **`<shortname>`:** The abbreviated or shortened name for a group, used in each filename to connect associated files together.
@@ -10,6 +12,22 @@ There are only four variables in the documents that _need_ to be changed:
 - **`<agenda-label>`:** The label for which to search the Node.js GitHub organization, to add items to the group's agenda.
 - **`<issue-label>`:** an optional label for the created issue itself.
 - **`<observer>`:** Name of an observer in a group's meetings.
+
+## Meeting Properties Reference
+
+The following properties are available in meeting base templates and can be used in meeting issue generation:
+
+- **`CALENDAR_FILTER`:** The name of calendar events that mark the group's meeting date/time
+- **`CALENDAR_ID`:** The Google Calendar ID for the Node.js calendar (typically `nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com`)
+- **`USER`:** The GitHub username/organization (typically `nodejs`)
+- **`REPO`:** The repository name where meeting issues are created
+- **`GROUP_NAME`:** The full name of the Committee, Working Group, Initiative, or Team
+- **`AGENDA_TAG`:** The label used to search for agenda items in GitHub issues and PRs
+- **`HOST`:** Meeting host information
+- **`JOINING_INSTRUCTIONS`:** Instructions for joining the meeting (Zoom links, YouTube streams, etc.)
+- **`ISSUE_LABEL`:** Optional label to apply to the created meeting issue
+
+These properties are defined in the `meeting_base_<shortname>` template files and are substituted when generating meeting issues.
 
 # Invited
 

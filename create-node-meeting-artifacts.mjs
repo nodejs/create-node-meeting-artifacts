@@ -3,19 +3,17 @@
 /**
  * Node.js Meeting Artifacts Creator
  *
- * Creates GitHub issues and Google Docs for Node.js team meetings.
+ * Creates GitHub issues and HackMD documents for Node.js team meetings.
  * Reads meeting configuration from templates, fetches calendar events,
  * creates meeting minutes documents, and posts GitHub issues.
  *
  * Environment Variables Required:
  * - GITHUB_TOKEN: Personal access token for GitHub API
- * - GOOGLE_CLIENT_ID: Google OAuth client ID
- * - GOOGLE_CLIENT_SECRET: Google OAuth client secret
+ * - HACKMD_API_TOKEN: HackMD API token for creating documents
+ * - GOOGLE_API_KEY: Google Calendar API key for read-only calendar access
  *
  * Optional Environment Variables:
- * - GOOGLE_SERVICE_ACCOUNT_EMAIL: Service account email (for GitHub Actions)
- * - GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: Service account private key (for GitHub Actions)
- * - GOOGLE_REDIRECT_URI: OAuth redirect URI (default: http://localhost:3000/oauth2callback)
+ * - HACKMD_TEAM_NAME: HackMD team name/path (optional)
  * - MEETINGS_CONFIG_DIR: Directory containing meeting templates (default: ./)
  * - MEETINGS_OUTPUT_DIR: Directory for meeting output files (default: ~/.make-node-meeting/)
  *
@@ -25,91 +23,81 @@
  * npm run dev -- tsc
  */
 
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { getConfig } from './src/config.mjs';
-import { createGitHubIssue } from './src/github.mjs';
-import {
-  createGoogleAuthClient,
-  createGoogleClients,
-  findNextMeetingEvent,
-  uploadMinutesDocument,
-} from './src/google.mjs';
-import {
-  readMeetingConfig,
-  generateMeetingIssue,
-  createMinutesDocument,
-  createMeetingInfoString,
-} from './src/meeting.mjs';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import * as github from './src/github.mjs';
+import * as google from './src/google.mjs';
+import * as hackmd from './src/hackmd.mjs';
+import * as meetings from './src/meeting.mjs';
 
 // Step 1: Application configuration
 const config = getConfig();
 
-// Step 2: Initialize Google authentication and API clients
-const googleAuth = createGoogleAuthClient(config.google);
-const { calendarClient, driveClient } = await createGoogleClients(googleAuth);
+// Step 2: Initialize Google Calendar client with API Key
+const calendarClient = google.createGoogleCalendarClient(config.google);
 
-// Step 3: Read meeting configuration from templates
-const meetingConfig = await readMeetingConfig(
-  config.meetingGroup,
-  config.directories.templates
+// Step 3: Initialize HackMD client
+const hackmdClient = hackmd.createHackMDClientInstance(
+  config.hackmd.apiToken,
+  config.hackmd.teamName
 );
 
-// Step 4: Find next meeting event in calendar
-const event = await findNextMeetingEvent(calendarClient, meetingConfig);
-const meetingTime = new Date(event.start.dateTime).toISOString();
+// Step 4: Read meeting configuration from templates
+const meetingConfig = await meetings.readMeetingConfig(config);
 
-// Step 5: Generate meeting information string for external tools
-const meetingInfo = createMeetingInfoString(meetingConfig, meetingTime);
+// Step 5: Find next meeting event in calendar
+const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);
 
-// Step 6: Generate meeting issue content using make-node-meeting tool
-const makeNodeMeetingPath = join(
-  __dirname,
-  'node_modules/make-node-meeting/make-node-meeting.sh'
-);
+// Step 6: Extract meeting date from event
+const meetingDate = new Date(event.start.dateTime);
 
-const { title, content } = await generateMeetingIssue(
-  meetingConfig.meetingGroupForTag,
-  meetingInfo,
-  config.directories.output,
-  makeNodeMeetingPath
-);
-
-// Step 7: Create minutes document content using node-meeting-agenda tool
-const agendaToolPath = join(
-  __dirname,
-  'node_modules/node-meeting-agenda/node-meeting-agenda.js'
-);
-
-const minutesContent = await createMinutesDocument(
-  meetingConfig.meetingGroupForTag,
-  meetingConfig.githubOrg,
+// Step 7: Get Meeting Title
+const meetingTitle = meetings.generateMeetingTitle(
+  config,
   meetingConfig,
-  title,
-  config.directories.templates,
-  config.meetingGroup,
-  agendaToolPath
+  meetingDate
 );
 
-// Step 8: Upload minutes document to Google Drive
-const uploadResult = await uploadMinutesDocument(
-  driveClient,
-  title,
+// Step 8: Generate meeting issue content using native implementation
+const issueContent = await meetings.generateMeetingIssue(
+  config,
+  meetingConfig,
+  meetingDate
+);
+
+// Step 9: Create GitHub issue with HackMD link
+const githubIssue = await github.createGitHubIssue(
+  config,
+  meetingConfig,
+  meetingTitle,
+  issueContent
+);
+
+// Step 10: Create HackMD document with meeting notes
+const hackmdNote = await hackmd.createMeetingNotesDocument(
+  hackmdClient,
+  meetingTitle,
+  ''
+);
+
+// Step 11: Get the HackMD document link
+const noteLink = hackmdNote.publishLink || `https://hackmd.io/${hackmdNote.id}`;
+
+// Step 12: Update the minutes content with the HackMD link
+const minutesContent = await meetings.generateMeetingMinutes(
+  config,
+  meetingConfig,
+  meetingTitle,
+  noteLink,
+  githubIssue.html_url
+);
+
+// Step 13: Update the HackMD document with the self-referencing link
+await hackmd.updateMeetingNotesDocument(
+  hackmdClient,
+  hackmdNote.id,
   minutesContent
 );
 
-// Step 9: Create GitHub issue with Google Doc link
-const issue = await createGitHubIssue(
-  config.githubToken,
-  meetingConfig,
-  title,
-  content,
-  uploadResult.id
-);
-
 // Output success information with links
-console.log(`Created GitHub issue: ${issue.html_url}`);
-console.log(`Doc: https://docs.google.com/document/d/${uploadResult.id}`);
+console.log(`Created GitHub issue: ${githubIssue.html_url}`);
+console.log(`Created HackMD document: ${noteLink}`);

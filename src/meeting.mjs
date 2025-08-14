@@ -1,138 +1,164 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import parser from 'properties-parser';
-
 import { DEFAULT_CONFIG } from './constants.mjs';
-import {
-  executeCommand,
-  createMeetingInfo,
-  processMinutesTemplate,
-} from './utils.mjs';
+import * as github from './github.mjs';
+import * as dates from './utils/dates.mjs';
+import * as templates from './utils/templates.mjs';
+import * as urls from './utils/urls.mjs';
 
 /**
  * Reads and parses meeting configuration from template files
- * @param {string} meetingGroup - The meeting group name
- * @param {string} templatesDir - Directory containing template files
+ * @param {import('./types.d.ts').AppConfig} config - Application configuration
  * @returns {Promise<import('./types.d.ts').MeetingConfig>} Meeting configuration object
  */
-export const readMeetingConfig = async (meetingGroup, templatesDir) => {
+export const readMeetingConfig = async config => {
   // Read all template files asynchronously
   const invited = await readFile(
-    join(templatesDir, `invited_${meetingGroup}`),
+    join(config.directories.templates, `invited_${config.meetingGroup}`),
     'utf8'
   );
 
   const observers = await readFile(
-    join(templatesDir, `observers_${meetingGroup}`),
+    join(config.directories.templates, `observers_${config.meetingGroup}`),
     'utf8'
   );
 
   const baseMeetingInfo = await readFile(
-    join(templatesDir, `meeting_base_${meetingGroup}`),
+    join(config.directories.templates, `meeting_base_${config.meetingGroup}`),
     'utf8'
   );
-
-  // Parse meeting properties from the base info
-  const meetingProperties = parser.parse(baseMeetingInfo);
 
   return {
     invited,
     observers,
     baseMeetingInfo,
-    properties: meetingProperties,
-    meetingGroupForTag: meetingProperties.AGENDA_TAG
-      ? meetingProperties.AGENDA_TAG.replace('-agenda', '')
-      : meetingGroup,
-    githubOrg: meetingProperties.GITHUB_ORG
-      ? meetingProperties.GITHUB_ORG.replace(/"/g, '')
-      : DEFAULT_CONFIG.githubOrg,
+    properties: templates.parseMeetingProperties(baseMeetingInfo),
   };
 };
 
 /**
- * Generates meeting issue content using make-node-meeting tool
- * @param {string} meetingGroupForTag - Meeting group tag for file naming
- * @param {string} meetingInfo - Complete meeting information string
- * @param {string} outputDir - Output directory for meeting files
- * @param {string} toolPath - Path to make-node-meeting tool
- * @returns {Promise<import('./types.d.ts').MeetingIssueResult>} Object containing issue title and content
+ * Generates the meeting title based on the meeting configuration
+ * @param {import('./types.d.ts').AppConfig} config - Application configuration
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig
+ * @param {Date} meetingDate - Date of the meeting
+ * @returns {Promise<string>} Generated meeting title
+ */
+export const generateMeetingTitle = (config, meetingConfig, meetingDate) => {
+  const props = meetingConfig.properties;
+
+  const host = props.HOST ?? DEFAULT_CONFIG.defaultHost;
+  const groupName = props.GROUP_NAME ?? config.meetingGroup;
+
+  const utcShort = meetingDate.toISOString().split('T')[0];
+
+  return `${host} ${groupName} Meeting ${utcShort}`;
+};
+
+/**
+ * Generates meeting issue content directly (replaces make-node-meeting.sh)
+ * @param {import('./types.d.ts').AppConfig} config - Application configuration
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @param {Date} meetingDate - Date of the meeting
  */
 export const generateMeetingIssue = async (
-  meetingGroupForTag,
-  meetingInfo,
-  outputDir,
-  toolPath
+  config,
+  meetingConfig,
+  meetingDate
 ) => {
-  // Write meeting info to file for make-node-meeting tool
-  const meetingConfigPath = join(outputDir, `${meetingGroupForTag}.sh`);
+  const props = meetingConfig.properties;
 
-  await writeFile(meetingConfigPath, meetingInfo);
+  const joiningInstructions = props.JOINING_INSTRUCTIONS ?? '';
+  const githubOrg = props.USER ?? DEFAULT_CONFIG.githubOrg;
 
-  // Generate issue content using external tool
-  const newIssue = await executeCommand('bash', [toolPath, meetingGroupForTag]);
+  const groupName = props.GROUP_NAME ?? config.meetingGroup;
+  const agendaTag = props.AGENDA_TAG ?? `${config.meetingGroup}-agenda`;
 
-  // Parse title and content from tool output
-  const issueLines = newIssue.split('\n');
-  const title = issueLines[1];
-  const content = issueLines.slice(4).join('\n');
+  // Format the meeting date and timezones
+  const { utc, timezones } = dates.formatTimezones(meetingDate);
 
-  return { title, content };
+  // Generate timezone conversion links
+  const timeAndDateLink = urls.generateTimeAndDateLink(meetingDate, groupName);
+  const wolframLink = urls.generateWolframAlphaLink(meetingDate);
+
+  // Fetch agenda issues from GitHub
+  const agendaContent = await github.fetchAgendaIssues(
+    config.githubToken,
+    githubOrg,
+    agendaTag
+  );
+
+  // Generate timezone table
+  const timezoneTable = timezones
+    .map(({ label, time }) => `| ${label.padEnd(13)} | ${time} |`)
+    .join('\n');
+
+  // Read and process the meeting issue template
+  const templatePath = join(config.directories.templates, 'meeting_issue.md');
+
+  const template = await readFile(templatePath, 'utf8');
+
+  const templateVariables = {
+    UTC_TIME: utc,
+    TIMEZONE_TABLE: timezoneTable,
+    TIME_AND_DATE_LINK: timeAndDateLink,
+    WOLFRAM_ALPHA_LINK: wolframLink,
+    AGENDA_LABEL: agendaTag,
+    GITHUB_ORG: githubOrg,
+    AGENDA_CONTENT: agendaContent ?? '*No agenda items found.*',
+    INVITEES: meetingConfig.invited,
+    JOINING_INSTRUCTIONS: joiningInstructions,
+    OBSERVERS: meetingConfig.observers ?? '',
+  };
+
+  return templates.parseVariables(template, templateVariables);
 };
 
 /**
  * Creates meeting minutes document content by processing template
- * @param {string} meetingGroupForTag - Meeting group tag for agenda generation
- * @param {string} githubOrg - GitHub organization name
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
- * @param {string} title - Meeting title
- * @param {string} templatesDir - Templates directory path
- * @param {string} meetingGroup - Original meeting group name
- * @param {string} agendaToolPath - Path to node-meeting-agenda tool
+ * @param {import('./types.d.ts').AppConfig} config - Application configuration
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @param {string} meetingTitle - Meeting title
+ * @param {string} minutesDocLink - Minutes document link (optional)
+ * @param {string} githubIssueLink - GitHub issue link (optional)
  * @returns {Promise<string>} Processed minutes document content
  */
-export const createMinutesDocument = async (
-  meetingGroupForTag,
-  githubOrg,
+export const generateMeetingMinutes = async (
+  config,
   meetingConfig,
-  title,
-  templatesDir,
-  meetingGroup,
-  agendaToolPath
+  meetingTitle,
+  minutesDocLink = '$MINUTES_DOC$',
+  githubIssueLink = '$GITHUB_ISSUE$'
 ) => {
-  // Get agenda information using external tool
-  const agendaInfo = await executeCommand('node', [
-    agendaToolPath,
-    `${meetingGroupForTag}-agenda`,
+  const props = meetingConfig.properties;
+
+  const githubOrg = props.USER ?? DEFAULT_CONFIG.githubOrg;
+
+  const agendaTag = props.AGENDA_TAG ?? `${config.meetingGroup}-agenda`;
+
+  // Get agenda information using native implementation
+  const agendaInfo = await github.fetchAgendaIssues(
+    config.githubToken,
     githubOrg,
-  ]);
-
-  // Read minutes template file asynchronously
-  const minutesDoc = await readFile(
-    join(templatesDir, `minutes_base_${meetingGroup}`),
-    'utf8'
+    agendaTag
   );
 
-  // Process template variables and return final document
-  return processMinutesTemplate(
-    minutesDoc,
-    title,
-    agendaInfo,
-    meetingConfig.invited,
-    meetingConfig.observers
+  // Read and process the meeting minutes template
+  const templatePath = join(
+    config.directories.templates,
+    `minutes_base_${config.meetingGroup}`
   );
+
+  const template = await readFile(templatePath, 'utf8');
+
+  const templateVariables = {
+    TITLE: meetingTitle,
+    AGENDA_CONTENT: agendaInfo,
+    INVITED: meetingConfig.invited,
+    OBSERVERS: meetingConfig.observers,
+    MINUTES_DOC: minutesDocLink,
+    GITHUB_ISSUE: githubIssueLink,
+  };
+
+  return templates.parseVariables(template, templateVariables);
 };
-
-/**
- * Creates complete meeting information string for make-node-meeting tool
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
- * @param {string} meetingTime - ISO string of meeting time
- * @returns {string} Complete meeting information for tool consumption
- */
-export const createMeetingInfoString = (meetingConfig, meetingTime) =>
-  createMeetingInfo(
-    meetingConfig.baseMeetingInfo,
-    meetingTime,
-    meetingConfig.invited,
-    meetingConfig.observers
-  );

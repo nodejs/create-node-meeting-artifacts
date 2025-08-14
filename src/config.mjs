@@ -1,11 +1,7 @@
 import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { DEFAULT_CONFIG } from './constants.mjs';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const defaultMeetingsDirectory = join(homedir(), '.make-node-meeting');
 
 /**
  * Gets the application configuration from environment variables and arguments
@@ -13,28 +9,29 @@ const __dirname = dirname(__filename);
  */
 export const getConfig = () => ({
   // Meeting group from command line argument, defaults to 'tsc'
-  meetingGroup: process.argv[2] || 'tsc',
+  meetingGroup: process.argv[2],
 
   // GitHub personal access token from environment
   githubToken: process.env.GITHUB_TOKEN,
 
-  // Google authentication configuration - supports both OAuth and Service Account
+  // Google authentication configuration - now uses API Keys for simplicity
   google: {
-    // OAuth credentials for local development
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri: process.env.GOOGLE_REDIRECT_URI || DEFAULT_CONFIG.redirectUri,
+    // Google API Key for Calendar access (preferred method)
+    apiKey: process.env.GOOGLE_API_KEY,
+  },
 
-    // Service Account credentials for GitHub Actions automation
-    serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    serviceAccountPrivateKey: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
+  // HackMD configuration for meeting notes
+  hackmd: {
+    // HackMD API token for authentication
+    apiToken: process.env.HACKMD_API_TOKEN,
+    // HackMD team name
+    teamName: process.env.HACKMD_TEAM_NAME,
   },
 
   // Directory paths for templates, output, and configuration
   directories: {
     config: process.env.MEETINGS_CONFIG_DIR || './',
-    output:
-      process.env.MEETINGS_OUTPUT_DIR || join(homedir(), '.make-node-meeting'),
-    templates: join(dirname(__dirname), 'templates'),
+    output: process.env.MEETINGS_OUTPUT_DIR || defaultMeetingsDirectory,
+    templates: join(dirname(import.meta.dirname), 'templates'),
   },
 });

@@ -1,13 +1,14 @@
 # Node.js Meeting Artifacts Creator
 
-A modern Node.js application that creates GitHub issues and Google Docs for Node.js team meetings. This tool automates the process of reading meeting configuration, fetching calendar events, creating meeting minutes documents, and posting GitHub issues.
+A modern Node.js application that creates GitHub issues and HackMD documents for Node.js team meetings. This tool automates the process of reading meeting configuration, fetching calendar events, creating meeting minutes documents, and posting GitHub issues.
 
 ## 📋 Requirements
 
 - Node.js 22+ (LTS)
 - GitHub Personal Access Token
-- Google Cloud Project with Calendar and Drive APIs enabled
-- OAuth credentials or Service Account credentials
+- Google Cloud Project with Calendar API enabled (for meeting scheduling)
+- Google API Key for Calendar access
+- HackMD API Token (for meeting minutes)
 
 ## 🔑 Authentication Setup
 
@@ -18,23 +19,25 @@ A modern Node.js application that creates GitHub issues and Google Docs for Node
    - `repo` (Full control of private repositories)
    - `user` (Read user information)
 
-### Google Authentication
+### HackMD Authentication
 
-#### Option 1: OAuth (for local development)
+1. Go to [HackMD](https://hackmd.io/) and sign in to your account
+2. Navigate to Account Settings > API Tokens
+3. Create a new API token for the meeting artifacts tool
+4. Optionally, create or join a team workspace for better organization
+
+### Google Authentication (Calendar Only)
+
+#### API Key Authentication (Recommended)
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select an existing one
-3. Enable the Google Calendar API and Google Drive API
-4. Create OAuth 2.0 credentials (Desktop Application)
-5. Add credentials to `.env` file
+3. Enable the Google Calendar API
+4. Go to **Credentials** → **Create Credentials** → **API Key**
+5. Restrict the API key to the Google Calendar API for security
+6. Add the API key to your environment variables as `GOOGLE_API_KEY`
 
-#### Option 2: Service Account (for GitHub Actions)
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Google Calendar API and Google Drive API
-4. Create a Service Account and generate JSON key file
-5. Add credentials to environment variables
+**Note:** API Keys provide simplified authentication and are sufficient for read-only calendar access. They don't require complex OAuth flows or service account setup.
 
 ## 🎯 Available Meeting Commands
 
@@ -195,8 +198,8 @@ node --env-file=.env create-node-meeting-artifacts.mjs tsc
 The application creates:
 
 1. **GitHub Issue**: Posted to the configured repository with meeting details and agenda
-2. **Google Doc**: Meeting minutes document stored in the `/nodejs-meetings` folder
-3. **Console Output**: Links to both the created issue and document
+2. **HackMD Document**: Meeting minutes document in Markdown format with collaborative editing
+3. **Console Output**: Links to both the created issue and HackMD document
 
 ## 🔧 Configuration
 
@@ -205,19 +208,15 @@ The application creates:
 #### Required
 
 - `GITHUB_TOKEN`: GitHub Personal Access Token
+- `HACKMD_API_TOKEN`: HackMD API token for creating and managing documents
 
-#### Google Authentication (choose one)
+#### HackMD Configuration (optional)
 
-**OAuth (Local Development):**
+- `HACKMD_TEAM_NAME`: HackMD team name/path for team workspaces
 
-- `GOOGLE_CLIENT_ID`: OAuth client ID
-- `GOOGLE_CLIENT_SECRET`: OAuth client secret
-- `GOOGLE_REDIRECT_URI`: OAuth redirect URI (default: `http://localhost:3000/oauth2callback`)
+#### Google Authentication
 
-**Service Account (GitHub Actions):**
-
-- `GOOGLE_SERVICE_ACCOUNT_EMAIL`: Service account email
-- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`: Service account private key (JSON format)
+- `GOOGLE_API_KEY`: Google Calendar API Key for read-only calendar access
 
 #### Optional
 

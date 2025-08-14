@@ -1,3 +1,15 @@
+# Node.js Packages
 node_modules/
-client_secret.json
-package-lock.json
+
+# Environment File
+.env
+
+# Test artifacts and temporary files
+test/fixtures/temp/
+test/snapshots/*.snap
+*.log
+coverage/
+
+# Files created during unit test runs
+*.sh
+meeting-test/

@@ -4,17 +4,16 @@
  */
 
 import type { calendar_v3 } from '@googleapis/calendar';
-import type { drive_v3 } from '@googleapis/drive';
 import type { RestEndpointMethodTypes } from '@octokit/rest';
-import type { GoogleAuth } from 'google-auth-library';
+import type { HackMDAPI } from '@hackmd/api';
+import type { SingleNote } from '@hackmd/api/dist/type.d.ts';
 
 declare global {
   // Google API type aliases
   type CalendarEvent = calendar_v3.Schema$Event;
   type CalendarClient = calendar_v3.Calendar;
-  type DriveFile = drive_v3.Schema$File;
-  type DriveClient = drive_v3.Drive;
-  type GoogleAuthClient = GoogleAuth;
+  type HackMDClient = HackMDAPI;
+  type HackMDNote = SingleNote;
 
   // GitHub API type aliases
   type GitHubIssue =

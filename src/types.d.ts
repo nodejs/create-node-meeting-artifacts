@@ -10,26 +10,30 @@ export interface AppConfig {
   meetingGroup: string;
   /** GitHub personal access token */
   githubToken: string;
-  /** Google API configuration */
+  /** Google API configuration (Calendar only) */
   google: GoogleConfig;
+  /** HackMD API configuration */
+  hackmd: HackMDConfig;
   /** Directory paths configuration */
   directories: DirectoryConfig;
 }
 
 /**
- * Google authentication configuration
+ * Google authentication configuration (Calendar only)
  */
 export interface GoogleConfig {
-  /** OAuth client ID */
-  clientId?: string;
-  /** OAuth client secret */
-  clientSecret?: string;
-  /** OAuth redirect URI */
-  redirectUri?: string;
-  /** Service account email for automation */
-  serviceAccountEmail?: string;
-  /** Service account private key for automation */
-  serviceAccountPrivateKey?: string;
+  /** Google API Key for Calendar access */
+  apiKey?: string;
+}
+
+/**
+ * HackMD API configuration
+ */
+export interface HackMDConfig {
+  /** HackMD API token */
+  apiToken: string;
+  /** HackMD team name/path */
+  teamName?: string;
 }
 
 /**
@@ -56,10 +60,6 @@ export interface MeetingConfig {
   baseMeetingInfo: string;
   /** Parsed meeting properties */
   properties: MeetingProperties;
-  /** Meeting group tag for file naming */
-  meetingGroupForTag: string;
-  /** GitHub organization name */
-  githubOrg: string;
 }
 
 /**
@@ -70,42 +70,26 @@ export interface MeetingProperties {
   CALENDAR_ID?: string;
   /** Text filter for calendar events */
   CALENDAR_FILTER?: string;
-  /** GitHub repository owner */
+  /** GitHub repository owner/user */
   USER?: string;
   /** GitHub repository name */
   REPO?: string;
+  /** Host organization name (e.g. "Node.js", "OpenJS Foundation") */
+  HOST?: string;
+  /** Display name for the meeting group */
+  GROUP_NAME?: string;
+  /** Meeting agenda tag for labeling issues */
+  AGENDA_TAG?: string;
   /** Optional GitHub issue label */
   ISSUE_LABEL?: string;
-  /** Meeting agenda tag */
-  AGENDA_TAG?: string;
-  /** GitHub organization override */
-  GITHUB_ORG?: string;
-  /** Meeting location */
+  /** Meeting joining instructions */
+  JOINING_INSTRUCTIONS?: string;
+  /** Meeting location (deprecated) */
   LOCATION?: string;
-  /** Meeting time */
+  /** Meeting time (deprecated) */
   TIME?: string;
-  /** Meeting day */
+  /** Meeting day (deprecated) */
   DAY?: string;
-  /** Meeting frequency */
+  /** Meeting frequency (deprecated) */
   FREQUENCY?: string;
-}
-
-/**
- * Google API clients container
- */
-export interface GoogleClients {
-  /** Google Calendar API client */
-  calendarClient: CalendarClient;
-  /** Google Drive API client */
-  driveClient: DriveClient;
-}
-
-/**
- * Meeting issue generation result
- */
-export interface MeetingIssueResult {
-  /** Generated issue title */
-  title: string;
-  /** Generated issue content */
-  content: string;
 }

@@ -40,10 +40,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -54,17 +54,18 @@ jobs:
       - name: Create meeting artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          HACKMD_API_TOKEN: ${{ secrets.HACKMD_API_TOKEN }}
+          HACKMD_TEAM_NAME: ${{ secrets.HACKMD_TEAM_NAME }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: node create-node-meeting-artifacts.mjs ${{ github.event.inputs.meeting_group }}
 
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: meeting-artifacts-${{ github.event.inputs.meeting_group || 'tsc' }}
           path: |
             ~/.make-node-meeting/
-            minutes_temp.txt
+            *.md
           retention-days: 7
           if-no-files-found: ignore

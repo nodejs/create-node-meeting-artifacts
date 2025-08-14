@@ -11,23 +11,20 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@googleapis/calendar": "^9.7.0",
-    "@googleapis/drive": "^8.12.0",
-    "@octokit/rest": "^21.0.2",
-    "dedent": "^1.5.3",
-    "google-auth-library": "^9.14.1",
-    "make-node-meeting": "^1.0.11",
-    "node-meeting-agenda": "^1.0.4",
-    "properties-parser": "^0.3.1"
+    "@googleapis/calendar": "^11.0.1",
+    "@hackmd/api": "^2.5.0",
+    "@octokit/rest": "^22.0.0",
+    "dedent": "^1.6.0",
+    "properties-parser": "^0.6.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
+    "@eslint/js": "^9.33.0",
     "@types/properties-parser": "^0.3.3",
-    "eslint": "^9.19.0",
+    "eslint": "^9.33.0",
     "eslint-plugin-import-x": "^4.16.1",
-    "eslint-plugin-jsdoc": "^51.3.3",
+    "eslint-plugin-jsdoc": "^54.0.0",
     "globals": "^16.3.0",
-    "prettier": "^3.4.2"
+    "prettier": "^3.6.2"
   },
   "scripts": {
     "dev": "node --env-file=.env create-node-meeting-artifacts.mjs",
@@ -36,6 +33,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "npm run lint && npm run format:check",
+    "test": "node --test test/**/*.test.mjs",
+    "test:watch": "node --test --watch test/**/*.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage test/**/*.test.mjs",
     "uvwasi-meeting": "node create-node-meeting-artifacts.mjs uvwasi",
     "uvwasi-meeting:dev": "node --env-file=.env create-node-meeting-artifacts.mjs uvwasi",
     "tsc-meeting": "node create-node-meeting-artifacts.mjs tsc",

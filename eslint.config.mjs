@@ -7,7 +7,7 @@ export default [
   pluginJs.configs.recommended,
   importX.flatConfigs.recommended,
   {
-    ignores: ['node_modules/', '.env*', 'minutes_temp.txt'],
+    ignores: ['node_modules', '.env*', 'minutes_temp.txt'],
   },
   {
     files: ['**/*.mjs'],
