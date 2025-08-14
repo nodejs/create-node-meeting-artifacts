@@ -15,7 +15,6 @@
  * Optional Environment Variables:
  * - HACKMD_TEAM_NAME: HackMD team name/path (optional)
  * - MEETINGS_CONFIG_DIR: Directory containing meeting templates (default: ./)
- * - MEETINGS_OUTPUT_DIR: Directory for meeting output files (default: ~/.make-node-meeting/)
  *
  * Usage:
  * node create-node-meeting-artifacts.mjs [meetingGroup]

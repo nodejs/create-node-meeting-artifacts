@@ -1,8 +1,4 @@
 /**
- * TypeScript definitions for the Node.js Meeting Artifacts Creator
- */
-
-/**
  * Application configuration object
  */
 export interface AppConfig {
@@ -40,10 +36,6 @@ export interface HackMDConfig {
  * Directory paths configuration
  */
 export interface DirectoryConfig {
-  /** Configuration directory path */
-  config: string;
-  /** Output directory for meeting files */
-  output: string;
   /** Templates directory path */
   templates: string;
 }
@@ -84,12 +76,4 @@ export interface MeetingProperties {
   ISSUE_LABEL?: string;
   /** Meeting joining instructions */
   JOINING_INSTRUCTIONS?: string;
-  /** Meeting location (deprecated) */
-  LOCATION?: string;
-  /** Meeting time (deprecated) */
-  TIME?: string;
-  /** Meeting day (deprecated) */
-  DAY?: string;
-  /** Meeting frequency (deprecated) */
-  FREQUENCY?: string;
 }

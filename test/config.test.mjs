@@ -71,24 +71,6 @@ describe('Config', () => {
       assert.strictEqual(config.hackmd.teamName, 'nodejs');
     });
 
-    it('should read directory config from environment', () => {
-      process.env.MEETINGS_CONFIG_DIR = '/custom/config';
-      process.env.MEETINGS_OUTPUT_DIR = '/custom/output';
-
-      const config = getConfig();
-
-      assert.strictEqual(config.directories.config, '/custom/config');
-      assert.strictEqual(config.directories.output, '/custom/output');
-    });
-
-    it('should use default directories when not provided', () => {
-      const config = getConfig();
-
-      assert.strictEqual(config.directories.config, './');
-      assert.ok(config.directories.output.includes('.make-node-meeting'));
-      assert.ok(config.directories.templates.includes('templates'));
-    });
-
     it('should handle undefined environment variables gracefully', () => {
       // Clear all relevant env vars
       delete process.env.GITHUB_TOKEN;

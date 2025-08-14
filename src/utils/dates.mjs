@@ -17,8 +17,8 @@ export const formatDateTime = (date, options = {}) => {
  * @param {Date} meetingDate - The meeting date
  * @returns {Object} Object with formatted times for different timezones
  */
-export const formatTimezones = meetingDate => {
-  const utcOptions = {
+export const formatTimezones = meetingDate => ({
+  utc: formatDateTime(meetingDate, {
     weekday: 'short',
     day: '2-digit',
     month: 'short',
@@ -27,26 +27,18 @@ export const formatTimezones = meetingDate => {
     minute: '2-digit',
     hour12: true,
     timeZone: 'UTC',
-  };
-
-  return {
-    utc: formatDateTime(meetingDate, utcOptions),
-    timezones: RELEVANT_TIMEZONES.map(({ label, tz }) => {
-      const tzOptions = {
-        weekday: 'short',
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: tz,
-      };
-
-      return {
-        label,
-        time: formatDateTime(meetingDate, tzOptions),
-      };
+  }),
+  timezones: RELEVANT_TIMEZONES.map(({ label, tz }) => ({
+    label,
+    time: formatDateTime(meetingDate, {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: tz,
     }),
-  };
-};
+  })),
+});

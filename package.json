@@ -14,8 +14,7 @@
     "@googleapis/calendar": "^11.0.1",
     "@hackmd/api": "^2.5.0",
     "@octokit/rest": "^22.0.0",
-    "dedent": "^1.6.0",
-    "properties-parser": "^0.6.0"
+    "dedent": "^1.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

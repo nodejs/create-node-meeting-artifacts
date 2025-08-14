@@ -209,19 +209,11 @@ The application creates:
 
 - `GITHUB_TOKEN`: GitHub Personal Access Token
 - `HACKMD_API_TOKEN`: HackMD API token for creating and managing documents
-
-#### HackMD Configuration (optional)
-
-- `HACKMD_TEAM_NAME`: HackMD team name/path for team workspaces
-
-#### Google Authentication
-
 - `GOOGLE_API_KEY`: Google Calendar API Key for read-only calendar access
 
 #### Optional
 
-- `MEETINGS_CONFIG_DIR`: Configuration directory (default: `./`)
-- `MEETINGS_OUTPUT_DIR`: Output directory (default: `~/.make-node-meeting/`)
+- `HACKMD_TEAM_NAME`: HackMD team name/path for team workspaces
 
 ### Meeting Base Configuration
 
