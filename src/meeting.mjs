@@ -2,7 +2,6 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { DEFAULT_CONFIG } from './constants.mjs';
-import * as github from './github.mjs';
 import * as dates from './utils/dates.mjs';
 import * as templates from './utils/templates.mjs';
 import * as urls from './utils/urls.mjs';
@@ -47,7 +46,7 @@ export const readMeetingConfig = async config => {
 export const generateMeetingTitle = (config, meetingConfig, meetingDate) => {
   const props = meetingConfig.properties;
 
-  const host = props.HOST ?? DEFAULT_CONFIG.defaultHost;
+  const host = props.HOST ?? DEFAULT_CONFIG.host;
   const groupName = props.GROUP_NAME ?? config.meetingGroup;
 
   const utcShort = meetingDate.toISOString().split('T')[0];
@@ -56,15 +55,51 @@ export const generateMeetingTitle = (config, meetingConfig, meetingDate) => {
 };
 
 /**
+ * Generates the meeting agenda from the list of agenda issues
+ * @param {Array<{ repoName: string, issues: Array<GitHubIssue> }>} agendaIssues - List of agenda issues
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @returns {Promise<string>} Formatted meeting agenda
+ */
+export const generateMeetingAgenda = (agendaIssues, meetingConfig) => {
+  const props = meetingConfig.properties;
+
+  const githubOrg = props.USER ?? DEFAULT_CONFIG.githubOrg;
+
+  // Format issues as markdown
+  let agendaMarkdown = '';
+
+  agendaIssues.forEach(({ repoName, issues }) => {
+    if (issues.length > 0) {
+      agendaMarkdown += `### ${githubOrg}/${repoName}\n\n`;
+
+      issues.forEach(issue => {
+        // Escape markdown characters in title
+        const cleanTitle = issue.title.replace(/([[\]])/g, '\\$1');
+
+        agendaMarkdown += `* ${cleanTitle} [#${issue.number}](${issue.html_url})\n`;
+      });
+
+      agendaMarkdown += '\n';
+    }
+  });
+
+  return agendaMarkdown.trim();
+};
+
+/**
  * Generates meeting issue content directly (replaces make-node-meeting.sh)
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @param {string} meetingAgenda - Meeting agenda (optional)
+ * @param {string} minutesDocLink - Minutes document link (optional)
  * @param {Date} meetingDate - Date of the meeting
  */
 export const generateMeetingIssue = async (
   config,
   meetingConfig,
-  meetingDate
+  meetingDate,
+  meetingAgenda,
+  minutesDocLink
 ) => {
   const props = meetingConfig.properties;
 
@@ -80,13 +115,6 @@ export const generateMeetingIssue = async (
   // Generate timezone conversion links
   const timeAndDateLink = urls.generateTimeAndDateLink(meetingDate, groupName);
   const wolframLink = urls.generateWolframAlphaLink(meetingDate);
-
-  // Fetch agenda issues from GitHub
-  const agendaContent = await github.fetchAgendaIssues(
-    config.githubToken,
-    githubOrg,
-    agendaTag
-  );
 
   // Generate timezone table
   const timezoneTable = timezones
@@ -105,9 +133,10 @@ export const generateMeetingIssue = async (
     WOLFRAM_ALPHA_LINK: wolframLink,
     AGENDA_LABEL: agendaTag,
     GITHUB_ORG: githubOrg,
-    AGENDA_CONTENT: agendaContent ?? '*No agenda items found.*',
+    AGENDA_CONTENT: meetingAgenda ?? '*No agenda items found.*',
     INVITEES: meetingConfig.invited,
     JOINING_INSTRUCTIONS: joiningInstructions,
+    MINUTES_DOC: minutesDocLink,
     OBSERVERS: meetingConfig.observers ?? '',
   };
 
@@ -119,6 +148,7 @@ export const generateMeetingIssue = async (
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
  * @param {string} meetingTitle - Meeting title
+ * @param {string} meetingAgenda - Meeting agenda (optional)
  * @param {string} minutesDocLink - Minutes document link (optional)
  * @param {string} githubIssueLink - GitHub issue link (optional)
  * @returns {Promise<string>} Processed minutes document content
@@ -127,22 +157,10 @@ export const generateMeetingMinutes = async (
   config,
   meetingConfig,
   meetingTitle,
-  minutesDocLink = '$MINUTES_DOC$',
-  githubIssueLink = '$GITHUB_ISSUE$'
+  meetingAgenda,
+  minutesDocLink,
+  githubIssueLink
 ) => {
-  const props = meetingConfig.properties;
-
-  const githubOrg = props.USER ?? DEFAULT_CONFIG.githubOrg;
-
-  const agendaTag = props.AGENDA_TAG ?? `${config.meetingGroup}-agenda`;
-
-  // Get agenda information using native implementation
-  const agendaInfo = await github.fetchAgendaIssues(
-    config.githubToken,
-    githubOrg,
-    agendaTag
-  );
-
   // Read and process the meeting minutes template
   const templatePath = join(
     config.directories.templates,
@@ -153,7 +171,7 @@ export const generateMeetingMinutes = async (
 
   const templateVariables = {
     TITLE: meetingTitle,
-    AGENDA_CONTENT: agendaInfo,
+    AGENDA_CONTENT: meetingAgenda,
     INVITED: meetingConfig.invited,
     OBSERVERS: meetingConfig.observers,
     MINUTES_DOC: minutesDocLink,

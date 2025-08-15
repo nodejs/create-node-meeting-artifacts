@@ -7,17 +7,8 @@ import { TIME_CONSTANTS } from './constants.mjs';
  * @param {import('./types.d.ts').GoogleConfig} gConfig - Google configuration object
  * @returns {CalendarClient} Authenticated Google Calendar client
  */
-export const createGoogleCalendarClient = gConfig => {
-  // Use API Key authentication (simpler and more straightforward)
-  if (gConfig.apiKey) {
-    return calendar({
-      version: 'v3',
-      auth: gConfig.apiKey,
-    });
-  }
-
-  throw new Error('Google API Key is required for Google Calendar access');
-};
+export const createCalendarClient = ({ apiKey: auth }) =>
+  calendar({ version: 'v3', auth });
 
 /**
  * Finds the next meeting event in Google Calendar within the next week

@@ -3,7 +3,7 @@ export const DEFAULT_CONFIG = {
   // Default GitHub organization name
   githubOrg: 'nodejs',
   // Default Host of the Meeting
-  defaultHost: 'Node.js',
+  host: 'Node.js',
 };
 
 // Time constants for date calculations
@@ -27,3 +27,10 @@ export const RELEVANT_TIMEZONES = [
   { label: 'Tokyo', tz: 'Asia/Tokyo' },
   { label: 'Sydney', tz: 'Australia/Sydney' },
 ];
+
+// Creates the default permissions for our generated docs
+export const HACKMD_DEFAULT_PERMISSIONS = {
+  readPermission: 'guest',
+  writePermission: 'signed_in',
+  commentPermission: 'signed_in_users',
+};

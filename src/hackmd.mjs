@@ -1,24 +1,16 @@
 import HackMDAPI from '@hackmd/api';
 
-/**
- * Creates the default permissions for our generated docs
- * @type {Pick<import('@hackmd/api/dist/type.d.ts').CreateNoteOptions, 'readPermission' | 'writePermission' | 'commentPermission'>} */
-const hackMdPermissions = {
-  readPermission: 'guest', // Allow signed-in users to read
-  writePermission: 'signed_in', // Allow signed-in users to write
-  commentPermission: 'signed_in_users', // Allow signed-in users to comment
-};
+import { HACKMD_DEFAULT_PERMISSIONS } from './constants.mjs';
 
 /**
  * Creates a HackMD API client
- * @param {string} apiToken - HackMD API token
- * @param {string} teamPath - HackMD team path/name (optional)
+ * @param {import('./types.d.ts').AppConfig} config - Application configuration
  * @returns {HackMDClient} Configured HackMD API client
  */
-export const createHackMDClientInstance = (apiToken, teamPath) => {
+export const createHackMDClient = ({ hackmd: { apiToken, teamName } }) => {
   // Use team-specific API endpoint if teamPath is provided
-  const baseURL = teamPath
-    ? `https://api.hackmd.io/v1/teams/${teamPath}`
+  const baseURL = teamName
+    ? `https://api.hackmd.io/v1/teams/${teamName}`
     : 'https://api.hackmd.io/v1';
 
   return new HackMDAPI(apiToken, baseURL);
@@ -31,10 +23,8 @@ export const createHackMDClientInstance = (apiToken, teamPath) => {
  * @param {string} content - Document content in Markdown
  * @returns {Promise<HackMDNote>} Created note data with ID and URLs
  */
-export const createMeetingNotesDocument = (hackmdClient, title, content) => {
-  // Create a new note with the meeting content
-  return hackmdClient.createNote({ title, content, ...hackMdPermissions });
-};
+export const createMeetingNotesDocument = (hackmdClient, title, content) =>
+  hackmdClient.createNote({ title, content, ...HACKMD_DEFAULT_PERMISSIONS });
 
 /**
  * Updates an existing meeting notes document in HackMD
