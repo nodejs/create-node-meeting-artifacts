@@ -1,7 +1,6 @@
 CALENDAR_FILTER="Standards Working Group Meeting"
 CALENDAR_ID="linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g@group.calendar.google.com"
 USER="openjs-foundation"
-GITHUB_ORG="openjs-foundation"
 HOST="OpenJS Foundation"
 REPO="standards"
 GROUP_NAME="Standards Working Group"
