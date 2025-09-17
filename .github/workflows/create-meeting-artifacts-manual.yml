@@ -48,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Read USER field from meeting_base file
+      - name: Read Meeting Variables
         id: read-vars
         run: |
           meeting_group="${{ github.event.inputs.meeting_group }}"
