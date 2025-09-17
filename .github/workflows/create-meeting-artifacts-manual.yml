@@ -1,11 +1,6 @@
-name: Create Meeting Artifacts
+name: Create Meeting Artifacts (Manual)
 
 on:
-  # Run every Monday at 10 AM UTC (adjust as needed)
-  schedule:
-    - cron: '0 10 * * 1'
-
-  # Allow manual triggering
   workflow_dispatch:
     inputs:
       meeting_group:
@@ -13,37 +8,39 @@ on:
         required: true
         type: choice
         options:
-          - uvwasi
-          - tsc
+          - benchmarking
           - build
+          - cross_project_council
           - diag
           - diag_deepdive
-          - typescript
-          - Release
-          - cross_project_council
+          - ecosystem_report
+          - loaders
           - modules
-          - tooling
-          - security-wg
           - next-10
+          - outreach
           - package-maintenance
           - package_metadata_interop
-          - ecosystem_report
-          - sustainability_collab
-          - standards
+          - Release
+          - security-wg
           - security_collab
-          - loaders
+          - standards
+          - sustainability_collab
+          - tsc
+          - tooling
+          - typescript
+          - uvwasi
+          - userfeedback
           - web-server-frameworks
 
 jobs:
   create-artifacts:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -51,25 +48,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+      - name: Read USER field from meeting_base file
+        id: read-vars
+        run: |
+          meeting_group="${{ github.event.inputs.meeting_group }}"
+          user=$(grep '^USER=' "templates/meeting_base_${meeting_group}" | cut -d'=' -f2 | xargs)
+          hackmd_team_name=$(grep '^HACKMD_TEAM_NAME=' "templates/meeting_base_${meeting_group}" | cut -d'=' -f2 | xargs)
+          echo "user=$user" >> $GITHUB_OUTPUT
+          echo "hackmd_team_name=$hackmd_team_name" >> $GITHUB_OUTPUT
+
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ secrets.BOT_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY}}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          owner: ${{ steps.read-vars.outputs.user }}
 
       - name: Create meeting artifacts
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           HACKMD_API_TOKEN: ${{ secrets.HACKMD_API_TOKEN }}
-          # TODO: This should be part of the meeting artifact as different meetings
-          # might use different HackMD teams.
-          HACKMD_TEAM_NAME: ${{ secrets.HACKMD_TEAM_NAME }}
+          HACKMD_TEAM_NAME: ${{ steps.read-vars.outputs.hackmd_team_name }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: node create-node-meeting-artifacts.mjs ${{ github.event.inputs.meeting_group }}
 
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        uses: actions/upload-artifact@v4
         with:
           name: meeting-artifacts-${{ github.event.inputs.meeting_group || 'tsc' }}
           path: |

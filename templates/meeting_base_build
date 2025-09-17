@@ -4,6 +4,7 @@ USER="nodejs"
 REPO="build"
 AGENDA_TAG=build-agenda
 GROUP_NAME="Build WorkGroup"
+HACKMD_TEAM_NAME="openjs-nodejs"
 JOINING_INSTRUCTIONS="
 
 * link for participants: <https://zoom.us/j/715960833>

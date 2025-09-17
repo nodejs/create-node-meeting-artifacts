@@ -5,6 +5,7 @@ HOST="OpenJS Foundation"
 REPO="security-collab-space"
 GROUP_NAME="Security Collab Space"
 AGENDA_TAG=security-agenda
+HACKMD_TEAM_NAME="openjs-nodejs"
 JOINING_INSTRUCTIONS="
 
 link for participants: Zoom link: <https://zoom.us/j/94497273832>
