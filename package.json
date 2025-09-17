@@ -5,7 +5,7 @@
   "type": "module",
   "main": "create-node-meeting-artifacts.mjs",
   "bin": {
-    "create-meeting": "./bin/create-meeting"
+    "create-meeting": "./create-node-meeting-artifacts.mjs"
   },
   "engines": {
     "node": ">=22.0.0"
