@@ -24,11 +24,11 @@ const calendarClient = google.createCalendarClient(config.google);
 // Step 3: Initialize GitHub client
 const githubClient = github.createGitHubClient(config);
 
-// Step 4: Initialize HackMD client
-const hackmdClient = hackmd.createHackMDClient(config);
-
-// Step 5: Read meeting configuration from templates
+// Step 4: Read meeting configuration from templates
 const meetingConfig = await meetings.readMeetingConfig(config);
+
+// Step 5: Initialize HackMD client with meeting configuration
+const hackmdClient = hackmd.createHackMDClient(config, meetingConfig);
 
 // Step 6: Find next meeting event in calendar
 const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);

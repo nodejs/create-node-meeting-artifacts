@@ -24,8 +24,6 @@ export const getConfig = () => ({
   hackmd: {
     // HackMD API token for authentication
     apiToken: process.env.HACKMD_API_TOKEN,
-    // HackMD team name
-    teamName: process.env.HACKMD_TEAM_NAME,
   },
 
   // Directory paths for templates, output, and configuration

@@ -63,12 +63,10 @@ describe('Config', () => {
 
     it('should read HackMD config from environment', () => {
       process.env.HACKMD_API_TOKEN = 'hackmd_token';
-      process.env.HACKMD_TEAM_NAME = 'nodejs';
 
       const config = getConfig();
 
       assert.strictEqual(config.hackmd.apiToken, 'hackmd_token');
-      assert.strictEqual(config.hackmd.teamName, 'nodejs');
     });
 
     it('should handle undefined environment variables gracefully', () => {

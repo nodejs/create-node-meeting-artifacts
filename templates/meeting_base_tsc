@@ -1,10 +1,10 @@
 CALENDAR_FILTER="Node.js TSC Meeting"
 CALENDAR_ID="c_16f0ae5d3a22625175d199dbdb1cac84c2d09eab7f173e94f558417cb5cdbfd8@group.calendar.google.com"
 USER="nodejs"
-HACKMD_TEAM_NAME="openjs-nodejs"
 REPO="TSC"
 HOST="Node.js"
 GROUP_NAME="Technical Steering Committee (TSC)"
+HACKMD_TEAM_NAME="openjs-nodejs"
 JOINING_INSTRUCTIONS="
 
 Zoom link: <https://zoom.us/j/611357642>

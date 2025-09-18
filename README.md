@@ -123,9 +123,14 @@ templates/minutes_base_<shortname>
 
 See [TEMPLATES_DOCUMENTATION.md](./TEMPLATES_DOCUMENTATION.md) for detailed template examples and variable explanations.
 
-### 2. Update GitHub Actions Workflow
+### 2. Update GitHub Actions Workflows
 
-Add your meeting group to `.github/workflows/create-meeting-artifacts.yml`:
+Add your meeting group to both workflow files:
+
+- `.github/workflows/create-meeting-artifacts-manual.yml`
+- `.github/workflows/create-meeting-artifacts-scheduled.yml`
+
+For manual workflow, add your group to the `options` list under `workflow_dispatch.inputs.meeting_group`:
 
 ```yaml
 workflow_dispatch:
@@ -140,6 +145,19 @@ workflow_dispatch:
         - build
         # ... existing groups ...
         - your-new-group # Add your group here
+```
+
+For scheduled workflow, add your group to the `matrix.meeting_group` list:
+
+```yaml
+strategy:
+  matrix:
+    meeting_group:
+      - uvwasi
+      - tsc
+      - build
+      # ... existing groups ...
+      - your-new-group # Add your group here
 ```
 
 ### 3. Update Package.json Scripts
@@ -211,10 +229,6 @@ The application creates:
 - `HACKMD_API_TOKEN`: HackMD API token for creating and managing documents
 - `GOOGLE_API_KEY`: Google Calendar API Key for read-only calendar access
 
-#### Optional
-
-- `HACKMD_TEAM_NAME`: HackMD team name/path for team workspaces
-
 ### Meeting Base Configuration
 
 Each `meeting_base_<group>` file contains:
@@ -227,5 +241,6 @@ REPO="repository-name"
 GROUP_NAME="Full Group Name"
 AGENDA_TAG="agenda-label"
 ISSUE_LABEL="optional-issue-label"
+HACKMD_TEAM_NAME="openjs-nodejs"
 JOINING_INSTRUCTIONS="Meeting join instructions"
 ```

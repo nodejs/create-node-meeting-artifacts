@@ -59,14 +59,14 @@ export const getAgendaIssues = async (
 
   // Get all public repositories in the organization
   const repos = await paginate(rest.repos.listForOrg, {
-    org: properties.USER,
+    org: githubOrg,
     type: 'public',
     per_page: 100,
   });
 
-  // Fetch issues from all repositories concurrently
+  // Fetch issues and PRs from all repositories concurrently
   const issuePromises = repos.map(async repo => {
-    const issues = await paginate(rest.issues.listForRepo, {
+    const items = await paginate(rest.issues.listForRepo, {
       owner: githubOrg,
       repo: repo.name,
       labels: agendaTag,
@@ -74,9 +74,8 @@ export const getAgendaIssues = async (
       per_page: 100,
     });
 
-    const filteredIssues = issues.filter(({ pull_request }) => !pull_request); // Exclude PRs
-
-    return { repoName: repo.name, issues: filteredIssues };
+    // Include both issues and PRs for agenda items
+    return { repoName: repo.name, issues: items };
   });
 
   return Promise.all(issuePromises);

@@ -28,8 +28,6 @@ export interface GoogleConfig {
 export interface HackMDConfig {
   /** HackMD API token */
   apiToken: string;
-  /** HackMD team name/path */
-  teamName?: string;
 }
 
 /**
@@ -74,6 +72,8 @@ export interface MeetingProperties {
   AGENDA_TAG?: string;
   /** Optional GitHub issue label */
   ISSUE_LABEL?: string;
+  /** HackMD team name for creating documents */
+  HACKMD_TEAM_NAME?: string;
   /** Meeting joining instructions */
   JOINING_INSTRUCTIONS?: string;
 }
