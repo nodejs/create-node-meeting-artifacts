@@ -34,3 +34,6 @@ export const HACKMD_DEFAULT_PERMISSIONS = {
   writePermission: 'signed_in',
   commentPermission: 'signed_in_users',
 };
+
+export const REPOSITORY_URL_PREFIX_LENGTH = 'https://api.github.com/repos/'
+  .length;

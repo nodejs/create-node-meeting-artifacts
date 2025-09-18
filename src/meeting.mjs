@@ -56,21 +56,16 @@ export const generateMeetingTitle = (config, meetingConfig, meetingDate) => {
 
 /**
  * Generates the meeting agenda from the list of agenda issues
- * @param {Array<{ repoName: string, issues: Array<GitHubIssue> }>} agendaIssues - List of agenda issues
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @param {Array<{ [key: string]: Array<GitHubIssue> }>} agendaIssues - List of agenda issues
  * @returns {Promise<string>} Formatted meeting agenda
  */
-export const generateMeetingAgenda = (agendaIssues, meetingConfig) => {
-  const props = meetingConfig.properties;
-
-  const githubOrg = props.USER ?? DEFAULT_CONFIG.githubOrg;
-
+export const generateMeetingAgenda = agendaIssues => {
   // Format issues as markdown
   let agendaMarkdown = '';
 
-  agendaIssues.forEach(({ repoName, issues }) => {
+  Object.entries(agendaIssues).forEach(([repoName, issues]) => {
     if (issues.length > 0) {
-      agendaMarkdown += `### ${githubOrg}/${repoName}\n\n`;
+      agendaMarkdown += `### ${repoName}\n\n`;
 
       issues.forEach(issue => {
         // Escape markdown characters in title
