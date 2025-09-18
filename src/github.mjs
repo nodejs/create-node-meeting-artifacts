@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 
-import { DEFAULT_CONFIG } from './constants.mjs';
+import { DEFAULT_CONFIG, REPOSITORY_URL_PREFIX_LENGTH } from './constants.mjs';
 
 /**
  * Creates a GitHub API client
@@ -47,36 +47,26 @@ export const createGitHubIssue = async (
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
- * @returns {Promise<{ repoName: string, issues: Array<GitHubIssue> }> } Formatted markdown string of issues
+ * @returns {Promise<{ [key: string]: Array<GitHubIssue> }>} Formatted markdown string of issues
  */
 export const getAgendaIssues = async (
-  { paginate, rest },
+  githubClient,
   { meetingGroup },
   { properties }
 ) => {
   const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
   const agendaTag = properties.AGENDA_TAG ?? `${meetingGroup}-agenda`;
 
-  // Get all public repositories in the organization
-  const repos = await paginate(rest.repos.listForOrg, {
-    org: githubOrg,
-    type: 'public',
-    per_page: 100,
+  // Get all issues/PRs in the organization
+  const issues = await githubClient.paginate('GET /search/issues', {
+    q: `label:${agendaTag} org:${githubOrg}`,
+    advanced_search: true,
   });
 
-  // Fetch issues and PRs from all repositories concurrently
-  const issuePromises = repos.map(async repo => {
-    const items = await paginate(rest.issues.listForRepo, {
-      owner: githubOrg,
-      repo: repo.name,
-      labels: agendaTag,
-      state: 'open',
-      per_page: 100,
-    });
-
-    // Include both issues and PRs for agenda items
-    return { repoName: repo.name, issues: items };
-  });
-
-  return Promise.all(issuePromises);
+  return issues.reduce((obj, issue) => {
+    (obj[issue.repository_url.slice(REPOSITORY_URL_PREFIX_LENGTH)] ||= []).push(
+      issue
+    );
+    return obj;
+  }, {});
 };
