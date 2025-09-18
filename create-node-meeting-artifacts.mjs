@@ -51,10 +51,7 @@ const gitHubAgendaIssues = await github.getAgendaIssues(
 );
 
 // Step 10: Parse meeting agenda from GitHub issues
-const meetingAgenda = meetings.generateMeetingAgenda(
-  gitHubAgendaIssues,
-  meetingConfig
-);
+const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
 
 // Step 11: Create HackMD document with meeting notes
 const hackmdNote = await hackmd.createMeetingNotesDocument(
