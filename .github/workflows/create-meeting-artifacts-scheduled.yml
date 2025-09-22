@@ -8,6 +8,7 @@ jobs:
   create-artifacts:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         meeting_group:
           - benchmarking
