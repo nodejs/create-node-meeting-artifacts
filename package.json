@@ -73,6 +73,8 @@
     "security-collab-meeting:dev": "node --env-file=.env create-node-meeting-artifacts.mjs security_collab",
     "loaders-meeting": "create-meeting loaders",
     "loaders-meeting:dev": "node --env-file=.env create-node-meeting-artifacts.mjs loaders",
+    "web": "create-meeting web",
+    "web:dev": "node --env-file=.env create-node-meeting-artifacts.mjs web",
     "web-server-frameworks-meeting": "create-meeting web-server-frameworks",
     "web-server-frameworks-meeting:dev": "node --env-file=.env create-node-meeting-artifacts.mjs web-server-frameworks"
   },
