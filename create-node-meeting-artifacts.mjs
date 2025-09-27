@@ -18,17 +18,17 @@ import * as meetings from './src/meeting.mjs';
 // Step 1: Application configuration
 const config = getConfig();
 
-// Step 2: Initialize Google Calendar client with API Key
+// Step 2: Initialize HackMD client with meeting configuration
+const hackmdClient = hackmd.createHackMDClient(config);
+
+// Step 3: Initialize Google Calendar client with API Key
 const calendarClient = google.createCalendarClient(config.google);
 
-// Step 3: Initialize GitHub client
+// Step 4: Initialize GitHub client
 const githubClient = github.createGitHubClient(config);
 
-// Step 4: Read meeting configuration from templates
+// Step 5: Read meeting configuration from templates
 const meetingConfig = await meetings.readMeetingConfig(config);
-
-// Step 5: Initialize HackMD client with meeting configuration
-const hackmdClient = hackmd.createHackMDClient(config, meetingConfig);
 
 // Step 6: Find next meeting event in calendar
 const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);
@@ -56,11 +56,12 @@ const meetingAgenda = meetings.generateMeetingAgenda(
   meetingConfig
 );
 
-// Step 11: Create HackMD document with meeting notes
+// Step 11: Create HackMD document with meeting notes and tags
 const hackmdNote = await hackmd.createMeetingNotesDocument(
   hackmdClient,
   meetingTitle,
-  ''
+  '',
+  meetingConfig
 );
 
 // Step 12: Get the HackMD document link
@@ -76,7 +77,7 @@ const issueContent = await meetings.generateMeetingIssue(
   minutesDocLink
 );
 
-// Step 14: Create GitHub issue with HackMD link
+// // Step 14: Create GitHub issue with HackMD link
 const githubIssue = await github.createGitHubIssue(
   githubClient,
   meetingConfig,
@@ -98,7 +99,8 @@ const minutesContent = await meetings.generateMeetingMinutes(
 await hackmd.updateMeetingNotesDocument(
   hackmdClient,
   hackmdNote.id,
-  minutesContent
+  minutesContent,
+  meetingConfig
 );
 
 // Output success information with links

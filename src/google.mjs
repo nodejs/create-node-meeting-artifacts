@@ -1,7 +1,5 @@
 import { calendar } from '@googleapis/calendar';
 
-import { TIME_CONSTANTS } from './constants.mjs';
-
 /**
  * Creates an authenticated Google Calendar client using API Key
  * @param {import('./types.d.ts').GoogleConfig} gConfig - Google configuration object
@@ -11,7 +9,7 @@ export const createCalendarClient = ({ apiKey: auth }) =>
   calendar({ version: 'v3', auth });
 
 /**
- * Finds the next meeting event in Google Calendar within the next week
+ * Finds the next meeting event in Google Calendar for the current week
  * @param {import('@googleapis/calendar').calendar_v3.Calendar} calendarClient - Google Calendar client
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
  * @returns {Promise<CalendarEvent>} Calendar event object
@@ -19,13 +17,25 @@ export const createCalendarClient = ({ apiKey: auth }) =>
 export const findNextMeetingEvent = async (calendarClient, meetingConfig) => {
   const now = new Date();
 
-  const nextWeek = new Date(now.getTime() + TIME_CONSTANTS.WEEK_IN_MS);
+  // Calculate the start of the current week (Saturday 00:00:00 UTC)
+  // This handles the scenario where we want a full week from Saturday to Friday
+  const daysSinceStartOfWeek = (now.getUTCDay() + 1) % 7; // Saturday = 0, Sunday = 1, ..., Friday = 6
+  const weekStart = new Date(now);
+
+  weekStart.setUTCDate(now.getUTCDate() - daysSinceStartOfWeek);
+  weekStart.setUTCHours(0, 0, 0, 0);
+
+  // Calculate the end of the week (Friday 23:59:59 UTC)
+  const weekEnd = new Date(weekStart);
+
+  weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
+  weekEnd.setUTCHours(23, 59, 59, 999);
 
   // Search for events in the specified calendar using the filter text
   const response = await calendarClient.events.list({
     calendarId: meetingConfig.properties.CALENDAR_ID?.replace(/"/g, ''),
-    timeMin: now.toISOString(),
-    timeMax: nextWeek.toISOString(),
+    timeMin: weekStart.toISOString(),
+    timeMax: weekEnd.toISOString(),
     singleEvents: true,
     // Replace spaces with dots for Google Calendar search compatibility
     q: meetingConfig.properties.CALENDAR_FILTER?.replace(/"/g, '').replace(
@@ -36,7 +46,11 @@ export const findNextMeetingEvent = async (calendarClient, meetingConfig) => {
 
   // Ensure we found at least one event
   if (!response.data.items || response.data.items.length === 0) {
-    throw new Error('Could not find calendar event for the next week');
+    throw new Error(
+      `No meeting found for ${meetingConfig?.properties?.GROUP_NAME || 'this group'} ` +
+        `in the current week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
+        `This is expected for bi-weekly meetings or meetings that don't occur every week.`
+    );
   }
 
   // Return the first (next) event found
