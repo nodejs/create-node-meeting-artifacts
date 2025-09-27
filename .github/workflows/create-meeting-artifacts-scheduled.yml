@@ -1,6 +1,7 @@
 name: Create Meeting Artifacts (Scheduled)
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 10 * * 1'
 
