@@ -10,7 +10,7 @@ ISSUE_LABEL=cpc-meeting
 HACKMD_TEAM_NAME="openjs-nodejs"
 JOINING_INSTRUCTIONS="
 
-link for participants: Please refer to the <a href="https://calendar.openjsf.org">OpenJS public calendar</a> for meeting link
+link for participants: Please refer to <https://calendar.openjsf.org> for meeting link
 
 * For those who just want to watch: <https://livestream.openjsf.org>
 
