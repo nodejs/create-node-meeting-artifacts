@@ -1,0 +1,27 @@
+{
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "cross-project-council",
+    "agendaTag": "cross-project-council-agenda"
+  },
+  "meeting": {
+    "displayName": "OpenJS Cross Project Council",
+    "labels": ["cpc-meeting"],
+    "calendar": {
+      "id": "linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g",
+      "filter": "Cross Project Council Meeting"
+    },
+    "links": {
+      "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/99526225088?password=2d77485b-e041-4015-ae9a-f5342009d310",
+      "observer": "https://livestream.openjsf.org"
+    },
+    "invitees": [
+      "OpenJS Foundation Cross Project Council",
+      "OpenJS Foundation Project Maintainers",
+      "OpenJS Board of Directors"
+    ]
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  }
+}

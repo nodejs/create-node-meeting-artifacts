@@ -1,11 +1,3 @@
-// Default configuration values
-export const DEFAULT_CONFIG = {
-  // Default GitHub organization name
-  githubOrg: 'nodejs',
-  // Default Host of the Meeting
-  host: 'Node.js',
-};
-
 // Time constants for date calculations
 export const TIME_CONSTANTS = {
   // Week in milliseconds for calendar search
