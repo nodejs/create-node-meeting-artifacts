@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { parse } from 'dotenv';
+
 import { DEFAULT_CONFIG } from './constants.mjs';
 import * as dates from './utils/dates.mjs';
 import * as templates from './utils/templates.mjs';
@@ -32,7 +34,7 @@ export const readMeetingConfig = async config => {
     invited,
     observers,
     baseMeetingInfo,
-    properties: templates.parseMeetingProperties(baseMeetingInfo),
+    properties: parse(baseMeetingInfo),
   };
 };
 
