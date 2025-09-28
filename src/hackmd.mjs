@@ -5,10 +5,18 @@ import { HACKMD_DEFAULT_PERMISSIONS } from './constants.mjs';
 /**
  * Creates a HackMD API client
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
  * @returns {HackMDClient} Configured HackMD API client
  */
-export const createHackMDClient = ({ hackmd: { apiToken } }) => {
-  return new HackMDAPI(apiToken);
+export const createHackMDClient = ({ hackmd: { apiToken } }, meetingConfig) => {
+  // Use team-specific API endpoint if teamName is provided in meeting config
+  const teamName = meetingConfig.properties.HACKMD_TEAM_NAME;
+
+  const baseURL = teamName
+    ? `https://api.hackmd.io/v1/teams/${teamName}`
+    : 'https://api.hackmd.io/v1';
+
+  return new HackMDAPI(apiToken, baseURL);
 };
 
 /**
@@ -16,33 +24,20 @@ export const createHackMDClient = ({ hackmd: { apiToken } }) => {
  * @param {HackMDAPI} hackmdClient - HackMD API client
  * @param {string} title - Document title
  * @param {string} content - Document content in Markdown
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration for tags
  * @returns {Promise<HackMDNote>} Created note data with ID and URLs
  */
-export const createMeetingNotesDocument = (
-  hackmdClient,
-  title,
-  content,
-  meetingConfig
-) => {
-  const meetingTag =
-    meetingConfig?.properties?.GROUP_NAME ??
-    meetingConfig?.properties?.AGENDA_TAG;
-
-  const teamName = meetingConfig?.properties?.HACKMD_TEAM_NAME;
-
+export const createMeetingNotesDocument = (hackmdClient, title, content) => {
   const noteOptions = {
     title,
     content,
-    tags: [meetingTag, 'Meetings'],
+    parentFolderId: '',
     ...HACKMD_DEFAULT_PERMISSIONS,
   };
 
-  if (teamName) {
-    return hackmdClient.createTeamNote(teamName, noteOptions);
-  }
-
-  return hackmdClient.createNote(noteOptions);
+  // apparently it can return either { note: {...} } or just {...}
+  return hackmdClient
+    .createNote(noteOptions)
+    .then(response => response?.note ?? response);
 };
 
 /**
@@ -50,20 +45,11 @@ export const createMeetingNotesDocument = (
  * @param {HackMDClient} hackmdClient - HackMD API client
  * @param {string} noteId - HackMD note ID
  * @param {string} content - Updated document content in Markdown
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration for team context
  * @returns {Promise<HackMDNote>} Updated note data
  */
-export const updateMeetingNotesDocument = (
-  hackmdClient,
-  noteId,
-  content,
-  meetingConfig
-) => {
-  const teamName = meetingConfig?.properties?.HACKMD_TEAM_NAME;
-
-  if (teamName) {
-    return hackmdClient.updateTeamNote(teamName, noteId, { content });
-  }
-
-  return hackmdClient.updateNote(noteId, { content });
+export const updateMeetingNotesDocument = (hackmdClient, noteId, content) => {
+  // apparently it can return either { note: {...} } or just {...}
+  return hackmdClient
+    .updateNote(noteId, { content })
+    .then(response => response?.note ?? response);
 };
