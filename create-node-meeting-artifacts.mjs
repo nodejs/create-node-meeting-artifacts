@@ -64,8 +64,6 @@ const hackmdNote = await hackmd.createMeetingNotesDocument(
 const minutesDocLink =
   hackmdNote.publishLink || `https://hackmd.io/${hackmdNote.id}`;
 
-console.log({ hackmdNote, minutesDocLink });
-
 // Step 13: Generate meeting issue content using native implementation
 const issueContent = await meetings.generateMeetingIssue(
   config,
