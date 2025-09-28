@@ -33,7 +33,7 @@ export const parseMeetingProperties = content => {
   // Handle multiline properties first with a generic regex
   // Matches: KEY="multiline content" where content can span multiple lines
   const multilineMatches = content.matchAll(
-    /^([A-Z_][A-Z0-9_]*)="([\s\S]*?)"$/gm
+    /^([A-Z_][A-Z0-9_]*)="?([\s\S]*?)"?$/gm
   );
 
   for (const match of multilineMatches) {
