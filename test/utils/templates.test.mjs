@@ -1,9 +1,7 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 
-import {
-  parseVariables
-} from '../../src/utils/templates.mjs';
+import { parseVariables } from '../../src/utils/templates.mjs';
 
 describe('Utils - Templates', () => {
   describe('parseVariables', () => {
