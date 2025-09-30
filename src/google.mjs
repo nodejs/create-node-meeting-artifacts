@@ -14,7 +14,10 @@ export const createCalendarClient = ({ apiKey: auth }) =>
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
  * @returns {Promise<CalendarEvent>} Calendar event object
  */
-export const findNextMeetingEvent = async (calendarClient, meetingConfig) => {
+export const findNextMeetingEvent = async (
+  calendarClient,
+  { meeting: { calendar } }
+) => {
   const now = new Date();
 
   // Calculate the start of the current week (Saturday 00:00:00 UTC)
@@ -33,21 +36,18 @@ export const findNextMeetingEvent = async (calendarClient, meetingConfig) => {
 
   // Search for events in the specified calendar using the filter text
   const response = await calendarClient.events.list({
-    calendarId: meetingConfig.properties.CALENDAR_ID?.replace(/"/g, ''),
+    calendarId: `${calendar.id}@group.calendar.google.com`,
     timeMin: weekStart.toISOString(),
     timeMax: weekEnd.toISOString(),
     singleEvents: true,
     // Replace spaces with dots for Google Calendar search compatibility
-    q: meetingConfig.properties.CALENDAR_FILTER?.replace(/"/g, '').replace(
-      / /g,
-      '.'
-    ),
+    q: calendar.filter.replace(/"/g, '').replace(/ /g, '.'),
   });
 
   // Ensure we found at least one event
   if (!response.data.items || response.data.items.length === 0) {
     throw new Error(
-      `No meeting found for ${meetingConfig?.properties?.GROUP_NAME || 'this group'} ` +
+      `No meeting found for ${calendar.filter} ` +
         `in the current week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
         `This is expected for bi-weekly meetings or meetings that don't occur every week.`
     );

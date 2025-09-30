@@ -8,12 +8,12 @@ import { HACKMD_DEFAULT_PERMISSIONS } from './constants.mjs';
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
  * @returns {HackMDClient} Configured HackMD API client
  */
-export const createHackMDClient = ({ hackmd: { apiToken } }, meetingConfig) => {
-  // Use team-specific API endpoint if teamName is provided in meeting config
-  const teamName = meetingConfig.properties.HACKMD_TEAM_NAME;
-
-  const baseURL = teamName
-    ? `https://api.hackmd.io/v1/teams/${teamName}`
+export const createHackMDClient = (
+  { hackmd: { apiToken } },
+  { hackmd: { team } }
+) => {
+  const baseURL = team
+    ? `https://api.hackmd.io/v1/teams/${team}`
     : 'https://api.hackmd.io/v1';
 
   return new HackMDAPI(apiToken, baseURL);

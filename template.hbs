@@ -1,0 +1,62 @@
+## Time
+
+**UTC {{utc}}**:
+
+| Timezone | Date/Time |
+| -------- | --------- |
+{{#timezones}}
+| {{{label}}} | {{{time}}} |
+{{/timezones}}
+
+Or in your local time:
+
+{{#timeLinks}}
+* {{{.}}}
+{{/timeLinks}}
+
+## Links
+
+{{#externalURLs}}
+* {{{.}}}
+{{/externalURLs}}
+
+## Agenda
+
+Extracted from **{{{config.github.agendaTag}}}** labelled issues and pull requests from @{{{config.github.owner}}} prior to the meeting.
+{{#agenda}}
+
+### {{{repo}}}
+
+{{#issues}}
+* {{{title}}} [#{{{number}}}]({{{html_url}}})
+{{/issues}}
+{{/agenda}}
+{{^agenda}}
+*No agenda items found.*
+{{/agenda}}
+
+## Invited
+
+{{#config.meeting.invitees}}
+* {{{.}}}
+{{/config.meeting.invitees}}
+
+### Observers/Guests
+
+{{#config.meeting.observers}}
+* {{{.}}}
+{{/config.meeting.observers}}
+
+## Joining the meeting
+
+* To join this meeting, visit <{{{config.meeting.links.participant}}}>.
+* To observe this meeting, visit <{{{config.meeting.links.observer}}}>.
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure

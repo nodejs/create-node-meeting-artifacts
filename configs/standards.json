@@ -1,0 +1,25 @@
+{
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "standards"
+  },
+  "meeting": {
+    "displayName": "OpenJS Standards Working Group",
+    "calendar": {
+      "id": "linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g",
+      "filter": "Standards Working Group Meeting"
+    },
+    "links": {
+      "participant": "https://zoom.us/j/599005386",
+      "observer": "https://livestream.openjsf.org"
+    },
+    "invitees": [
+      "OpenJS Foundation Cross Project Council",
+      "OpenJS Foundation Project Maintainers",
+      "OpenJS Foundation Board of Directors"
+    ]
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  }
+}

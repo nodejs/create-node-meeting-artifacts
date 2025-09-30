@@ -1,0 +1,22 @@
+{
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "ecosystem-report-collab-space",
+    "agendaTag": "ecosystem-report-agenda"
+  },
+  "meeting": {
+    "displayName": "OpenJS Ecosystem Report Collab Space",
+    "calendar": {
+      "id": "linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g",
+      "filter": "Ecosystem Report Collab Space"
+    },
+    "links": {
+      "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/93477817392?password=d91f112c-4840-48a6-8c30-1ce94cc0e418",
+      "observer": "https://livestream.openjsf.org"
+    },
+    "invitees": ["@openjs-foundation/ecosystem-report"]
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  }
+}

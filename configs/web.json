@@ -1,0 +1,23 @@
+{
+  "github": {
+    "owner": "nodejs",
+    "repo": "web-team",
+    "agendaTag": "web-agenda"
+  },
+  "meeting": {
+    "displayName": "Node.js Web Team",
+    "labels": ["meeting"],
+    "calendar": {
+      "id": "linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g",
+      "filter": "Web Team Monthly Meeting"
+    },
+    "links": {
+      "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/91972207331?password=419d8029-a3c7-4536-9666-d9e97c0f0f93",
+      "observer": "https://livestream.openjsf.org"
+    },
+    "invitees": ["@nodejs/web"]
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  }
+}
