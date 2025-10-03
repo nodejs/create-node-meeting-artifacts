@@ -13,7 +13,7 @@ Or in your local time:
 
 ## Links
 
-* Minutes Google Doc: <$MINUTES_DOC$>
+* Minutes: <$MINUTES_DOC$>
 
 ## Agenda
 
