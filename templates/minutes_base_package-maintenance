@@ -4,7 +4,7 @@
 
 * **Recording**:  
 * **GitHub Issue**: $GITHUB_ISSUE$
-* **Minutes Google Doc**: $MINUTES_DOC$
+* **Minutes**: $MINUTES_DOC$
 
 ## Present
 
@@ -29,4 +29,4 @@ Ask participants about the state of [Project Board](https://github.com/nodejs/pa
 
 * **Node.js Project Calendar**: <https://nodejs.org/calendar>
 
-Click `+GoogleCalendar` at the bottom right to add to your own Google calendar.
+Click `Add to Google Calendar` at the bottom left to add to your own Google calendar.
