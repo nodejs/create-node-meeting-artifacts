@@ -1,0 +1,94 @@
+## Time
+
+**UTC {{utc}}**:
+
+| Timezone | Date/Time |
+| -------- | --------- |
+{{#timezones}}
+| {{{label}}} | {{{time}}} |
+{{/timezones}}
+
+Or in your local time:
+
+{{#timeLinks}}
+* {{{.}}}
+{{/timeLinks}}
+
+## Links
+
+{{#externalURLs}}
+* {{{title}}}: {{{url}}}
+{{/externalURLs}}
+
+## {{#isMinutes}}Present{{/isMinutes}}{{^isMinutes}}Invited{{/isMinutes}}
+
+{{#config.meeting.invitees}}
+* {{{.}}}
+{{/config.meeting.invitees}}
+
+### Observers/Guests
+
+{{#config.meeting.observers}}
+* {{{.}}}
+{{/config.meeting.observers}}
+
+## Agenda
+
+{{#isMinutes}}
+### Announcements
+
+*No announcements.*
+{{/isMinutes}}
+{{#config.agenda}}
+### {{{title}}}
+{{#description}}
+
+{{{.}}}
+{{/description}}
+
+{{#items}}
+* {{{.}}}
+{{/items}}
+
+{{/config.agenda}}
+### Issues and Pull Requests
+
+Extracted from **{{{config.github.agendaTag}}}** labelled issues and pull requests from @{{{config.github.owner}}} prior to the meeting.
+
+{{#agenda}}
+#### {{{repo}}}
+
+{{#issues}}
+* {{{title}}} [#{{{number}}}]({{{html_url}}})
+{{/issues}}
+
+{{/agenda}}
+{{^agenda}}
+*No agenda items found.*
+
+{{/agenda}}
+{{#isMinutes}}
+### Other
+
+*No other items.*
+
+## Upcoming Meetings
+
+* **Calendar**: https://calendar.google.com/calendar/embed?src={{{config.meeting.calendarId}}}
+
+Click `Add to Google Calendar` at the bottom left to add to your own Google calendar.
+{{/isMinutes}}
+{{^isMinutes}}
+## Joining the meeting
+
+* To join this meeting, visit <{{{config.meeting.links.participant}}}>.
+* To observe this meeting, visit <{{{config.meeting.links.observer}}}>.
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure
+{{/isMinutes}}

@@ -1,0 +1,38 @@
+name: Create Meeting Artifacts (Scheduled)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: 'Dry run?'
+        default: false
+        required: true
+  schedule:
+    - cron: '0 10 * * 1'
+
+jobs:
+  create-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      groups: ${{ steps.set-matrix.outputs.configs }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Get config basenames
+        id: set-matrix
+        run: |
+          CONFIGS=$(find configs/ -maxdepth 1 -type f -name '*.json' -exec basename {} .json \; | jq -R -s -c 'split("\n")[:-1]')
+          echo "configs=$CONFIGS" >> $GITHUB_OUTPUT
+
+  create-artifacts:
+    needs: create-matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        groups: ${{ fromJson(needs.create-matrix.outputs.groups) }}
+    uses: ./.github/workflows/create-meeting-artifacts.yml
+    with:
+      meeting_group: ${{ matrix.groups }}
+      dry_run: ${{ github.event.inputs.dry_run }}

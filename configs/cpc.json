@@ -1,0 +1,59 @@
+{
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "cross-project-council",
+    "agendaTag": "cross-project-council-agenda"
+  },
+  "meeting": {
+    "displayName": "OpenJS Cross Project Council",
+    "labels": ["cpc-meeting"],
+    "calendar": {
+      "id": "linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g",
+      "filter": "Cross Project Council Meeting"
+    },
+    "links": {
+      "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/99526225088?password=2d77485b-e041-4015-ae9a-f5342009d310",
+      "observer": "https://livestream.openjsf.org"
+    },
+    "invitees": [
+      "OpenJS Foundation Cross Project Council",
+      "OpenJS Foundation Project Maintainers",
+      "OpenJS Board of Directors"
+    ]
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "agenda": [
+    {
+      "title": "Board Meeting Updates",
+      "items": [
+        "https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-board"
+      ]
+    },
+    {
+      "title": "Staff Updates",
+      "items": [
+        "https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-legal-info",
+        "https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-staff-update",
+        "https://github.com/openjs-foundation/cross-project-council/labels/waiting-on-website-update"
+      ]
+    },
+    {
+      "title": "Next Week's Working Session",
+      "description": "Are there any initiatives or agenda items that we should use a working session to further progress on?",
+      "items": [
+        "https://github.com/openjs-foundation/cross-project-council/labels/cpc-working-session"
+      ]
+    },
+    {
+      "title": "Regular Reviews",
+      "description": "Please review regularly our list of dates and reminders, our quarterly review issues, and check the list of issues that can be closed:",
+      "items": [
+        "https://github.com/openjs-foundation/cross-project-council/blob/main/Dates-and-Reminders.md",
+        "https://github.com/openjs-foundation/cross-project-council/labels/cpc-quartely-review",
+        "https://github.com/openjs-foundation/cross-project-council/labels/cpc-can-issue-be-closed"
+      ]
+    }
+  ]
+}
