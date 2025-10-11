@@ -9,14 +9,28 @@
  * npm run dev -- tsc
  */
 
-import { getConfig } from './src/config.mjs';
+import { Command } from 'commander';
+
+import environmentConfig from './src/config.mjs';
 import * as github from './src/github.mjs';
 import * as google from './src/google.mjs';
 import * as hackmd from './src/hackmd.mjs';
 import * as meetings from './src/meeting.mjs';
 
+const program = new Command();
+program
+  .argument('<group>', 'Meeting group')
+  .option('--dry-run', 'Show output without creating/updating anything', false)
+  .option('--verbose', 'Show debug output')
+  .parse(process.argv);
+
 // Step 1: Application configuration
-const config = getConfig();
+/** @type {import('./src/types').AppConfig} */
+const config = {
+  ...environmentConfig,
+  ...program.opts(),
+  meetingGroup: program.args[0],
+};
 
 // Step 2: Initialize Google Calendar client with API Key
 const calendarClient = google.createCalendarClient(config.google);
@@ -28,7 +42,8 @@ const githubClient = github.createGitHubClient(config);
 const meetingConfig = await meetings.readMeetingConfig(config);
 
 // Step 5: Initialize HackMD client with meeting configuration
-const hackmdClient = hackmd.createHackMDClient(config, meetingConfig);
+const hackmdClient =
+  config.dryRun || hackmd.createHackMDClient(config, meetingConfig);
 
 // Step 6: Find next meeting event in calendar
 const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);
@@ -54,11 +69,9 @@ const gitHubAgendaIssues = await github.getAgendaIssues(
 const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
 
 // Step 11: Create HackMD document with meeting notes and tags
-const hackmdNote = await hackmd.createMeetingNotesDocument(
-  hackmdClient,
-  meetingTitle,
-  ''
-);
+const hackmdNote = config.dryRun
+  ? {}
+  : await hackmd.createMeetingNotesDocument(hackmdClient, meetingTitle, '');
 
 // Step 12: Get the HackMD document link
 const minutesDocLink =
@@ -74,12 +87,14 @@ const issueContent = await meetings.generateMeetingIssue(
 );
 
 // Step 14: Create GitHub issue with HackMD link
-const githubIssue = await github.createGitHubIssue(
-  githubClient,
-  meetingConfig,
-  meetingTitle,
-  issueContent
-);
+const githubIssue = config.dryRun
+  ? {}
+  : await github.createGitHubIssue(
+      githubClient,
+      meetingConfig,
+      meetingTitle,
+      issueContent
+    );
 
 // Step 15: Update the minutes content with the HackMD link
 const minutesContent = await meetings.generateMeetingMinutes(
@@ -91,13 +106,19 @@ const minutesContent = await meetings.generateMeetingMinutes(
   githubIssue.html_url
 );
 
-// Step 16: Update the HackMD document with the self-referencing link
-await hackmd.updateMeetingNotesDocument(
-  hackmdClient,
-  hackmdNote.id,
-  minutesContent
-);
+if (config.dryRun) {
+  console.log('Would create GitHub issue with the following content:');
+  console.log(issueContent);
+  console.log('Would create HackMD note with the following content:');
+  console.log(minutesContent);
+} else {
+  // Step 16: Update the HackMD document with the self-referencing link
+  await hackmd.updateMeetingNotesDocument(
+    hackmdClient,
+    hackmdNote.id,
+    minutesContent
+  );
 
-// Output success information with links
-console.log(`Created GitHub issue: ${githubIssue.html_url}`);
-console.log(`Created HackMD document: ${minutesDocLink}`);
+  console.log(`Created GitHub issue: ${githubIssue.html_url}`);
+  console.log(`Created HackMD document: ${minutesDocLink}`);
+}
