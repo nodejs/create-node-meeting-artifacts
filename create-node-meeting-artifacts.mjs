@@ -136,6 +136,6 @@ await hackmd.updateMeetingNotesDocument(
   minutesContent
 );
 
-// Step 16: Update the HackMD document with the self-referencing link
+// Output success information with links
 console.log(`Created GitHub issue: ${githubIssue.html_url}`);
 console.log(`Created HackMD document: ${minutesDocLink}`);
