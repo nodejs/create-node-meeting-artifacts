@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 const defaultMeetingsDirectory = join(homedir(), '.make-node-meeting');
 
 /**
- * @type {import('./types.d.ts').EnvironmentConfig} Environment configuration object
+ * @type {import('./types.d.ts').AppConfig} Environment configuration object
  */
 export default {
   // GitHub personal access token from environment
