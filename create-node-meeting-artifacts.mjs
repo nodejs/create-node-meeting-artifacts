@@ -45,8 +45,6 @@ const meetingConfig = await meetings.readMeetingConfig(config);
 const hackmdClient = hackmd.createHackMDClient(config, meetingConfig);
 
 if (config.dryRun) {
-  const meetingDate = new Date();
-
   const gitHubAgendaIssues = await github.getAgendaIssues(
     githubClient,
     config,
@@ -58,7 +56,7 @@ if (config.dryRun) {
   const issueContent = await meetings.generateMeetingIssue(
     config,
     meetingConfig,
-    meetingDate,
+    new Date(),
     meetingAgenda,
     ''
   );
