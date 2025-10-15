@@ -1,5 +1,5 @@
 CALENDAR_FILTER="Sustainability Collaboration Space"
-CALENDAR_ID="linuxfoundation.org_fuop4ufv766f9avc517ujs4i0g@group.calendar.google.com"
+ICAL_URL="https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
 USER="openjs-foundation"
 HOST="OpenJS Foundation"
 REPO="sustainability-collab-space"
