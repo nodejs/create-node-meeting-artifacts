@@ -11,12 +11,12 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@googleapis/calendar": "^11.0.1",
     "@hackmd/api": "^2.5.0",
     "@octokit/rest": "^22.0.0",
     "commander": "^14.0.1",
     "dedent": "^1.6.0",
-    "dotenv": "^17.2.2"
+    "dotenv": "^17.2.2",
+    "ical": "^0.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

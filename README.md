@@ -6,8 +6,6 @@ A modern Node.js application that creates GitHub issues and HackMD documents for
 
 - Node.js 22+ (LTS)
 - GitHub Personal Access Token
-- Google Cloud Project with Calendar API enabled (for meeting scheduling)
-- Google API Key for Calendar access
 - HackMD API Token (for meeting minutes)
 
 ## 🔑 Authentication Setup
@@ -25,19 +23,6 @@ A modern Node.js application that creates GitHub issues and HackMD documents for
 2. Navigate to Account Settings > API Tokens
 3. Create a new API token for the meeting artifacts tool
 4. Optionally, create or join a team workspace for better organization
-
-### Google Authentication (Calendar Only)
-
-#### API Key Authentication (Recommended)
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Google Calendar API
-4. Go to **Credentials** → **Create Credentials** → **API Key**
-5. Restrict the API key to the Google Calendar API for security
-6. Add the API key to your environment variables as `GOOGLE_API_KEY`
-
-**Note:** API Keys provide simplified authentication and are sufficient for read-only calendar access. They don't require complex OAuth flows or service account setup.
 
 ## 🎯 Available Meeting Commands
 
@@ -72,7 +57,7 @@ create-node-meeting-artifacts/
 │   ├── config.mjs             # Configuration management
 │   ├── constants.mjs          # Application constants
 │   ├── github.mjs             # GitHub API integration
-│   ├── google.mjs             # Google APIs integration
+│   ├── calendar.mjs           # Calendar integration
 │   ├── meeting.mjs            # Meeting operations
 │   └── utils.mjs              # Utility functions
 ├── templates/                 # Meeting templates
@@ -227,7 +212,6 @@ The application creates:
 
 - `GITHUB_TOKEN`: GitHub Personal Access Token
 - `HACKMD_API_TOKEN`: HackMD API token for creating and managing documents
-- `GOOGLE_API_KEY`: Google Calendar API Key for read-only calendar access
 
 ### Meeting Base Configuration
 
@@ -235,7 +219,6 @@ Each `meeting_base_<group>` file contains:
 
 ```bash
 CALENDAR_FILTER="Meeting Name in Calendar"
-CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
 USER="nodejs"
 REPO="repository-name"
 GROUP_NAME="Full Group Name"
