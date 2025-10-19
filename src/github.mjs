@@ -7,8 +7,8 @@ import { DEFAULT_CONFIG } from './constants.mjs';
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
  * @returns {import('@octokit/rest').Octokit} Configured GitHub API client
  */
-export const createGitHubClient = ({ githubToken: auth }) =>
-  new Octokit({ auth });
+export const createGitHubClient = ({ githubToken: auth, verbose }) =>
+  new Octokit({ auth, log: verbose ? console : undefined });
 
 /**
  * Creates GitHub issue with meeting information and Google Doc link

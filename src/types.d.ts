@@ -1,9 +1,7 @@
 /**
  * Application configuration object
  */
-export interface AppConfig {
-  /** Meeting group from command line argument */
-  meetingGroup: string;
+export interface EnvironmentConfig {
   /** GitHub personal access token */
   githubToken: string;
   /** Google API configuration (Calendar only) */
@@ -13,6 +11,17 @@ export interface AppConfig {
   /** Directory paths configuration */
   directories: DirectoryConfig;
 }
+
+/**
+ * CLI configuration object
+ */
+export interface CLIConfig {
+  verbose: boolean;
+  dryRun: boolean;
+  meetingGroup: string;
+}
+
+export type AppConfig = EnvironmentConfig & CLIConfig;
 
 /**
  * Google authentication configuration (Calendar only)

@@ -9,14 +9,28 @@
  * npm run dev -- tsc
  */
 
-import { getConfig } from './src/config.mjs';
+import { Command } from 'commander';
+
+import environmentConfig from './src/config.mjs';
 import * as github from './src/github.mjs';
 import * as google from './src/google.mjs';
 import * as hackmd from './src/hackmd.mjs';
 import * as meetings from './src/meeting.mjs';
 
+const program = new Command();
+program
+  .argument('<group>', 'Meeting group')
+  .option('--dry-run', 'Show output without creating/updating anything', false)
+  .option('--verbose', 'Show debug output')
+  .parse(process.argv);
+
 // Step 1: Application configuration
-const config = getConfig();
+/** @type {import('./src/types').AppConfig} */
+const config = {
+  ...environmentConfig,
+  ...program.opts(),
+  meetingGroup: program.args[0],
+};
 
 // Step 2: Initialize Google Calendar client with API Key
 const calendarClient = google.createCalendarClient(config.google);
@@ -29,6 +43,28 @@ const meetingConfig = await meetings.readMeetingConfig(config);
 
 // Step 5: Initialize HackMD client with meeting configuration
 const hackmdClient = hackmd.createHackMDClient(config, meetingConfig);
+
+if (config.dryRun) {
+  const gitHubAgendaIssues = await github.getAgendaIssues(
+    githubClient,
+    config,
+    meetingConfig
+  );
+
+  const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
+
+  const issueContent = await meetings.generateMeetingIssue(
+    config,
+    meetingConfig,
+    new Date(),
+    meetingAgenda,
+    ''
+  );
+
+  console.log(issueContent);
+
+  process.exit(0);
+}
 
 // Step 6: Find next meeting event in calendar
 const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);

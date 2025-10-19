@@ -4,13 +4,9 @@ import { join, dirname } from 'node:path';
 const defaultMeetingsDirectory = join(homedir(), '.make-node-meeting');
 
 /**
- * Gets the application configuration from environment variables and arguments
- * @returns {import('./types.d.ts').AppConfig} Application configuration object
+ * @type {import('./types.d.ts').AppConfig} Environment configuration object
  */
-export const getConfig = () => ({
-  // Meeting group from command line argument, defaults to 'tsc'
-  meetingGroup: process.argv[2],
-
+export default {
   // GitHub personal access token from environment
   githubToken: process.env.GITHUB_TOKEN,
 
@@ -32,4 +28,4 @@ export const getConfig = () => ({
     output: process.env.MEETINGS_OUTPUT_DIR || defaultMeetingsDirectory,
     templates: join(dirname(import.meta.dirname), 'templates'),
   },
-});
+};
