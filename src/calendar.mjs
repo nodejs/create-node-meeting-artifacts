@@ -14,7 +14,7 @@ const getEventsFromCalendar = async url => {
 /**
  * Finds the next meeting event in any iCal feed for the current week
  * @param {import('./types').MeetingConfig} meetingConfig - Meeting configuration object
- * @returns {Promise<Date>} Calendar event object
+ * @returns {Promise<Date>} The date of the next meeting
  */
 export const findNextMeetingDate = async ({ properties }) => {
   const now = new Date();
