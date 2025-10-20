@@ -35,11 +35,12 @@ export const findNextMeetingDate = async ({ properties }) => {
 
   const allEvents = await getEventsFromCalendar(properties.ICAL_URL);
 
-  const filteredEvents = allEvents.filter(event =>
-    // The event must be recurring
-    event.rrule &&
-    // The event must match our filter
-    (event.summary || event.description)?.includes(properties.CALENDAR_FILTER)
+  const filteredEvents = allEvents.filter(
+    event =>
+      // The event must be recurring
+      event.rrule &&
+      // The event must match our filter
+      (event.summary || event.description)?.includes(properties.CALENDAR_FILTER)
   );
 
   for (const event of filteredEvents) {
