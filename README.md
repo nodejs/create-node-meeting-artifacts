@@ -39,31 +39,6 @@ A modern Node.js application that creates GitHub issues and HackMD documents for
 
 **Note:** API Keys provide simplified authentication and are sufficient for read-only calendar access. They don't require complex OAuth flows or service account setup.
 
-## 🎯 Available Meeting Commands
-
-| Meeting Group            | Production Command                         | Development Command                            |
-| ------------------------ | ------------------------------------------ | ---------------------------------------------- |
-| UVWASI                   | `npm run uvwasi-meeting`                   | `npm run uvwasi-meeting:dev`                   |
-| TSC                      | `npm run tsc-meeting`                      | `npm run tsc-meeting:dev`                      |
-| Build                    | `npm run build-meeting`                    | `npm run build-meeting:dev`                    |
-| Diagnostics              | `npm run diag-meeting`                     | `npm run diag-meeting:dev`                     |
-| Diagnostics Deep Dive    | `npm run diag-deepdive-meeting`            | `npm run diag-deepdive-meeting:dev`            |
-| TypeScript               | `npm run typescript-meeting`               | `npm run typescript-meeting:dev`               |
-| Release                  | `npm run release-meeting`                  | `npm run release-meeting:dev`                  |
-| Cross Project Council    | `npm run cross-project-council-meeting`    | `npm run cross-project-council-meeting:dev`    |
-| Modules                  | `npm run modules-meeting`                  | `npm run modules-meeting:dev`                  |
-| Tooling                  | `npm run tooling-meeting`                  | `npm run tooling-meeting:dev`                  |
-| Security WG              | `npm run security-wg-meeting`              | `npm run security-wg-meeting:dev`              |
-| Next-10                  | `npm run next-10-meeting`                  | `npm run next-10-meeting:dev`                  |
-| Package Maintenance      | `npm run package-maintenance-meeting`      | `npm run package-maintenance-meeting:dev`      |
-| Package Metadata Interop | `npm run package-metadata-interop-meeting` | `npm run package-metadata-interop-meeting:dev` |
-| Ecosystem Report         | `npm run ecosystem-report-meeting`         | `npm run ecosystem-report-meeting:dev`         |
-| Sustainability Collab    | `npm run sustainability-collab-meeting`    | `npm run sustainability-collab-meeting:dev`    |
-| Standards                | `npm run standards-meeting`                | `npm run standards-meeting:dev`                |
-| Security Collab          | `npm run security-collab-meeting`          | `npm run security-collab-meeting:dev`          |
-| Loaders                  | `npm run loaders-meeting`                  | `npm run loaders-meeting:dev`                  |
-| Web Server Frameworks    | `npm run web-server-frameworks-meeting`    | `npm run web-server-frameworks-meeting:dev`    |
-
 ## 📁 Project Structure
 
 ```
@@ -204,10 +179,10 @@ npm run check         # Run both linting and formatting checks
 ### Local Development
 
 ```bash
-# Using npm scripts (recommended)
-npm run tsc-meeting:dev
+# Using npx
+npx --env-file=.env . tsc
 
-# Direct execution
+# Direct execution (with a `.env` file)
 node --env-file=.env create-node-meeting-artifacts.mjs tsc
 ```
 
