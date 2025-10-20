@@ -1,12 +1,22 @@
 import ical from 'ical';
+
+/**
+ * Creates an ICAL instance from the input URL
+ * @param {string} url
+ */
+const getEventsFromCalendar = async url => {
+  const response = await fetch(url);
+  const text = await response.text();
+
+  return Object.values(ical.parseICS(text));
+};
+
 /**
  * Finds the next meeting event in Google Calendar for the current week
  * @param {import('./types').MeetingConfig} meetingConfig - Meeting configuration object
  * @returns {Promise<Date>} Calendar event object
  */
-export const findNextMeetingDate = async ({
-  properties: { ICAL_URL, CALENDAR_FILTER, GROUP_NAME },
-}) => {
+export const findNextMeetingDate = async ({ properties }) => {
   const now = new Date();
 
   // Calculate the start of the current week (Saturday 00:00:00 UTC)
@@ -23,21 +33,26 @@ export const findNextMeetingDate = async ({
   weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
   weekEnd.setUTCHours(23, 59, 59, 999);
 
-  const ics = await fetch(ICAL_URL).then(r => r.text());
+  const allEvents = await getEventsFromCalendar(properties.ICAL_URL);
 
-  const events = Object.values(ical.parseICS(ics)).filter(event =>
-    (event.summary || event.description)?.includes(CALENDAR_FILTER)
+  const filteredEvents = allEvents.filter(event =>
+    // The event must be recurring
+    event.rrule &&
+    // The event must match our filter
+    (event.summary || event.description)?.includes(properties.CALENDAR_FILTER)
   );
 
-  for (const event of events) {
-    const duringOurTimeframe = event.rrule?.between(weekStart, weekEnd);
+  for (const event of filteredEvents) {
+    // Get all rucurrences in our timeframe
+    const duringOurTimeframe = event.rrule.between(weekStart, weekEnd);
+
     if (duringOurTimeframe.length > 0) {
       return duringOurTimeframe[0];
     }
   }
 
   throw new Error(
-    `No meeting found for ${GROUP_NAME || 'this group'} ` +
+    `No meeting found for ${properties.GROUP_NAME || 'this group'} ` +
       `in the current week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
       `This is expected for bi-weekly meetings or meetings that don't occur every week.`
   );
