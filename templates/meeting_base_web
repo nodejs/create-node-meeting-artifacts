@@ -1,4 +1,4 @@
-CALENDAR_FILTER="Web Team Meeting"
+CALENDAR_FILTER="Web Team Monthly"
 ICAL_URL="https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
 USER="nodejs"
 REPO="web-team"
