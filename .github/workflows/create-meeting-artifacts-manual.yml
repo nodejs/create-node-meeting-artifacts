@@ -6,31 +6,18 @@ on:
       meeting_group:
         description: 'Meeting group to create artifacts for'
         required: true
-        type: choice
-        options:
-          - benchmarking
-          - build
-          - cross_project_council
-          - diag
-          - diag_deepdive
-          - ecosystem_report
-          - loaders
-          - modules
-          - next-10
-          - outreach
-          - package-maintenance
-          - package_metadata_interop
-          - Release
-          - security-wg
-          - security_collab
-          - standards
-          - sustainability_collab
-          - tsc
-          - tooling
-          - typescript
-          - uvwasi
-          - userfeedback
-          - web-server-frameworks
+        type: string
+      dry_run:
+        type: boolean
+        description: 'Dry run?'
+        default: false
+        required: true
+  workflow_call:
+    inputs:
+      meeting_group:
+        description: 'Meeting group to create artifacts for'
+        required: true
+        type: string
       dry_run:
         type: boolean
         description: 'Dry run?'
