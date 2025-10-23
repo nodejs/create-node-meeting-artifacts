@@ -11,9 +11,9 @@
 
 import { Command } from 'commander';
 
+import * as calendar from './src/calendar.mjs';
 import environmentConfig from './src/config.mjs';
 import * as github from './src/github.mjs';
-import * as google from './src/google.mjs';
 import * as hackmd from './src/hackmd.mjs';
 import * as meetings from './src/meeting.mjs';
 
@@ -21,6 +21,7 @@ const program = new Command();
 program
   .argument('<group>', 'Meeting group')
   .option('--dry-run', 'Show output without creating/updating anything', false)
+  .option('--force', 'Create a new issue even if one already exists', false)
   .option('--verbose', 'Show debug output')
   .parse(process.argv);
 
@@ -31,9 +32,6 @@ const config = {
   ...program.opts(),
   meetingGroup: program.args[0],
 };
-
-// Step 2: Initialize Google Calendar client with API Key
-const calendarClient = google.createCalendarClient(config.google);
 
 // Step 3: Initialize GitHub client
 const githubClient = github.createGitHubClient(config);
@@ -67,10 +65,11 @@ if (config.dryRun) {
 }
 
 // Step 6: Find next meeting event in calendar
-const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);
+const meetingDate = await calendar.findNextMeetingDate(meetingConfig);
 
-// Step 7: Extract meeting date from event
-const meetingDate = new Date(event.start.dateTime);
+if (!meetingDate) {
+  process.exit(0);
+}
 
 // Step 8: Get Meeting Title
 const meetingTitle = meetings.generateMeetingTitle(
@@ -79,6 +78,21 @@ const meetingTitle = meetings.generateMeetingTitle(
   meetingDate
 );
 
+// Look for existing issues
+if (!config.force) {
+  const existingIssue = await github.findIssueByTitle(
+    githubClient,
+    meetingTitle,
+    meetingConfig
+  );
+
+  if (existingIssue) {
+    console.log(`${existingIssue.html_url} already exists. Exiting.`);
+    process.exit(0);
+  }
+}
+
+process.exit(0);
 // Step 9: Get agenda information using native implementation
 const gitHubAgendaIssues = await github.getAgendaIssues(
   githubClient,

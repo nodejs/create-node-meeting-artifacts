@@ -18,7 +18,7 @@ There are several variables in the documents that need to be configured:
 The following properties are available in meeting base templates and can be used in meeting issue generation:
 
 - **`CALENDAR_FILTER`:** The name of calendar events that mark the group's meeting date/time
-- **`CALENDAR_ID`:** The Google Calendar ID for the Node.js calendar (typically `nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com`)
+- **`ICAL_URL`:** The ICAL URL for a given meetings' calendar
 - **`USER`:** The GitHub username/organization (typically `nodejs`)
 - **`REPO`:** The repository name where meeting issues are created
 - **`GROUP_NAME`:** The full name of the Committee, Working Group, Initiative, or Team
@@ -55,7 +55,7 @@ A base of metadata and some content for the issue to be created on time, with ag
 
 ```
 CALENDAR_FILTER="<calendar event name>"
-CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+ICAL_URL="<ical url>"
 USER="nodejs"
 REPO="<repo>"
 GROUP_NAME="<name>"
@@ -72,7 +72,7 @@ JOINING_INSTRUCTIONS="
 
 ```
 CALENDAR_FILTER="Node.js Community Committee"
-CALENDAR_ID="nodejs.org_nr77ama8p7d7f9ajrpnu506c98@group.calendar.google.com"
+ICAL_URL="<...>"
 USER="nodejs"
 REPO="community-committee"
 GROUP_NAME="Community Committee"
