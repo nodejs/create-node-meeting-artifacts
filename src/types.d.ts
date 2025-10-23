@@ -15,6 +15,7 @@ export interface EnvironmentConfig {
  */
 export interface CLIConfig {
   verbose: boolean;
+  force: boolean;
   dryRun: boolean;
   meetingGroup: string;
 }

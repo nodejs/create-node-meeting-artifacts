@@ -17,21 +17,12 @@ const getEventsFromCalendar = async url => {
  * @returns {Promise<Date>} The date of the next meeting
  */
 export const findNextMeetingDate = async ({ properties }) => {
-  const now = new Date();
+  const start = new Date();
+  start.setUTCHours(0, 0, 0, 0);
 
-  // Calculate the start of the current week (Saturday 00:00:00 UTC)
-  // This handles the scenario where we want a full week from Saturday to Friday
-  const daysSinceStartOfWeek = (now.getUTCDay() + 1) % 7; // Saturday = 0, Sunday = 1, ..., Friday = 6
-  const weekStart = new Date(now);
-
-  weekStart.setUTCDate(now.getUTCDate() - daysSinceStartOfWeek);
-  weekStart.setUTCHours(0, 0, 0, 0);
-
-  // Calculate the end of the week (Friday 23:59:59 UTC)
-  const weekEnd = new Date(weekStart);
-
-  weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
-  weekEnd.setUTCHours(23, 59, 59, 999);
+  // One week from today
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 7);
 
   const allEvents = await getEventsFromCalendar(properties.ICAL_URL);
 
@@ -46,16 +37,16 @@ export const findNextMeetingDate = async ({ properties }) => {
   for (const event of filteredEvents) {
     // Get all recurrences in our timeframe
     event.rrule.options.tzid = event.tzid;
-    const duringOurTimeframe = event.rrule.between(weekStart, weekEnd);
+    const duringOurTimeframe = event.rrule.between(start, end);
 
     if (duringOurTimeframe.length > 0) {
       return duringOurTimeframe[0];
     }
   }
 
-  throw new Error(
+  console.error(
     `No meeting found for ${properties.GROUP_NAME || 'this group'} ` +
-      `in the current week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
+      `in the next week (${start.toISOString().split('T')[0]} to ${end.toISOString().split('T')[0]}). ` +
       `This is expected for bi-weekly meetings or meetings that don't occur every week.`
   );
 };
