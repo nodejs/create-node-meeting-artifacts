@@ -4,7 +4,7 @@ import ical from 'ical';
  * Creates an ICAL instance from the input URL
  * @param {string} url
  */
-const getEventsFromCalendar = async url => {
+export const getEventsFromCalendar = async url => {
   const response = await fetch(url);
   const text = await response.text();
 
@@ -12,28 +12,28 @@ const getEventsFromCalendar = async url => {
 };
 
 /**
+ * @param {Date} now
+ */
+const getWeekBounds = (now = new Date()) => {
+  const startDate = now.getUTCDate() - now.getUTCDay();
+
+  const start = new Date(now.setUTCDate(startDate));
+  start.setUTCHours(0, 0, 0, 0);
+
+  const end = new Date(now.setUTCDate(startDate + 7));
+  end.setUTCHours(0, 0, 0, 0);
+
+  return [start, end];
+};
+
+/**
  * Finds the next meeting event in any iCal feed for the current week
+ * @param {ical.CalendarComponent[]} allEvents - The events
  * @param {import('./types').MeetingConfig} meetingConfig - Meeting configuration object
  * @returns {Promise<Date>} The date of the next meeting
  */
-export const findNextMeetingDate = async ({ properties }) => {
-  const now = new Date();
-
-  // Calculate the start of the current week (Saturday 00:00:00 UTC)
-  // This handles the scenario where we want a full week from Saturday to Friday
-  const daysSinceStartOfWeek = (now.getUTCDay() + 1) % 7; // Saturday = 0, Sunday = 1, ..., Friday = 6
-  const weekStart = new Date(now);
-
-  weekStart.setUTCDate(now.getUTCDate() - daysSinceStartOfWeek);
-  weekStart.setUTCHours(0, 0, 0, 0);
-
-  // Calculate the end of the week (Friday 23:59:59 UTC)
-  const weekEnd = new Date(weekStart);
-
-  weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
-  weekEnd.setUTCHours(23, 59, 59, 999);
-
-  const allEvents = await getEventsFromCalendar(properties.ICAL_URL);
+export const findNextMeetingDate = async (allEvents, { properties }) => {
+  const [weekStart, weekEnd] = getWeekBounds();
 
   const filteredEvents = allEvents.filter(
     event =>

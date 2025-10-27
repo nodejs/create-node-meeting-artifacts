@@ -64,7 +64,11 @@ if (config.dryRun) {
 }
 
 // Step 6: Find next meeting event in calendar
-const meetingDate = await calendar.findNextMeetingDate(meetingConfig);
+const events = await calendar.getEventsFromCalendar(
+  meetingConfig.properties.ICAL_URL
+);
+
+const meetingDate = await calendar.findNextMeetingDate(events, meetingConfig);
 
 // Step 8: Get Meeting Title
 const meetingTitle = meetings.generateMeetingTitle(
