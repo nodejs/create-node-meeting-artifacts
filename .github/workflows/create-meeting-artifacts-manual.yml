@@ -11,7 +11,6 @@ on:
         type: boolean
         description: 'Dry run?'
         default: false
-        required: true
   workflow_call:
     inputs:
       meeting_group:
