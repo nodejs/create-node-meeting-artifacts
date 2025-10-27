@@ -2,12 +2,6 @@ name: Create Meeting Artifacts (Scheduled)
 
 on:
   workflow_dispatch:
-    inputs:
-      dry_run:
-        type: boolean
-        description: 'Dry run?'
-        default: false
-        required: true
   schedule:
     - cron: '0 10 * * 1'
 
@@ -35,4 +29,3 @@ jobs:
     uses: ./.github/workflows/create-meeting-artifacts-manual.yml
     with:
       meeting_group: ${{ matrix.groups }}
-      dry_run: ${{ github.event.inputs.dry_run }}
