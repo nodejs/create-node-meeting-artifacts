@@ -21,7 +21,6 @@ on:
         type: boolean
         description: 'Dry run?'
         default: false
-        required: true
 
 jobs:
   create-artifacts:
