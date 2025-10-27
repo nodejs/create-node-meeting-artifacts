@@ -41,7 +41,7 @@ jobs:
       - name: Read Meeting Variables
         id: read-vars
         run: |
-          meeting_group="${{ github.event.inputs.meeting_group }}"
+          meeting_group="${{ inputs.meeting_group }}"
           user=$(grep '^USER=' "templates/meeting_base_${meeting_group}" | cut -d'=' -f2 | xargs)
           echo "user=$user" >> $GITHUB_OUTPUT
 
@@ -58,14 +58,18 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           HACKMD_API_TOKEN: ${{ secrets.HACKMD_API_TOKEN }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          ADDITIONAL_ARGS: ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
-        run: node create-node-meeting-artifacts.mjs ${{ github.event.inputs.meeting_group }} --verbose $ADDITIONAL_ARGS
+        run: |
+          args="${{ inputs.meeting_group }} --verbose"
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            args="$args --dry-run"
+          fi
+          node create-node-meeting-artifacts.mjs $args
 
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
-          name: meeting-artifacts-${{ github.event.inputs.meeting_group || 'tsc' }}
+          name: meeting-artifacts-${{ inputs.meeting_group }}
           path: |
             ~/.make-node-meeting/
             *.md
