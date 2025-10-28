@@ -27,5 +27,6 @@ jobs:
       matrix:
         groups: ${{ fromJson(needs.create-matrix.outputs.groups) }}
     uses: ./.github/workflows/create-meeting-artifacts-manual.yml
+    secrets: inherit
     with:
       meeting_group: ${{ matrix.groups }}
