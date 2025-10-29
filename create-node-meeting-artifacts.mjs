@@ -11,9 +11,9 @@
 
 import { Command } from 'commander';
 
+import * as calendar from './src/calendar.mjs';
 import environmentConfig from './src/config.mjs';
 import * as github from './src/github.mjs';
-import * as google from './src/google.mjs';
 import * as hackmd from './src/hackmd.mjs';
 import * as meetings from './src/meeting.mjs';
 
@@ -31,9 +31,6 @@ const config = {
   ...program.opts(),
   meetingGroup: program.args[0],
 };
-
-// Step 2: Initialize Google Calendar client with API Key
-const calendarClient = google.createCalendarClient(config.google);
 
 // Step 3: Initialize GitHub client
 const githubClient = github.createGitHubClient(config);
@@ -67,10 +64,11 @@ if (config.dryRun) {
 }
 
 // Step 6: Find next meeting event in calendar
-const event = await google.findNextMeetingEvent(calendarClient, meetingConfig);
+const events = await calendar.getEventsFromCalendar(
+  meetingConfig.properties.ICAL_URL
+);
 
-// Step 7: Extract meeting date from event
-const meetingDate = new Date(event.start.dateTime);
+const meetingDate = await calendar.findNextMeetingDate(events, meetingConfig);
 
 // Step 8: Get Meeting Title
 const meetingTitle = meetings.generateMeetingTitle(
