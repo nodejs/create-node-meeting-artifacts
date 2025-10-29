@@ -12,16 +12,13 @@ export const getEventsFromCalendar = async url => {
 };
 
 /**
- * @param {Date} now
+ * @param {Date} start
  */
-const getWeekBounds = (now = new Date()) => {
-  const startDate = now.getUTCDate() - now.getUTCDay();
-
-  const start = new Date(now.setUTCDate(startDate));
+const getWeekBounds = (start = new Date()) => {
   start.setUTCHours(0, 0, 0, 0);
 
-  const end = new Date(now.setUTCDate(startDate + 7));
-  end.setUTCHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 7);
 
   return [start, end];
 };
@@ -55,7 +52,7 @@ export const findNextMeetingDate = async (allEvents, { properties }) => {
 
   throw new Error(
     `No meeting found for ${properties.GROUP_NAME || 'this group'} ` +
-      `in the current week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
+      `in the next week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
       `This is expected for bi-weekly meetings or meetings that don't occur every week.`
   );
 };

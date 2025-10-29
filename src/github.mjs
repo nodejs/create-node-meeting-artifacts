@@ -56,6 +56,24 @@ export const sortIssuesByRepo = issues =>
   }, {});
 
 /**
+ * Fetches GitHub issue from a repo with a given title
+ * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
+ * @param {string} title - The title to find
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ */
+export const findIssueByTitle = async (githubClient, title, { properties }) => {
+  const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
+
+  const issues = await githubClient.request('GET /search/issues', {
+    q: `is:open in:title repo:"${githubOrg}/${properties.REPO}" "${title}"`,
+    advanced_search: true,
+    per_page: 1,
+  });
+
+  return issues.data.items[0];
+};
+
+/**
  * Fetches GitHub issues from all repositories in an organization with a specific label
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
