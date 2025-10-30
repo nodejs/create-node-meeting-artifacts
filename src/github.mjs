@@ -43,6 +43,46 @@ export const createGitHubIssue = async (
 };
 
 /**
+ * Creates or updates a GitHub issue with meeting information and Google Doc link
+ * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
+ * @param {import('./types.d.ts').AppConfig} config - The application config
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
+ * @param {string} title - Issue title
+ * @param {string} content - Issue content
+ * @returns {Promise<GitHubIssue>} Created issue data
+ */
+export const createOrUpdateMeetingIssue = async (
+  githubClient,
+  { force },
+  meetingConfig,
+  title,
+  content
+) => {
+  if (!force) {
+    const existingIssue = await findIssueByTitle(
+      githubClient,
+      title,
+      meetingConfig
+    );
+
+    if (existingIssue) {
+      // If content != body, update the issue
+      return (
+        content === existingIssue.body ||
+        updateMeetingIssue(
+          githubClient,
+          existingIssue.number,
+          content,
+          meetingConfig
+        )
+      );
+    }
+  }
+
+  return createGitHubIssue(githubClient, meetingConfig, title, content);
+};
+
+/**
  * Sorts issues by repository
  * @param {Array<GitHubIssue>} issues The issues to sort
  * @returns {Promise<{ [key: string]: Array<GitHubIssue> }>} Sorted issues
@@ -54,6 +94,29 @@ export const sortIssuesByRepo = issues =>
     );
     return obj;
   }, {});
+
+/**
+ * Fetches GitHub issue from a repo with a given title
+ * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
+ * @param {number} number - The issue number
+ * @param {string} content - The new content
+ * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ */
+export const updateMeetingIssue = async (
+  githubClient,
+  number,
+  content,
+  { properties }
+) => {
+  const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
+
+  return githubClient.issues.update({
+    issue_number: number,
+    body: content,
+    owner: githubOrg,
+    repo: properties.REPO,
+  });
+};
 
 /**
  * Fetches GitHub issue from a repo with a given title
