@@ -3,7 +3,7 @@ name: Create Meeting Artifacts (Scheduled)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 10 * * 1'
+    - cron: '0 0 * * *'
 
 jobs:
   create-matrix:

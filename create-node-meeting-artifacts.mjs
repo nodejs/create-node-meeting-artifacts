@@ -21,6 +21,7 @@ const program = new Command();
 program
   .argument('<group>', 'Meeting group')
   .option('--dry-run', 'Show output without creating/updating anything', false)
+  .option('--force', 'Create a new issue even if one already exists', false)
   .option('--verbose', 'Show debug output')
   .parse(process.argv);
 
@@ -76,6 +77,20 @@ const meetingTitle = meetings.generateMeetingTitle(
   meetingConfig,
   meetingDate
 );
+
+// Look for existing issues
+if (!config.force) {
+  const existingIssue = await github.findIssueByTitle(
+    githubClient,
+    meetingTitle,
+    meetingConfig
+  );
+
+  if (existingIssue) {
+    console.log(`${existingIssue.html_url} already exists. Exiting.`);
+    process.exit(0);
+  }
+}
 
 // Step 9: Get agenda information using native implementation
 const gitHubAgendaIssues = await github.getAgendaIssues(
