@@ -66,15 +66,16 @@ export const createOrUpdateMeetingIssue = async (
     );
 
     if (existingIssue) {
-      // If content != body, update the issue
-      return content === existingIssue.body
-        ? existingIssue
-        : await updateMeetingIssue(
-            githubClient,
-            existingIssue.number,
-            content,
-            meetingConfig
-          );
+      if (content !== existingIssue.body) {
+        await updateMeetingIssue(
+          githubClient,
+          existingIssue.number,
+          content,
+          meetingConfig
+        );
+      }
+
+      return existingIssue;
     }
   }
 
