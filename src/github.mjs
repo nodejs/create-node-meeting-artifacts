@@ -96,7 +96,7 @@ export const sortIssuesByRepo = issues =>
   }, {});
 
 /**
- * Fetches GitHub issue from a repo with a given title
+ * Updates an existing GitHub issue with new content
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
  * @param {number} number - The issue number
  * @param {string} content - The new content
