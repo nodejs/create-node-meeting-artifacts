@@ -47,7 +47,7 @@ export const createMeetingNotesDocument = (hackmdClient, title, content) => {
  * @param {import('./types.d.ts').AppConfig} config - Configuration
  * @returns {Promise<HackMDNote>} The created / fetched note
  */
-export const getOrCreateNotesDocument = async (
+export const getOrCreateMeetingNotesDocument = async (
   hackmdClient,
   title,
   { force }

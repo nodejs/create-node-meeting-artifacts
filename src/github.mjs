@@ -51,7 +51,7 @@ export const createGitHubIssue = async (
  * @param {string} content - Issue content
  * @returns {Promise<GitHubIssue>} Created issue data
  */
-export const createOrUpdateMeetingIssue = async (
+export const createOrUpdateGitHubIssue = async (
   githubClient,
   { force },
   meetingConfig,
@@ -59,7 +59,7 @@ export const createOrUpdateMeetingIssue = async (
   content
 ) => {
   if (!force) {
-    const existingIssue = await findIssueByTitle(
+    const existingIssue = await findGitHubIssueByTitle(
       githubClient,
       title,
       meetingConfig
@@ -67,7 +67,7 @@ export const createOrUpdateMeetingIssue = async (
 
     if (existingIssue) {
       if (content !== existingIssue.body) {
-        await updateMeetingIssue(
+        await updateGitHubIssue(
           githubClient,
           existingIssue.number,
           content,
@@ -102,7 +102,7 @@ export const sortIssuesByRepo = issues =>
  * @param {string} content - The new content
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
  */
-export const updateMeetingIssue = async (
+export const updateGitHubIssue = async (
   githubClient,
   number,
   content,
@@ -124,7 +124,11 @@ export const updateMeetingIssue = async (
  * @param {string} title - The title to find
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
  */
-export const findIssueByTitle = async (githubClient, title, { properties }) => {
+export const findGitHubIssueByTitle = async (
+  githubClient,
+  title,
+  { properties }
+) => {
   const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
 
   const issues = await githubClient.request('GET /search/issues', {

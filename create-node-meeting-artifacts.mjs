@@ -89,7 +89,7 @@ const gitHubAgendaIssues = await github.getAgendaIssues(
 const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
 
 // Step 11: Create HackMD document with meeting notes and tags
-const hackmdNote = await hackmd.getOrCreateNotesDocument(
+const hackmdNote = await hackmd.getOrCreateMeetingNotesDocument(
   hackmdClient,
   meetingTitle,
   config
@@ -109,7 +109,7 @@ const issueContent = await meetings.generateMeetingIssue(
 );
 
 // Step 14: Create GitHub issue with HackMD link
-const githubIssue = await github.createOrUpdateMeetingIssue(
+const githubIssue = await github.createOrUpdateGitHubIssue(
   githubClient,
   config,
   meetingConfig,
