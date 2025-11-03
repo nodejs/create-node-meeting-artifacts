@@ -41,6 +41,30 @@ export const createMeetingNotesDocument = (hackmdClient, title, content) => {
 };
 
 /**
+ * Creates a new meeting notes document in HackMD with appropriate tags
+ * @param {HackMDAPI} hackmdClient - HackMD API client
+ * @param {string} title - Document title
+ * @param {import('./types.d.ts').AppConfig} config - Configuration
+ * @returns {Promise<HackMDNote>} The created / fetched note
+ */
+export const getOrCreateMeetingNotesDocument = async (
+  hackmdClient,
+  title,
+  { force }
+) => {
+  if (!force) {
+    const notes = await hackmdClient.getNoteList();
+    const existingNote = notes.find(note => note.title === title);
+
+    if (existingNote) {
+      return existingNote;
+    }
+  }
+
+  return createMeetingNotesDocument(hackmdClient, title, '');
+};
+
+/**
  * Updates an existing meeting notes document in HackMD with retry logic
  * @param {HackMDClient} hackmdClient - HackMD API client
  * @param {string} noteId - HackMD note ID

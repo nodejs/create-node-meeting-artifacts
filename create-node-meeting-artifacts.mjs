@@ -78,20 +78,6 @@ const meetingTitle = meetings.generateMeetingTitle(
   meetingDate
 );
 
-// Look for existing issues
-if (!config.force) {
-  const existingIssue = await github.findIssueByTitle(
-    githubClient,
-    meetingTitle,
-    meetingConfig
-  );
-
-  if (existingIssue) {
-    console.log(`${existingIssue.html_url} already exists. Exiting.`);
-    process.exit(0);
-  }
-}
-
 // Step 9: Get agenda information using native implementation
 const gitHubAgendaIssues = await github.getAgendaIssues(
   githubClient,
@@ -103,10 +89,10 @@ const gitHubAgendaIssues = await github.getAgendaIssues(
 const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
 
 // Step 11: Create HackMD document with meeting notes and tags
-const hackmdNote = await hackmd.createMeetingNotesDocument(
+const hackmdNote = await hackmd.getOrCreateMeetingNotesDocument(
   hackmdClient,
   meetingTitle,
-  ''
+  config
 );
 
 // Step 12: Get the HackMD document link
@@ -123,8 +109,9 @@ const issueContent = await meetings.generateMeetingIssue(
 );
 
 // Step 14: Create GitHub issue with HackMD link
-const githubIssue = await github.createGitHubIssue(
+const githubIssue = await github.createOrUpdateGitHubIssue(
   githubClient,
+  config,
   meetingConfig,
   meetingTitle,
   issueContent
