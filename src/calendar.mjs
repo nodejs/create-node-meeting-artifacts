@@ -14,7 +14,7 @@ export const getEventsFromCalendar = async url => {
 /**
  * @param {Date} start
  */
-const getWeekBounds = (start = new Date()) => {
+export const getWeekBounds = (start = new Date()) => {
   start.setUTCHours(0, 0, 0, 0);
 
   const end = new Date(start);

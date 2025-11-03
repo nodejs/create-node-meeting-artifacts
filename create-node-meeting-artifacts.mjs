@@ -73,9 +73,7 @@ const meetingDate = await calendar.findNextMeetingDate(events, meetingConfig);
 
 // If no meeting is found, exit gracefully
 if (!meetingDate) {
-  const [weekStart, weekEnd] = [new Date(), new Date()];
-  weekStart.setUTCHours(0, 0, 0, 0);
-  weekEnd.setUTCDate(weekStart.getUTCDate() + 7);
+  const [weekStart, weekEnd] = calendar.getWeekBounds();
 
   console.log(
     `No meeting found for ${meetingConfig.properties.GROUP_NAME || 'this group'} ` +
