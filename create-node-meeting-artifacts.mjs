@@ -71,6 +71,18 @@ const events = await calendar.getEventsFromCalendar(
 
 const meetingDate = await calendar.findNextMeetingDate(events, meetingConfig);
 
+// If no meeting is found, exit gracefully
+if (!meetingDate) {
+  const [weekStart, weekEnd] = calendar.getWeekBounds();
+
+  console.log(
+    `No meeting found for ${meetingConfig.properties.GROUP_NAME || 'this group'} ` +
+      `in the next week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
+      `This is expected for bi-weekly meetings or meetings that don't occur every week.`
+  );
+  process.exit(0);
+}
+
 // Step 8: Get Meeting Title
 const meetingTitle = meetings.generateMeetingTitle(
   config,

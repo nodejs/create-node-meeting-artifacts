@@ -14,7 +14,7 @@ export const getEventsFromCalendar = async url => {
 /**
  * @param {Date} start
  */
-const getWeekBounds = (start = new Date()) => {
+export const getWeekBounds = (start = new Date()) => {
   start.setUTCHours(0, 0, 0, 0);
 
   const end = new Date(start);
@@ -27,7 +27,7 @@ const getWeekBounds = (start = new Date()) => {
  * Finds the next meeting event in any iCal feed for the current week
  * @param {ical.CalendarComponent[]} allEvents - The events
  * @param {import('./types').MeetingConfig} meetingConfig - Meeting configuration object
- * @returns {Promise<Date>} The date of the next meeting
+ * @returns {Promise<Date|null>} The date of the next meeting, or null if no meeting is found
  */
 export const findNextMeetingDate = async (allEvents, { properties }) => {
   const [weekStart, weekEnd] = getWeekBounds();
@@ -50,9 +50,5 @@ export const findNextMeetingDate = async (allEvents, { properties }) => {
     }
   }
 
-  throw new Error(
-    `No meeting found for ${properties.GROUP_NAME || 'this group'} ` +
-      `in the next week (${weekStart.toISOString().split('T')[0]} to ${weekEnd.toISOString().split('T')[0]}). ` +
-      `This is expected for bi-weekly meetings or meetings that don't occur every week.`
-  );
+  return null;
 };
