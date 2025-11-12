@@ -26,6 +26,8 @@ program
   .parse(process.argv);
 
 // Step 1: Application configuration
+process.env.TZ = 'UTC';
+
 /** @type {import('./src/types').AppConfig} */
 const config = {
   ...environmentConfig,
