@@ -42,7 +42,7 @@ export const findNextMeetingDate = async (allEvents, { properties }) => {
 
   for (const event of filteredEvents) {
     // Get all recurrences in our timeframe
-    event.rrule.options.tzid = event.tzid;
+    event.rrule.options.tzid = event.start?.tz;
     const duringOurTimeframe = event.rrule.between(weekStart, weekEnd);
 
     if (duringOurTimeframe.length > 0) {
