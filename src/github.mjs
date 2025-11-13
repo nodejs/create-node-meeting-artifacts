@@ -103,14 +103,14 @@ export const sortIssuesByRepo = issues =>
  * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
  */
 export const updateGitHubIssue = async (
-  githubClient,
+  { rest },
   number,
   content,
   { properties }
 ) => {
   const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
 
-  return githubClient.issues.update({
+  return rest.issues.update({
     issue_number: number,
     body: content,
     owner: githubOrg,
