@@ -1,5 +1,5 @@
-CALENDAR_FILTER="Node.js Release Working Group Meeting"
-ICAL_URL="https://calendar.google.com/calendar/ical/c_16f0ae5d3a22625175d199dbdb1cac84c2d09eab7f173e94f558417cb5cdbfd8%40group.calendar.google.com/public/basic.ics"
+CALENDAR_FILTER="Node.js Release Working Group Monthly Meeting"
+ICAL_URL="https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
 USER="nodejs"
 REPO="Release"
 GROUP_NAME="Release WorkGroup"
