@@ -14,9 +14,7 @@ export const getEventsFromCalendar = async url => {
 /**
  * @param {Date} start
  */
-export const getWeekBounds = (start = new Date()) => {
-  start.setUTCHours(0, 0, 0, 0);
-
+export const getNextWeek = (start = new Date()) => {
   const end = new Date(start);
   end.setUTCDate(start.getUTCDate() + 7);
 
@@ -30,7 +28,7 @@ export const getWeekBounds = (start = new Date()) => {
  * @returns {Promise<Date|null>} The date of the next meeting, or null if no meeting is found
  */
 export const findNextMeetingDate = async (allEvents, { properties }) => {
-  const [weekStart, weekEnd] = getWeekBounds();
+  const [weekStart, weekEnd] = getNextWeek();
 
   const filteredEvents = allEvents.filter(
     event =>
