@@ -5,24 +5,24 @@ import { createMeetingConfig, createMockEvent } from './helpers.mjs';
 import * as calendar from '../src/calendar.mjs';
 
 describe('calendar.mjs', () => {
-  describe('getWeekBounds', () => {
-    it('should return a week starting from the given date at UTC midnight', () => {
+  describe('getNextWeek', () => {
+    it('should return a week starting from the given date', () => {
       const testDate = new Date('2025-01-15T10:30:00Z');
-      const [start] = calendar.getWeekBounds(testDate);
+      const [start] = calendar.getNextWeek(testDate);
 
-      assert.strictEqual(start.getTime(), 1736899200000);
+      assert.strictEqual(start, testDate);
     });
 
     it('should return a week end 7 days after the start', () => {
       const testDate = new Date('2025-01-15T00:00:00Z');
-      const [start, end] = calendar.getWeekBounds(testDate);
+      const [start, end] = calendar.getNextWeek(testDate);
       const diffDays = (end - start) / (1000 * 60 * 60 * 24);
 
       assert.strictEqual(diffDays, 7);
     });
 
     it('should use current date when no date is provided', () => {
-      const [start, end] = calendar.getWeekBounds();
+      const [start, end] = calendar.getNextWeek();
 
       assert(start <= new Date());
       assert(end >= new Date());
@@ -30,7 +30,7 @@ describe('calendar.mjs', () => {
 
     it('should handle dates across year boundaries', () => {
       const testDate = new Date('2024-12-30T00:00:00Z');
-      const [start, weekEnd] = calendar.getWeekBounds(testDate);
+      const [start, weekEnd] = calendar.getNextWeek(testDate);
 
       assert.strictEqual(start.getUTCFullYear(), 2024);
       assert.strictEqual(weekEnd.getUTCFullYear(), 2025);
@@ -38,18 +38,10 @@ describe('calendar.mjs', () => {
 
     it('should handle leap year dates', () => {
       const testDate = new Date('2024-02-28T00:00:00Z');
-      const [start, end] = calendar.getWeekBounds(testDate);
+      const [start, end] = calendar.getNextWeek(testDate);
 
       assert(start < end);
       assert.strictEqual((end - start) / (1000 * 60 * 60 * 24), 7);
-    });
-
-    it('should maintain UTC timezone context', () => {
-      const testDate = new Date('2025-01-15T23:59:59Z');
-      const [start] = calendar.getWeekBounds(testDate);
-
-      assert.strictEqual(start.getUTCHours(), 0);
-      assert.strictEqual(start.getUTCMinutes(), 0);
     });
   });
 
