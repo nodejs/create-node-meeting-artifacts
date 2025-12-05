@@ -17,7 +17,7 @@ Or in your local time:
 
 ## Agenda
 
-Extracted from **$AGENDA_LABEL$** labelled issues and pull requests from the **$GITHUB_ORG$ org** prior to the meeting.
+Extracted from **$AGENDA_LABEL$** labelled issues and pull requests from the **$GITHUB_ORG$ org** prior to the meeting. (Updated daily)
 
 $AGENDA_CONTENT$
 
