@@ -1,12 +1,12 @@
-CALENDAR_FILTER="Node.js Next 10 years"
-ICAL_URL="https://calendar.google.com/calendar/ical/c_16f0ae5d3a22625175d199dbdb1cac84c2d09eab7f173e94f558417cb5cdbfd8%40group.calendar.google.com/public/basic.ics"
+CALENDAR_FILTER="Node.js Next-10 Bi-Weekly Meeting"
+ICAL_URL="https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
 USER="nodejs"
 REPO="next-10"
 GROUP_NAME="Next 10 Years team"
 HACKMD_TEAM_NAME="openjs-nodejs"
 JOINING_INSTRUCTIONS="
 
-* link for participants: <https://zoom.us/j/99950131676>
+* link for participants: <https://zoom-lfx.platform.linuxfoundation.org/meeting/94655111104?password=24076cd8-afca-4239-ae9f-b33b73328d6e>
 
 * For those who just want to watch: We stream our conference call straight to YouTube so anyone can listen to it live, it should start playing at <https://www.youtube.com/c/nodejs+foundation/live> when we turn it on. There's usually a short cat-herding time at the start of the meeting and then occasionally we have some quick private business to attend to before we can start recording & streaming. So be patient and it should show up.
 * youtube admin page: <https://www.youtube.com/my_live_events?filter=scheduled>"
