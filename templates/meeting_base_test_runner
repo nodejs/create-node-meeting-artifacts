@@ -1,0 +1,19 @@
+CALENDAR_FILTER="Node.js Test Runner"
+ICAL_URL="https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+USER="nodejs"
+REPO="test-runner"
+GROUP_NAME="Test Runner"
+HACKMD_TEAM_NAME="openjs-nodejs"
+JOINING_INSTRUCTIONS="
+
+Join URL: <https://zoom-lfx.platform.linuxfoundation.org/meeting/95769812407?password=884bba7b-1b1e-490f-bfc3-2eff14e35159>
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure
+"
