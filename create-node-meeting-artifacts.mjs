@@ -35,11 +35,14 @@ const config = {
   meetingGroup: program.args[0],
 };
 
+console.log('Application config loaded', config);
+
 // Step 3: Initialize GitHub client
 const githubClient = github.createGitHubClient(config);
 
 // Step 4: Read meeting configuration from templates
 const meetingConfig = await meetings.readMeetingConfig(config);
+console.debug('Meeting config loaded', meetingConfig);
 
 // Step 5: Initialize HackMD client with meeting configuration
 const hackmdClient = hackmd.createHackMDClient(config, meetingConfig);
@@ -50,6 +53,7 @@ if (config.dryRun) {
     config,
     meetingConfig
   );
+  console.debug('Found agenda issues', gitHubAgendaIssues);
 
   const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
 
@@ -70,12 +74,14 @@ if (config.dryRun) {
 const events = await calendar.getEventsFromCalendar(
   meetingConfig.properties.ICAL_URL
 );
+console.debug('Loaded calendar', events);
 
 const meetingDate = await calendar.findNextMeetingDate(events, meetingConfig);
+console.debug('Next meeting date', meetingDate);
 
 // If no meeting is found, exit gracefully
 if (!meetingDate) {
-  const [weekStart, weekEnd] = calendar.getWeekBounds();
+  const [weekStart, weekEnd] = calendar.getNextWeek();
 
   console.log(
     `No meeting found for ${meetingConfig.properties.GROUP_NAME || 'this group'} ` +
@@ -91,6 +97,7 @@ const meetingTitle = meetings.generateMeetingTitle(
   meetingConfig,
   meetingDate
 );
+console.debug('Meeting title', meetingTitle);
 
 // Step 9: Get agenda information using native implementation
 const gitHubAgendaIssues = await github.getAgendaIssues(
@@ -98,6 +105,7 @@ const gitHubAgendaIssues = await github.getAgendaIssues(
   config,
   meetingConfig
 );
+console.debug('Found agenda issues', gitHubAgendaIssues);
 
 // Step 10: Parse meeting agenda from GitHub issues
 const meetingAgenda = meetings.generateMeetingAgenda(gitHubAgendaIssues);
@@ -108,6 +116,7 @@ const hackmdNote = await hackmd.getOrCreateMeetingNotesDocument(
   meetingTitle,
   config
 );
+console.debug('HackMD document created/retrieved:', hackmdNote);
 
 // Step 12: Get the HackMD document link
 const minutesDocLink =
@@ -130,6 +139,7 @@ const githubIssue = await github.createOrUpdateGitHubIssue(
   meetingTitle,
   issueContent
 );
+console.debug('GitHub issue created/updated', githubIssue);
 
 // Step 15: Update the minutes content with the HackMD link
 const minutesContent = await meetings.generateMeetingMinutes(
