@@ -132,7 +132,7 @@ export const findGitHubIssueByTitle = async (
   const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
 
   const issues = await githubClient.request('GET /search/issues', {
-    q: `is:open in:title repo:"${githubOrg}/${properties.REPO}" "${title}"`,
+    q: `in:title repo:"${githubOrg}/${properties.REPO}" "${title}"`,
     advanced_search: true,
     per_page: 1,
   });
