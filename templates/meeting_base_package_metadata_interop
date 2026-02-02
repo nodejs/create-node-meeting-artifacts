@@ -5,7 +5,7 @@ HOST="OpenJS Foundation"
 REPO="package-metadata-interoperability-collab-space"
 GROUP_NAME="Package Metadata Interoperability Collab Space"
 AGENDA_TAG=package-metadata-agenda
-HACKMD_TEAM_NAME="openjs-nodejs"
+HACKMD_TEAM_NAME="openjs"
 JOINING_INSTRUCTIONS="
 
 link for participants: Zoom link: <>
