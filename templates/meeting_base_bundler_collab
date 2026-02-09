@@ -1,0 +1,23 @@
+CALENDAR_FILTER="Bundler Collaboration Space"
+ICAL_URL="https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+USER="openjs-foundation"
+HOST="OpenJS Foundation"
+REPO="bundler-collab-space"
+GROUP_NAME="Bundler Collaboration Space"
+AGENDA_TAG=bundler-agenda
+HACKMD_TEAM_NAME="openjs"
+JOINING_INSTRUCTIONS="
+
+link for participants: Please refer to <https://calendar.openjsf.org> for meeting link
+
+---
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your
+availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure yet
+"
