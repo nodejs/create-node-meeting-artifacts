@@ -5,7 +5,7 @@ HOST="OpenJS Foundation"
 REPO="standards"
 GROUP_NAME="Standards Working Group"
 AGENDA_TAG=standards-agenda
-HACKMD_TEAM_NAME="openjs-nodejs"
+HACKMD_TEAM_NAME="openjs"
 JOINING_INSTRUCTIONS="
 
 link for participants: Zoom link: <https://zoom.us/j/599005386>

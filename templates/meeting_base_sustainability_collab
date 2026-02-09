@@ -5,7 +5,7 @@ HOST="OpenJS Foundation"
 REPO="sustainability-collab-space"
 GROUP_NAME="Sustainability Collaboration Space"
 AGENDA_TAG=sustainability-agenda
-HACKMD_TEAM_NAME="openjs-nodejs"
+HACKMD_TEAM_NAME="openjs"
 JOINING_INSTRUCTIONS="
 
 link for participants: <https://zoom-lfx.platform.linuxfoundation.org/meeting/97342926119?password=39c25254-e7a3-4830-be8e-d54d63234bfb>

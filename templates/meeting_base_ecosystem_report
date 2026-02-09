@@ -5,7 +5,7 @@ HOST="OpenJS Foundation"
 REPO="ecosystem-report-collab-space"
 GROUP_NAME="Ecosystem Report Collab Space"
 AGENDA_TAG=ecosystem-report-agenda
-HACKMD_TEAM_NAME="openjs-nodejs"
+HACKMD_TEAM_NAME="openjs"
 JOINING_INSTRUCTIONS="
 
 link for participants: <https://zoom-lfx.platform.linuxfoundation.org/meeting/93477817392?password=d91f112c-4840-48a6-8c30-1ce94cc0e418>

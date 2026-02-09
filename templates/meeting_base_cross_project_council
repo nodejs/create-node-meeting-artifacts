@@ -6,7 +6,7 @@ REPO="cross-project-council"
 GROUP_NAME="Cross Project Council"
 AGENDA_TAG=cross-project-council-agenda
 ISSUE_LABEL=cpc-meeting
-HACKMD_TEAM_NAME="openjs-nodejs"
+HACKMD_TEAM_NAME="openjs"
 JOINING_INSTRUCTIONS="
 
 link for participants: Please refer to <https://calendar.openjsf.org> for meeting link
