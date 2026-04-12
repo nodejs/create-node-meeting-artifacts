@@ -136,7 +136,7 @@ describe('github.mjs', () => {
           {
             advanced_search: true,
             per_page: 1,
-            q: 'is:open in:title repo:"nodejs/node" "Node.js Meeting 2025-01-15"',
+            q: 'in:title repo:"nodejs/node" "Node.js Meeting 2025-01-15"',
           },
         ],
       ]);
@@ -188,7 +188,7 @@ describe('github.mjs', () => {
           {
             advanced_search: true,
             per_page: 1,
-            q: 'is:open in:title repo:"nodejs/node" "Test"',
+            q: 'in:title repo:"nodejs/node" "Test"',
           },
         ],
       ]);
@@ -209,7 +209,7 @@ describe('github.mjs', () => {
           {
             advanced_search: true,
             per_page: 1,
-            q: 'is:open in:title repo:"nodejs/node" "Test"',
+            q: 'in:title repo:"nodejs/node" "Test"',
           },
         ],
       ]);
