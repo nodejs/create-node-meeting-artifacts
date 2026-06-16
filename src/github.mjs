@@ -1,7 +1,5 @@
 import { Octokit } from '@octokit/rest';
 
-import { DEFAULT_CONFIG } from './constants.mjs';
-
 /**
  * Creates a GitHub API client
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
@@ -11,50 +9,41 @@ export const createGitHubClient = ({ githubToken: auth, verbose }) =>
   new Octokit({ auth, log: verbose ? console : undefined });
 
 /**
- * Creates GitHub issue with meeting information and Google Doc link
+ * Creates a GitHub issue with meeting information
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration object
  * @param {string} title - Issue title
  * @param {string} content - Issue content
- * @returns {Promise<GitHubIssue>} Created issue data
+ * @returns {Promise<import('./types.d.ts').GitHubIssue>} Created issue data
  */
-export const createGitHubIssue = async (
-  { rest },
-  { properties },
-  title,
-  content
-) => {
-  const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
-
-  const issueLabel = properties.ISSUE_LABEL
-    ? [properties.ISSUE_LABEL]
-    : undefined;
+export const createGitHubIssue = async ({ rest }, meeting, title, content) => {
+  const { owner, repo, issueLabels } = meeting.github;
 
   // Create the GitHub issue with meeting information
   const response = await rest.issues.create({
-    owner: githubOrg,
-    repo: properties.REPO,
+    owner,
+    repo,
     title,
     body: content,
-    labels: issueLabel,
+    labels: issueLabels,
   });
 
   return response.data;
 };
 
 /**
- * Creates or updates a GitHub issue with meeting information and Google Doc link
+ * Creates or updates a GitHub issue with meeting information
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
  * @param {import('./types.d.ts').AppConfig} config - The application config
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration object
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration object
  * @param {string} title - Issue title
  * @param {string} content - Issue content
- * @returns {Promise<GitHubIssue>} Created issue data
+ * @returns {Promise<import('./types.d.ts').GitHubIssue>} Created issue data
  */
 export const createOrUpdateGitHubIssue = async (
   githubClient,
   { force },
-  meetingConfig,
+  meeting,
   title,
   content
 ) => {
@@ -62,7 +51,7 @@ export const createOrUpdateGitHubIssue = async (
     const existingIssue = await findGitHubIssueByTitle(
       githubClient,
       title,
-      meetingConfig
+      meeting
     );
 
     if (existingIssue) {
@@ -71,7 +60,7 @@ export const createOrUpdateGitHubIssue = async (
           githubClient,
           existingIssue.number,
           content,
-          meetingConfig
+          meeting
         );
       }
 
@@ -79,60 +68,62 @@ export const createOrUpdateGitHubIssue = async (
     }
   }
 
-  return createGitHubIssue(githubClient, meetingConfig, title, content);
+  return createGitHubIssue(githubClient, meeting, title, content);
 };
 
 /**
- * Sorts issues by repository
- * @param {Array<GitHubIssue>} issues The issues to sort
- * @returns {Promise<{ [key: string]: Array<GitHubIssue> }>} Sorted issues
+ * Groups issues by their repository
+ * @param {Array<import('./types.d.ts').GitHubIssue>} issues The issues to group
+ * @returns {Array<import('./types.d.ts').AgendaGroup>} Issues grouped by repository
  */
-export const sortIssuesByRepo = issues =>
-  issues.reduce((obj, issue) => {
-    (obj[issue.repository_url.split('/').slice(-2).join('/')] ||= []).push(
-      issue
-    );
-    return obj;
-  }, {});
+export const sortIssuesByRepo = issues => {
+  const byRepo = new Map();
+
+  for (const issue of issues) {
+    const repo = issue.repository_url.split('/').slice(-2).join('/');
+
+    if (!byRepo.has(repo)) {
+      byRepo.set(repo, []);
+    }
+
+    byRepo.get(repo).push(issue);
+  }
+
+  return [...byRepo].map(([repo, repoIssues]) => ({
+    repo,
+    issues: repoIssues,
+  }));
+};
 
 /**
  * Updates an existing GitHub issue with new content
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
  * @param {number} number - The issue number
  * @param {string} content - The new content
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration
  */
-export const updateGitHubIssue = async (
-  { rest },
-  number,
-  content,
-  { properties }
-) => {
-  const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
+export const updateGitHubIssue = async ({ rest }, number, content, meeting) => {
+  const { owner, repo } = meeting.github;
 
   return rest.issues.update({
     issue_number: number,
     body: content,
-    owner: githubOrg,
-    repo: properties.REPO,
+    owner,
+    repo,
   });
 };
 
 /**
- * Fetches GitHub issue from a repo with a given title
+ * Fetches a GitHub issue from a repo with a given title
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
  * @param {string} title - The title to find
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration
  */
-export const findGitHubIssueByTitle = async (
-  githubClient,
-  title,
-  { properties }
-) => {
-  const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
+export const findGitHubIssueByTitle = async (githubClient, title, meeting) => {
+  const { owner, repo } = meeting.github;
 
   const issues = await githubClient.request('GET /search/issues', {
-    q: `in:title repo:"${githubOrg}/${properties.REPO}" "${title}"`,
+    q: `in:title repo:"${owner}/${repo}" "${title}"`,
     advanced_search: true,
     per_page: 1,
   });
@@ -141,23 +132,17 @@ export const findGitHubIssueByTitle = async (
 };
 
 /**
- * Fetches GitHub issues from all repositories in an organization with a specific label
+ * Fetches GitHub issues from all repositories in an organization with the agenda label
  * @param {import('@octokit/rest').Octokit} githubClient - Authenticated GitHub API client
- * @param {import('./types.d.ts').AppConfig} config - Application configuration
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
- * @returns {Promise<{ [key: string]: Array<GitHubIssue> }>} Meeting agenda
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration
+ * @returns {Promise<Array<import('./types.d.ts').AgendaGroup>>} Agenda issues grouped by repository
  */
-export const getAgendaIssues = async (
-  githubClient,
-  { meetingGroup },
-  { properties }
-) => {
-  const githubOrg = properties.USER ?? DEFAULT_CONFIG.githubOrg;
-  const agendaTag = properties.AGENDA_TAG ?? `${meetingGroup}-agenda`;
+export const getAgendaIssues = async (githubClient, meeting) => {
+  const { owner, agendaLabel } = meeting.github;
 
   // Get all issues/PRs in the organization
   const issues = await githubClient.paginate('GET /search/issues', {
-    q: `is:open label:${agendaTag} org:${githubOrg}`,
+    q: `is:open label:${agendaLabel} org:${owner}`,
     advanced_search: true,
   });
 

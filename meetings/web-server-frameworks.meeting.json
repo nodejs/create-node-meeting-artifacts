@@ -1,0 +1,20 @@
+{
+  "name": "Web Server Frameworks",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Web Server Frameworks",
+    "url": "https://calendar.google.com/calendar/ical/c_16f0ae5d3a22625175d199dbdb1cac84c2d09eab7f173e94f558417cb5cdbfd8%40group.calendar.google.com/public/basic.ics"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "web-server-frameworks"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom.us/j/96287211361",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live"
+  },
+  "invited": ["Web Server Frameworks team: @nodejs/web-server-frameworks"]
+}

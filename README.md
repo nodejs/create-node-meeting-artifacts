@@ -29,116 +29,77 @@ A modern Node.js application that creates GitHub issues and HackMD documents for
 ```
 create-node-meeting-artifacts/
 ├── src/
-│   ├── config.mjs             # Configuration management
+│   ├── config.mjs             # Environment configuration (API tokens)
 │   ├── constants.mjs          # Application constants
 │   ├── github.mjs             # GitHub API integration
 │   ├── calendar.mjs           # Calendar integration
-│   ├── meeting.mjs            # Meeting operations
-│   └── utils.mjs              # Utility functions
-├── templates/                 # Meeting templates
+│   ├── hackmd.mjs             # HackMD API integration
+│   ├── meeting.mjs            # Config loading + template rendering
+│   ├── types.d.ts             # Type definitions
+│   └── utils/                 # Date and URL helpers
+├── meetings/                  # One <group>.meeting.json per meeting group
+├── templates/
+│   └── meeting.mustache       # Single shared template (issue + minutes)
 ├── .nvmrc                     # Node.js version
-├── .env.example              # Environment variables example
+├── .env.example               # Environment variables example
 ├── create-node-meeting-artifacts.mjs # Main application
-├── TEMPLATES_DOCUMENTATION.md # Template creation guide
+├── TEMPLATES_DOCUMENTATION.md # Meeting config reference
 └── README.md                  # This file
 ```
 
-## 📝 Meeting Templates
+## 📝 Meeting Configurations
 
-Meeting configurations are stored in the `templates/` directory. Each meeting group requires four template files:
-
-- `invited_<group>`: List of invited attendees (GitHub team mentions)
-- `observers_<group>`: List of observers with their details
-- `meeting_base_<group>`: Base meeting configuration (calendar ID, GitHub repo, etc.)
-- `minutes_base_<group>`: Template for meeting minutes document
-
-For detailed information about creating new templates, see [TEMPLATES_DOCUMENTATION.md](./TEMPLATES_DOCUMENTATION.md).
-
-### Template Variables
-
-Templates support the following replacement variables:
-
-- `$TITLE$`: Meeting title
-- `$AGENDA_CONTENT$`: Auto-generated agenda items
-- `$INVITED$`: Invited attendees list
-- `$OBSERVERS$`: Observers list
-- `$GITHUB_ISSUE$`: GitHub issue URL
-- `$MINUTES_DOC$`: Google Doc URL
-
-## ➕ Adding New Meeting Groups
-
-To add a new meeting group to the system, you need to create templates and update configuration in three places:
-
-### 1. Create Template Files
-
-Create four template files in the `templates/` directory following the naming convention:
-
-```bash
-# Replace <shortname> with your meeting group identifier
-templates/invited_<shortname>
-templates/observers_<shortname>
-templates/meeting_base_<shortname>
-templates/minutes_base_<shortname>
-```
-
-See [TEMPLATES_DOCUMENTATION.md](./TEMPLATES_DOCUMENTATION.md) for detailed template examples and variable explanations.
-
-### 2. Update GitHub Actions Workflows
-
-Add your meeting group to both workflow files:
-
-- `.github/workflows/create-meeting-artifacts-manual.yml`
-- `.github/workflows/create-meeting-artifacts-scheduled.yml`
-
-For manual workflow, add your group to the `options` list under `workflow_dispatch.inputs.meeting_group`:
-
-```yaml
-workflow_dispatch:
-  inputs:
-    meeting_group:
-      description: 'Meeting group to create artifacts for'
-      required: true
-      type: choice
-      options:
-        - uvwasi
-        - tsc
-        - build
-        # ... existing groups ...
-        - your-new-group # Add your group here
-```
-
-For scheduled workflow, add your group to the `matrix.meeting_group` list:
-
-```yaml
-strategy:
-  matrix:
-    meeting_group:
-      - uvwasi
-      - tsc
-      - build
-      # ... existing groups ...
-      - your-new-group # Add your group here
-```
-
-### 3. Update Package.json Scripts
-
-Add npm scripts to `package.json` following this pattern:
+Every meeting group is described by a single JSON file in the [`meetings/`](./meetings)
+directory, named `<group>.meeting.json` (for example, `tsc.meeting.json`). Each
+file follows an **identical format**, and the same shared
+[`templates/meeting.mustache`](./templates/meeting.mustache) renders both the
+GitHub issue and the HackMD minutes for every group — so every meeting's
+artifacts look the same.
 
 ```json
 {
-  "scripts": {
-    "your-meeting-group-meeting": "node create-node-meeting-artifacts.mjs your_meeting_group",
-    "your-meeting-group-meeting:dev": "node --env-file=.env create-node-meeting-artifacts.mjs your_meeting_group"
-  }
+  "name": "Technical Steering Committee (TSC)",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js TSC Meeting",
+    "url": "https://calendar.google.com/calendar/ical/<id>/public/basic.ics"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "TSC"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom.us/j/611357642",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live"
+  },
+  "invited": ["@nodejs/tsc"]
 }
 ```
 
-**Important Notes:**
+See [TEMPLATES_DOCUMENTATION.md](./TEMPLATES_DOCUMENTATION.md) for a full reference
+of every field, including the optional ones (`github.agendaLabel`,
+`github.issueLabels`, `joining.notes`, `observers`, and curated `agenda` sections).
 
-- Use **kebab-case** for script names: `your-meeting-group-meeting`
-- Use **snake_case** for the actual group parameter: `your_meeting_group`
-- Always create both production and development (`:dev`) versions
-- The development version uses `--env-file=.env` for local testing
+## ➕ Adding New Meeting Groups
+
+Adding a group is a single step: create its config file.
+
+### 1. Create the meeting config
+
+Add `meetings/<group>.meeting.json` following the format above. The filename stem
+(`<group>`) is what you pass on the command line and to the workflows.
+
+### 2. That's it
+
+The GitHub Actions workflows discover meeting groups automatically:
+
+- The **scheduled** workflow builds its matrix by listing `meetings/*.meeting.json`.
+- The **manual** workflow reads the owner straight from the JSON file.
+
+No workflow edits and no `package.json` scripts are needed.
 
 ## 🏗️ Development
 
@@ -147,7 +108,7 @@ Add npm scripts to `package.json` following this pattern:
 1. Clone the repository
 2. Install dependencies: `npm install`
 3. Copy `.env.example` to `.env` and configure your credentials
-4. Create meeting artifacts: `npm run <group>-meeting:dev`
+4. Create meeting artifacts: `npm run dev -- <group>` (e.g. `npm run dev -- tsc`)
 
 ### Code Quality
 
@@ -169,7 +130,16 @@ npx --env-file=.env . tsc
 
 # Direct execution (with a `.env` file)
 node --env-file=.env create-node-meeting-artifacts.mjs tsc
+
+# Preview the rendered issue without creating anything
+node --env-file=.env create-node-meeting-artifacts.mjs tsc --dry-run
 ```
+
+The CLI accepts the following flags:
+
+- `--dry-run`: render and print the issue without creating an issue or document
+- `--force`: create a new issue/document even if one already exists
+- `--verbose`: enable debug logging from the GitHub client
 
 ## 📂 Output
 
@@ -188,17 +158,8 @@ The application creates:
 - `GITHUB_TOKEN`: GitHub Personal Access Token
 - `HACKMD_API_TOKEN`: HackMD API token for creating and managing documents
 
-### Meeting Base Configuration
+### Meeting Configuration
 
-Each `meeting_base_<group>` file contains:
-
-```bash
-CALENDAR_FILTER="Meeting Name in Calendar"
-USER="nodejs"
-REPO="repository-name"
-GROUP_NAME="Full Group Name"
-AGENDA_TAG="agenda-label"
-ISSUE_LABEL="optional-issue-label"
-HACKMD_TEAM_NAME="openjs-nodejs"
-JOINING_INSTRUCTIONS="Meeting join instructions"
-```
+Each meeting is configured by a `meetings/<group>.meeting.json` file. See
+[TEMPLATES_DOCUMENTATION.md](./TEMPLATES_DOCUMENTATION.md) for the complete field
+reference.

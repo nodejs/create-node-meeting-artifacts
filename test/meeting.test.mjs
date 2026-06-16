@@ -1,324 +1,485 @@
 import assert from 'node:assert';
+import { readdir, readFile } from 'node:fs/promises';
 import { describe, it } from 'node:test';
 
-import { DEFAULT_CONFIG } from '../src/constants.mjs';
+import { createMeetingConfig, createIssue } from './helpers.mjs';
+import { DEFAULT_HOST } from '../src/constants.mjs';
 import * as meeting from '../src/meeting.mjs';
 
+const MEETINGS_DIR = new URL('../meetings/', import.meta.url);
+
+const groupNames = (await readdir(MEETINGS_DIR))
+  .filter(name => name.endsWith('.meeting.json'))
+  .map(name => name.replace(/\.meeting\.json$/, ''));
+
 describe('meeting.mjs', () => {
-  describe('generateMeetingTitle', () => {
-    const titleTestCases = [
-      {
-        name: 'should generate title with host and group name',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: { HOST: 'Node.js', GROUP_NAME: 'TSC' } },
-        date: new Date('2025-01-15T10:30:00Z'),
-        expectations: ['Node.js', 'TSC', '2025-01-15'],
-      },
-      {
-        name: 'should use default host when HOST not provided',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: { GROUP_NAME: 'TSC' } },
-        date: new Date('2025-01-15T10:30:00Z'),
-        expectations: [DEFAULT_CONFIG.host, 'TSC'],
-      },
-      {
-        name: 'should use meetingGroup as GROUP_NAME when GROUP_NAME not provided',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: { HOST: 'Node.js' } },
-        date: new Date('2025-01-15T10:30:00Z'),
-        expectations: ['tsc'],
-      },
-      {
-        name: 'should format date as YYYY-MM-DD',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: {} },
-        date: new Date('2025-06-15T10:30:00Z'),
-        expectations: ['2025-06-15'],
-      },
-      {
-        name: 'should include "Meeting" text in title',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: {} },
-        date: new Date('2025-01-15T10:30:00Z'),
-        expectations: ['Meeting'],
-      },
-    ];
+  describe('load', () => {
+    it('should load a known config and attach its group', async () => {
+      const tsc = await meeting.load('tsc');
 
-    titleTestCases.forEach(
-      ({ name, config, meetingConfig, date, expectations }) => {
-        it(name, () => {
-          const result = meeting.generateMeetingTitle(
-            config,
-            meetingConfig,
-            date
-          );
-          expectations.forEach(expectation => {
-            assert(
-              result.includes(expectation),
-              `Expected "${expectation}" in "${result}"`
-            );
-          });
-        });
-      }
-    );
-
-    it('should generate consistent title for same inputs', () => {
-      const config = { meetingGroup: 'tsc' };
-      const meetingConfig = {
-        properties: { HOST: 'Node.js', GROUP_NAME: 'TSC' },
-      };
-      const date = new Date('2025-01-15T10:30:00Z');
-
-      const result1 = meeting.generateMeetingTitle(config, meetingConfig, date);
-      const result2 = meeting.generateMeetingTitle(config, meetingConfig, date);
-
-      assert.strictEqual(result1, result2);
+      assert.strictEqual(tsc.group, 'tsc');
+      assert.strictEqual(tsc.name, 'Technical Steering Committee (TSC)');
+      assert.strictEqual(tsc.github.owner, 'nodejs');
+      assert.strictEqual(tsc.github.repo, 'TSC');
     });
 
-    const edgeCases = [
-      {
-        name: 'should handle very long group names',
-        config: { meetingGroup: 'x'.repeat(100) },
-        meetingConfig: {
-          properties: { HOST: 'Node.js', GROUP_NAME: 'y'.repeat(100) },
-        },
-        date: new Date('2025-01-15T10:30:00Z'),
-        check: result => result.includes('y'.repeat(100)),
-      },
-      {
-        name: 'should handle special characters in group names',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: {
-          properties: { HOST: 'Node.js', GROUP_NAME: 'TSC & CTC (merged)' },
-        },
-        date: new Date('2025-01-15T10:30:00Z'),
-        check: result => result.includes('TSC & CTC (merged)'),
-      },
-      {
-        name: 'should handle dates at month boundaries',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: {} },
-        date: new Date('2025-01-31T23:59:59Z'),
-        check: result => result.includes('2025-01-31'),
-      },
-      {
-        name: 'should handle leap year dates',
-        config: { meetingGroup: 'tsc' },
-        meetingConfig: { properties: {} },
-        date: new Date('2024-02-29T10:30:00Z'),
-        check: result => result.includes('2024-02-29'),
-      },
-    ];
+    it('should default the agenda label to <group>-agenda', async () => {
+      const tsc = await meeting.load('tsc');
+      assert.strictEqual(tsc.github.agendaLabel, 'tsc-agenda');
+    });
 
-    edgeCases.forEach(({ name, config, meetingConfig, date, check }) => {
-      it(name, () => {
-        const result = meeting.generateMeetingTitle(
-          config,
-          meetingConfig,
-          date
-        );
-        assert(check(result), `Check failed for "${name}"`);
-      });
+    it('should preserve an explicit agenda label', async () => {
+      const build = await meeting.load('build');
+      assert.strictEqual(build.github.agendaLabel, 'build-agenda');
+
+      const web = await meeting.load('web');
+      assert.strictEqual(web.github.agendaLabel, 'web-agenda');
+    });
+
+    it('should default the host to Node.js', async () => {
+      const build = await meeting.load('build');
+      assert.strictEqual(build.host, DEFAULT_HOST);
+    });
+
+    it('should preserve a non-default host', async () => {
+      const standards = await meeting.load('standards');
+      assert.strictEqual(standards.host, 'OpenJS Foundation');
+    });
+
+    it('should always expose observers and agenda arrays', async () => {
+      const tsc = await meeting.load('tsc');
+      assert.ok(Array.isArray(tsc.observers));
+      assert.ok(Array.isArray(tsc.agenda));
     });
   });
 
-  describe('generateMeetingAgenda', () => {
-    const agendaTestCases = [
+  describe('every meeting config', () => {
+    it('should exist', () => {
+      assert.ok(groupNames.length > 0, 'expected at least one meeting config');
+    });
+
+    groupNames.forEach(group => {
+      it(`${group} should follow the identical, valid format`, async () => {
+        const config = await meeting.load(group);
+
+        assert.strictEqual(typeof config.name, 'string');
+        assert.ok(config.name.length > 0);
+        assert.strictEqual(typeof config.host, 'string');
+
+        assert.strictEqual(typeof config.calendar.filter, 'string');
+        assert.match(config.calendar.url, /^https?:\/\//);
+
+        assert.strictEqual(typeof config.github.owner, 'string');
+        assert.strictEqual(typeof config.github.repo, 'string');
+        assert.strictEqual(typeof config.github.agendaLabel, 'string');
+
+        assert.strictEqual(typeof config.hackmd.team, 'string');
+
+        assert.ok(Array.isArray(config.invited));
+        assert.ok(config.invited.length > 0);
+        assert.ok(Array.isArray(config.observers));
+        assert.ok(Array.isArray(config.agenda));
+      });
+    });
+
+    it('should be valid JSON', async () => {
+      for (const group of groupNames) {
+        const raw = await readFile(meeting.configURL(group), 'utf8');
+        assert.doesNotThrow(
+          () => JSON.parse(raw),
+          `${group} should be valid JSON`
+        );
+      }
+    });
+  });
+
+  describe('generateMeetingTitle', () => {
+    const date = new Date('2025-01-15T10:30:00Z');
+
+    it('should combine host, name and date', () => {
+      const title = meeting.generateMeetingTitle(
+        createMeetingConfig({ host: 'Node.js', name: 'TSC' }),
+        date
+      );
+      assert.strictEqual(title, 'Node.js TSC Meeting 2025-01-15');
+    });
+
+    it('should fall back to the group when name is missing', () => {
+      const title = meeting.generateMeetingTitle(
+        createMeetingConfig({ name: undefined, group: 'tsc' }),
+        date
+      );
+      assert.ok(title.includes('tsc'));
+    });
+
+    it('should fall back to the default host when host is missing', () => {
+      const title = meeting.generateMeetingTitle(
+        createMeetingConfig({ host: undefined, name: 'TSC' }),
+        date
+      );
+      assert.ok(title.startsWith(DEFAULT_HOST));
+    });
+
+    it('should format the date as YYYY-MM-DD', () => {
+      const title = meeting.generateMeetingTitle(
+        createMeetingConfig(),
+        new Date('2025-06-15T23:59:59Z')
+      );
+      assert.ok(title.includes('2025-06-15'));
+    });
+  });
+
+  describe('createTemplateContext', () => {
+    const date = new Date('2025-01-15T10:30:00Z');
+
+    it('should expose timezone and link data', () => {
+      const ctx = meeting.createTemplateContext(
+        createMeetingConfig(),
+        date,
+        [],
+        []
+      );
+
+      assert.ok(ctx.utc.length > 0);
+      assert.strictEqual(ctx.timezones.length, 12);
+      assert.ok(ctx.timeAndDateLink.startsWith('https://'));
+      assert.ok(ctx.wolframLink.startsWith('https://'));
+      assert.strictEqual(ctx.isMinutes, false);
+    });
+
+    it('should surface the agenda label and owner', () => {
+      const ctx = meeting.createTemplateContext(
+        createMeetingConfig({ github: { agendaLabel: 'tsc-agenda' } }),
+        date,
+        [],
+        []
+      );
+
+      assert.strictEqual(ctx.agendaLabel, 'tsc-agenda');
+      assert.strictEqual(ctx.owner, 'nodejs');
+    });
+
+    it('should flag whether agenda issues are present', () => {
+      const empty = meeting.createTemplateContext(
+        createMeetingConfig(),
+        date,
+        [],
+        []
+      );
+      assert.strictEqual(empty.hasAgenda, false);
+
+      const withIssues = meeting.createTemplateContext(
+        createMeetingConfig(),
+        date,
+        [{ repo: 'nodejs/node', issues: [createIssue(1, 'nodejs/node')] }],
+        []
+      );
+      assert.strictEqual(withIssues.hasAgenda, true);
+    });
+
+    it('should escape markdown brackets in issue titles', () => {
+      const ctx = meeting.createTemplateContext(
+        createMeetingConfig(),
+        date,
+        [
+          {
+            repo: 'nodejs/node',
+            issues: [
+              {
+                number: 1,
+                title: 'Issue with [brackets]',
+                html_url: 'https://github.com/nodejs/node/issues/1',
+              },
+            ],
+          },
+        ],
+        []
+      );
+
+      assert.strictEqual(
+        ctx.agenda[0].issues[0].title,
+        'Issue with \\[brackets\\]'
+      );
+    });
+
+    it('should pass isMinutes and title through', () => {
+      const ctx = meeting.createTemplateContext(
+        createMeetingConfig(),
+        date,
+        [],
+        [],
+        { isMinutes: true, title: 'Node.js TSC Meeting 2025-01-15' }
+      );
+      assert.strictEqual(ctx.isMinutes, true);
+      assert.strictEqual(ctx.title, 'Node.js TSC Meeting 2025-01-15');
+    });
+
+    it('should default the calendar page from the host', () => {
+      const node = meeting.createTemplateContext(
+        createMeetingConfig({ host: 'Node.js' }),
+        date,
+        [],
+        []
+      );
+      assert.strictEqual(node.calendarPage, 'https://nodejs.org/calendar');
+
+      const openjs = meeting.createTemplateContext(
+        createMeetingConfig({ host: 'OpenJS Foundation' }),
+        date,
+        [],
+        []
+      );
+      assert.strictEqual(openjs.calendarPage, 'https://calendar.openjsf.org');
+    });
+
+    it('should allow the calendar page to be overridden', () => {
+      const ctx = meeting.createTemplateContext(
+        createMeetingConfig({ calendar: { page: 'https://example.com/cal' } }),
+        date,
+        [],
+        []
+      );
+      assert.strictEqual(ctx.calendarPage, 'https://example.com/cal');
+    });
+  });
+
+  describe('resolveJoining', () => {
+    const sessions = [
+      { time: '13:00', participant: 'https://zoom/13' },
+      { time: '17:00', participant: 'https://zoom/17' },
+    ];
+
+    it('should return the single participant when there are no sessions', () => {
+      const result = meeting.resolveJoining(
+        createMeetingConfig({ joining: { participant: 'https://zoom/1' } }),
+        new Date('2025-01-15T10:30:00Z')
+      );
+      assert.strictEqual(result.participant, 'https://zoom/1');
+      assert.strictEqual(result.sessions, undefined);
+    });
+
+    it('should select the session matching the occurrence UTC time', () => {
+      const config = createMeetingConfig({ joining: { sessions } });
+
+      const at13 = meeting.resolveJoining(
+        config,
+        new Date('2026-06-24T13:00:00Z')
+      );
+      assert.strictEqual(at13.participant, 'https://zoom/13');
+      assert.strictEqual(at13.sessions, undefined);
+
+      const at17 = meeting.resolveJoining(
+        config,
+        new Date('2026-07-01T17:00:00Z')
+      );
+      assert.strictEqual(at17.participant, 'https://zoom/17');
+    });
+
+    it('should list all sessions when none matches (e.g. dry-run)', () => {
+      const result = meeting.resolveJoining(
+        createMeetingConfig({ joining: { sessions } }),
+        new Date('2026-06-24T09:00:00Z')
+      );
+      assert.strictEqual(result.participant, undefined);
+      assert.deepStrictEqual(result.sessions, sessions);
+    });
+  });
+
+  describe('render', () => {
+    const date = new Date('2025-01-15T10:30:00Z');
+    const agenda = [
       {
-        name: 'should format single repo with issues',
-        input: {
-          'nodejs/node': [
-            {
-              number: 1,
-              title: 'Issue 1',
-              html_url: 'https://github.com/nodejs/node/issues/1',
-            },
-            {
-              number: 2,
-              title: 'Issue 2',
-              html_url: 'https://github.com/nodejs/node/issues/2',
-            },
-          ],
-        },
-        checks: ['nodejs/node', 'Issue 1', 'Issue 2', '#1', '#2'],
-      },
-      {
-        name: 'should format multiple repos with issues',
-        input: {
-          'nodejs/node': [
-            {
-              number: 1,
-              title: 'Issue 1',
-              html_url: 'https://github.com/nodejs/node/issues/1',
-            },
-          ],
-          'nodejs/nodejs.org': [
-            {
-              number: 2,
-              title: 'Issue 2',
-              html_url: 'https://github.com/nodejs/nodejs.org/issues/2',
-            },
-          ],
-        },
-        checks: ['nodejs/node', 'nodejs/nodejs.org', 'Issue 1', 'Issue 2'],
-      },
-      {
-        name: 'should skip repos with no issues',
-        input: {
-          'nodejs/node': [
-            {
-              number: 1,
-              title: 'Issue 1',
-              html_url: 'https://github.com/nodejs/node/issues/1',
-            },
-          ],
-          'nodejs/empty': [],
-        },
-        checks: ['nodejs/node'],
-        excludes: ['nodejs/empty'],
-      },
-      {
-        name: 'should escape markdown special characters in issue titles',
-        input: {
-          'nodejs/node': [
-            {
-              number: 1,
-              title: 'Issue with [brackets] and stuff',
-              html_url: 'https://github.com/nodejs/node/issues/1',
-            },
-          ],
-        },
-        checks: ['\\[brackets\\]'],
-      },
-      {
-        name: 'should format as markdown list',
-        input: {
-          'nodejs/node': [
-            {
-              number: 1,
-              title: 'Issue 1',
-              html_url: 'https://github.com/nodejs/node/issues/1',
-            },
-          ],
-        },
-        checks: ['* ', '### nodejs/node'],
-      },
-      {
-        name: 'should include issue links',
-        input: {
-          'nodejs/node': [
-            {
-              number: 1,
-              title: 'Issue 1',
-              html_url: 'https://github.com/nodejs/node/issues/1',
-            },
-          ],
-        },
-        checks: ['[#1]', '(https://github.com/nodejs/node/issues/1)'],
-      },
-      {
-        name: 'should handle empty agenda',
-        input: {},
-        isEmpty: true,
-      },
-      {
-        name: 'should handle multiple issues in one repo',
-        input: {
-          'nodejs/node': [
-            { number: 1, title: 'First', html_url: 'https://example.com/1' },
-            { number: 2, title: 'Second', html_url: 'https://example.com/2' },
-            { number: 3, title: 'Third', html_url: 'https://example.com/3' },
-          ],
-        },
-        lineCountMin: 4,
-      },
-      {
-        name: 'should preserve issue title exactly',
-        input: {
-          'nodejs/node': [
-            {
-              number: 123,
-              title: 'Add feature X to Node.js',
-              html_url: 'https://github.com/nodejs/node/issues/123',
-            },
-          ],
-        },
-        checks: ['Add feature X to Node.js'],
-      },
-      {
-        name: 'should list issues in order',
-        input: {
-          'nodejs/node': [
-            { number: 1, title: 'First', html_url: 'https://example.com/1' },
-            { number: 2, title: 'Second', html_url: 'https://example.com/2' },
-            { number: 3, title: 'Third', html_url: 'https://example.com/3' },
-          ],
-        },
-        checkOrder: ['First', 'Second', 'Third'],
+        repo: 'nodejs/node',
+        issues: [
+          {
+            number: 42,
+            title: 'Discuss [streams]',
+            html_url: 'https://github.com/nodejs/node/issues/42',
+          },
+        ],
       },
     ];
 
-    agendaTestCases.forEach(
-      ({
-        name,
-        input,
-        checks = [],
-        excludes = [],
-        isEmpty,
-        lineCountMin,
-        checkOrder,
-      }) => {
-        it(name, () => {
-          const result = meeting.generateMeetingAgenda(input);
+    it('should render an issue with invited, agenda and joining sections', async () => {
+      const config = createMeetingConfig({
+        name: 'TSC',
+        invited: ['@nodejs/tsc'],
+        joining: {
+          participant: 'https://zoom.us/j/1',
+          observer: 'https://youtube.com/live',
+        },
+      });
 
-          if (isEmpty) {
-            assert.strictEqual(result.trim(), '');
-          }
+      const output = await meeting.render(
+        meeting.createTemplateContext(config, date, agenda, [
+          { title: 'Minutes', url: 'https://hackmd.io/abc' },
+        ])
+      );
 
-          checks.forEach(check => {
-            assert(result.includes(check), `Expected "${check}" in result`);
-          });
+      assert.ok(output.includes('## Time'));
+      assert.ok(output.includes('## Invited'));
+      assert.ok(output.includes('@nodejs/tsc'));
+      assert.ok(output.includes('Minutes: <https://hackmd.io/abc>'));
+      assert.ok(output.includes('### Issues and Pull Requests'));
+      assert.ok(output.includes('**node-agenda**'));
+      assert.ok(output.includes('#### nodejs/node'));
+      assert.ok(output.includes('Discuss \\[streams\\] [#42]'));
+      assert.ok(output.includes('## Joining the meeting'));
+      assert.ok(output.includes('To join the meeting: https://zoom.us/j/1'));
+      assert.ok(!output.includes('## Q&A, Other'));
+      assert.ok(!output.includes('**Recording**'));
+    });
 
-          excludes.forEach(exclude => {
-            assert(
-              !result.includes(exclude),
-              `Did not expect "${exclude}" in result`
-            );
-          });
+    it('should render the matching session link for an alternating meeting', async () => {
+      const config = createMeetingConfig({
+        name: 'TSC',
+        joining: {
+          observer: 'https://youtube.com/live',
+          sessions: [
+            { time: '13:00', participant: 'https://zoom/13' },
+            { time: '17:00', participant: 'https://zoom/17' },
+          ],
+        },
+      });
 
-          if (lineCountMin) {
-            const lines = result.split('\n');
-            assert(
-              lines.length >= lineCountMin,
-              `Expected at least ${lineCountMin} lines, got ${lines.length}`
-            );
-          }
+      const output = await meeting.render(
+        meeting.createTemplateContext(
+          config,
+          new Date('2026-06-24T13:00:00Z'),
+          [],
+          [{ title: 'Minutes', url: 'https://hackmd.io/abc' }]
+        )
+      );
 
-          if (checkOrder) {
-            let lastIndex = -1;
-            checkOrder.forEach(item => {
-              const index = result.indexOf(item);
-              assert(
-                index > lastIndex,
-                `Expected "${item}" to appear after previous items`
-              );
-              lastIndex = index;
-            });
-          }
-        });
-      }
-    );
+      assert.ok(output.includes('To join the meeting: https://zoom/13'));
+      assert.ok(!output.includes('https://zoom/17'));
+    });
 
-    it('should trim whitespace from result', () => {
-      const agendaIssues = {
-        'nodejs/node': [
-          { number: 1, title: 'Issue', html_url: 'https://example.com/1' },
+    it('should list all session links when none matches (dry-run)', async () => {
+      const config = createMeetingConfig({
+        name: 'TSC',
+        joining: {
+          sessions: [
+            { time: '13:00', participant: 'https://zoom/13' },
+            { time: '17:00', participant: 'https://zoom/17' },
+          ],
+        },
+      });
+
+      const output = await meeting.render(
+        meeting.createTemplateContext(
+          config,
+          new Date('2026-06-24T09:00:00Z'),
+          [],
+          [{ title: 'Minutes', url: 'https://hackmd.io/abc' }]
+        )
+      );
+
+      assert.ok(
+        output.includes('To join the 13:00 UTC meeting: https://zoom/13')
+      );
+      assert.ok(
+        output.includes('To join the 17:00 UTC meeting: https://zoom/17')
+      );
+    });
+
+    it('should render minutes with Present and Q&A sections', async () => {
+      const config = createMeetingConfig({ name: 'TSC' });
+
+      const output = await meeting.render(
+        meeting.createTemplateContext(
+          config,
+          date,
+          agenda,
+          [
+            { title: 'Minutes', url: 'https://hackmd.io/abc' },
+            {
+              title: 'GitHub Issue',
+              url: 'https://github.com/nodejs/node/issues/1',
+            },
+          ],
+          { isMinutes: true, title: 'Node.js TSC Meeting 2025-01-15' }
+        )
+      );
+
+      assert.ok(output.startsWith('# Node.js TSC Meeting 2025-01-15'));
+      assert.ok(output.includes('* **Recording**:'));
+      assert.ok(output.includes('## Present'));
+      assert.ok(output.includes('### Announcements'));
+      assert.ok(output.includes('## Q&A, Other'));
+      assert.ok(output.includes('## Upcoming Meetings'));
+      assert.ok(!output.includes('## Joining the meeting'));
+    });
+
+    it('should render curated agenda sections only in the minutes', async () => {
+      const config = createMeetingConfig({
+        name: 'CPC',
+        host: 'OpenJS Foundation',
+        agenda: [
+          {
+            title: 'Working Group Updates',
+            description: 'Standing review of the collab spaces:',
+            items: [
+              '[security](https://github.com/openjs-foundation/security-collab-space)',
+            ],
+          },
         ],
-      };
+      });
 
-      const result = meeting.generateMeetingAgenda(agendaIssues);
+      const minutes = await meeting.render(
+        meeting.createTemplateContext(config, date, [], [], {
+          isMinutes: true,
+          title: 'OpenJS CPC Meeting 2025-01-15',
+        })
+      );
+      assert.ok(minutes.includes('### Working Group Updates'));
+      assert.ok(minutes.includes('Standing review of the collab spaces:'));
+      assert.ok(
+        minutes.includes(
+          '[security](https://github.com/openjs-foundation/security-collab-space)'
+        )
+      );
+      // OpenJS host uses the OpenJS public calendar.
+      assert.ok(minutes.includes('<https://calendar.openjsf.org>'));
 
-      assert.strictEqual(result, result.trim());
+      const issue = await meeting.render(
+        meeting.createTemplateContext(config, date, [], [])
+      );
+      assert.ok(!issue.includes('### Working Group Updates'));
+    });
+
+    it('should show a fallback when there are no agenda items', async () => {
+      const output = await meeting.render(
+        meeting.createTemplateContext(createMeetingConfig(), date, [], [])
+      );
+
+      assert.ok(output.includes('_No agenda items found._'));
+    });
+
+    it('should render every real meeting config without throwing', async () => {
+      for (const group of groupNames) {
+        const config = await meeting.load(group);
+        const output = await meeting.render(
+          meeting.createTemplateContext(
+            config,
+            date,
+            [],
+            [{ title: 'Minutes', url: 'https://hackmd.io/x' }]
+          )
+        );
+        assert.ok(
+          output.includes('## Time'),
+          `${group} should render a header`
+        );
+        assert.ok(
+          output.includes('## Invited'),
+          `${group} should render invited`
+        );
+        assert.ok(
+          output.includes(`**${config.github.agendaLabel}**`),
+          `${group} should reference its agenda label`
+        );
+      }
     });
   });
 });

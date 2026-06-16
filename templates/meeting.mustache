@@ -1,0 +1,114 @@
+{{#isMinutes}}# {{{title}}}
+
+{{/isMinutes}}## Time
+
+**UTC {{utc}}**:
+
+| Timezone | Date/Time |
+| -------- | --------- |
+{{#timezones}}
+| {{{label}}} | {{{time}}} |
+{{/timezones}}
+
+Or in your local time:
+
+* {{{timeAndDateLink}}}
+* or {{{wolframLink}}}
+
+## Links
+
+{{#isMinutes}}
+* **Recording**:
+{{/isMinutes}}
+{{#links}}
+* {{title}}: <{{{url}}}>
+{{/links}}
+
+## {{#isMinutes}}Present{{/isMinutes}}{{^isMinutes}}Invited{{/isMinutes}}
+
+{{#meeting.invited}}
+* {{{.}}}
+{{/meeting.invited}}
+
+### Observers/Guests
+
+{{#meeting.observers}}
+* {{{.}}}
+{{/meeting.observers}}
+{{^meeting.observers}}
+_None._
+{{/meeting.observers}}
+
+## Agenda
+{{#isMinutes}}
+
+### Announcements
+
+_No announcements._
+{{#meeting.agenda}}
+
+### {{{title}}}
+{{#description}}
+
+{{{.}}}
+{{/description}}
+{{#items}}
+* {{{.}}}
+{{/items}}
+{{/meeting.agenda}}
+{{/isMinutes}}
+
+### Issues and Pull Requests
+
+Extracted from **{{agendaLabel}}** labelled issues and pull requests from the **{{owner}} org** prior to the meeting.
+{{#hasAgenda}}
+{{#agenda}}
+
+#### {{{repo}}}
+
+{{#issues}}
+* {{{title}}} [#{{number}}]({{{html_url}}})
+{{/issues}}
+{{/agenda}}
+{{/hasAgenda}}
+{{^hasAgenda}}
+
+_No agenda items found._
+{{/hasAgenda}}
+{{#isMinutes}}
+
+## Q&A, Other
+
+## Upcoming Meetings
+
+* **Calendar**: <{{{calendarPage}}}>
+
+Click `Add to Google Calendar` at the bottom left to add to your own Google calendar.
+{{/isMinutes}}
+{{^isMinutes}}
+
+## Joining the meeting
+
+{{#joining.participant}}
+* To join the meeting: {{{.}}}
+{{/joining.participant}}
+{{#joining.sessions}}
+* To join the {{time}} UTC meeting: {{{participant}}}
+{{/joining.sessions}}
+{{#joining.observer}}
+* To watch the livestream: <{{{.}}}>
+{{/joining.observer}}
+{{#joining.notes}}
+* {{{.}}}
+{{/joining.notes}}
+
+---
+
+**Invitees**
+
+Please use the following emoji reactions in this post to indicate your availability.
+
+* :+1: - Attending
+* :-1: - Not attending
+* :confused: - Not sure
+{{/isMinutes}}

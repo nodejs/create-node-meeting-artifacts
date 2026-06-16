@@ -5,12 +5,12 @@ import { HACKMD_DEFAULT_PERMISSIONS } from './constants.mjs';
 /**
  * Creates a HackMD API client
  * @param {import('./types.d.ts').AppConfig} config - Application configuration
- * @param {import('./types.d.ts').MeetingConfig} meetingConfig - Meeting configuration
- * @returns {HackMDClient} Configured HackMD API client
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration
+ * @returns {HackMDAPI} Configured HackMD API client
  */
-export const createHackMDClient = ({ hackmd: { apiToken } }, meetingConfig) => {
-  // Use team-specific API endpoint if teamName is provided in meeting config
-  const teamName = meetingConfig.properties.HACKMD_TEAM_NAME;
+export const createHackMDClient = ({ hackmd: { apiToken } }, meeting) => {
+  // Use the team-specific API endpoint if a team is provided in meeting config
+  const teamName = meeting.hackmd?.team;
 
   const baseURL = teamName
     ? `https://api.hackmd.io/v1/teams/${teamName}`
@@ -24,7 +24,7 @@ export const createHackMDClient = ({ hackmd: { apiToken } }, meetingConfig) => {
  * @param {HackMDAPI} hackmdClient - HackMD API client
  * @param {string} title - Document title
  * @param {string} content - Document content in Markdown
- * @returns {Promise<HackMDNote>} Created note data with ID and URLs
+ * @returns {Promise<import('@hackmd/api/dist/type.d.ts').SingleNote>} Created note data with ID and URLs
  */
 export const createMeetingNotesDocument = (hackmdClient, title, content) => {
   const noteOptions = {
@@ -41,11 +41,11 @@ export const createMeetingNotesDocument = (hackmdClient, title, content) => {
 };
 
 /**
- * Creates a new meeting notes document in HackMD with appropriate tags
+ * Fetches or creates a meeting notes document in HackMD
  * @param {HackMDAPI} hackmdClient - HackMD API client
  * @param {string} title - Document title
  * @param {import('./types.d.ts').AppConfig} config - Configuration
- * @returns {Promise<HackMDNote>} The created / fetched note
+ * @returns {Promise<import('@hackmd/api/dist/type.d.ts').SingleNote>} The created / fetched note
  */
 export const getOrCreateMeetingNotesDocument = async (
   hackmdClient,
@@ -65,11 +65,11 @@ export const getOrCreateMeetingNotesDocument = async (
 };
 
 /**
- * Updates an existing meeting notes document in HackMD with retry logic
- * @param {HackMDClient} hackmdClient - HackMD API client
+ * Updates an existing meeting notes document in HackMD
+ * @param {HackMDAPI} hackmdClient - HackMD API client
  * @param {string} noteId - HackMD note ID
  * @param {string} content - Updated document content in Markdown
- * @returns {Promise<HackMDNote>} Updated note data
+ * @returns {Promise<import('@hackmd/api/dist/type.d.ts').SingleNote>} Updated note data
  */
 export const updateMeetingNotesDocument = (hackmdClient, noteId, content) => {
   // apparently it can return either { note: {...} } or just {...}

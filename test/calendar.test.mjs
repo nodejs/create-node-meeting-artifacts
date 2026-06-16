@@ -107,7 +107,7 @@ describe('calendar.mjs', () => {
       ];
       const result = await calendar.findNextMeetingDate(
         events,
-        createMeetingConfig({ CALENDAR_FILTER: 'Triage' })
+        createMeetingConfig({ calendar: { filter: 'Triage' } })
       );
       assert.strictEqual(result, mockDate);
     });
@@ -123,7 +123,7 @@ describe('calendar.mjs', () => {
       ];
       const result = await calendar.findNextMeetingDate(
         events,
-        createMeetingConfig({ CALENDAR_FILTER: 'Meeting' })
+        createMeetingConfig({ calendar: { filter: 'Meeting' } })
       );
       assert.strictEqual(result, date1);
     });

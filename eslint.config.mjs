@@ -10,6 +10,13 @@ export default [
     ignores: ['node_modules', '.env*', 'minutes_temp.txt'],
   },
   {
+    files: ['test/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      globals: { ...globals.nodeBuiltin },
+    },
+  },
+  {
     files: ['**/*.mjs'],
     rules: {
       'object-shorthand': 'error',

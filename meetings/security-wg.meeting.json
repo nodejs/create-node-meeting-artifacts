@@ -1,0 +1,29 @@
+{
+  "name": "Security team",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js Security Working Group Monthly Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "security-wg"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/92626800362?password=78ffb026-dfb9-4549-b8cd-c3b82bd907f7",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live"
+  },
+  "invited": ["Security wg team: @nodejs/security-wg"],
+  "agenda": [
+    {
+      "title": "Standing Items",
+      "items": [
+        "Vulnerability Review: https://github.com/nodejs/nodejs-dependency-vuln-assessments/issues",
+        "OpenSSF Scorecard Monitor Review: https://github.com/nodejs/security-wg/issues?q=is%3Aissue+OpenSSF+Scorecard+Report+Updated%21+"
+      ]
+    }
+  ]
+}

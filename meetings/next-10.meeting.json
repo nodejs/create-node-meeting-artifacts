@@ -1,0 +1,20 @@
+{
+  "name": "Next 10 Years team",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js Next-10 Bi-Weekly Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "next-10"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/94655111104?password=24076cd8-afca-4239-ae9f-b33b73328d6e",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live"
+  },
+  "invited": ["Next 10 years team: @nodejs/next-10"]
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Technical Steering Committee (TSC)",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js TSC Meeting",
+    "url": "https://calendar.google.com/calendar/ical/c_16f0ae5d3a22625175d199dbdb1cac84c2d09eab7f173e94f558417cb5cdbfd8%40group.calendar.google.com/public/basic.ics"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "TSC"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live",
+    "sessions": [
+      {
+        "time": "13:00",
+        "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/94552847907?password=fbbea37b-f6f4-4dce-bf27-10d3251f0a9c"
+      },
+      {
+        "time": "17:00",
+        "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/96540765177?password=6f3632c7-f3a6-432b-8a27-99c95caffeaa"
+      }
+    ]
+  },
+  "invited": [
+    "Antoine du Hamel @aduh95 (voting member)",
+    "Yagiz Nizipli @anonrig (voting member)",
+    "Benjamin Gruenbaum @benjamingr (voting member)",
+    "Ruben Bridgewater @BridgeAR (voting member)",
+    "Gireesh Punathil @gireeshpunathil (voting member)",
+    "James Snell @jasnell (voting member)",
+    "Joyee Cheung @joyeecheung (voting member)",
+    "Chengzhong Wu @legendecas (voting member)",
+    "Marco Ippolito @marco-ippolito (voting member)",
+    "Matteo Collina @mcollina (voting member)",
+    "Filip Skokan @panva (voting member)",
+    "Rafael Gonzaga @RafaelGSS (voting member)",
+    "Darshan Sen @RaisinTen (voting member)",
+    "Richard Lau @richardlau (voting member)",
+    "Robert Nagy @ronag (voting member)",
+    "Ruy Adorno @ruyadorno (voting member)",
+    "Paolo Insogna @ShogunPanda (voting member)",
+    "Michaël Zasso @targos (voting member)",
+    "Tobias Nießen @tniessen (voting member)",
+    "Beth Griggs @BethGriggs (regular member)",
+    "Ben Noordhuis @bnoordhuis (regular member)",
+    "Colin Ihrig @cjihrig (regular member)",
+    "Geoffrey Booth @GeoffreyBooth (regular member)",
+    "Moshe Atlow @MoLow (regular member)",
+    "Shelley Vohr @codebytere (regular member)",
+    "Rich Trott @Trott (regular member)",
+    "Joe Sepi @joesepi (Guest - Node.js CPC rep)"
+  ],
+  "agenda": [
+    {
+      "title": "Reminders",
+      "items": [
+        "Remember to nominate people for the [contributor spotlight](https://github.com/nodejs/node/blob/main/doc/contributing/reconizing-contributors.md#bi-monthly-contributor-spotlight)"
+      ]
+    },
+    {
+      "title": "Strategic Initiatives",
+      "items": []
+    }
+  ]
+}

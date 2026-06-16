@@ -1,0 +1,24 @@
+{
+  "name": "Bundler Collaboration Space",
+  "host": "OpenJS Foundation",
+  "calendar": {
+    "filter": "Bundler Working Group Monthly Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+  },
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "bundler-collab-space",
+    "agendaLabel": "bundler-agenda"
+  },
+  "hackmd": {
+    "team": "openjs"
+  },
+  "joining": {
+    "participant": "Refer to https://calendar.openjsf.org for the meeting link"
+  },
+  "invited": [
+    "Bundler Collab Space Members",
+    "OpenJS Foundation Cross Project Council",
+    "All are welcome"
+  ]
+}

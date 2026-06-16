@@ -1,0 +1,25 @@
+{
+  "name": "Standards Working Group",
+  "host": "OpenJS Foundation",
+  "calendar": {
+    "filter": "Standards Working Group Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+  },
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "standards",
+    "agendaLabel": "standards-agenda"
+  },
+  "hackmd": {
+    "team": "openjs"
+  },
+  "joining": {
+    "participant": "https://zoom.us/j/599005386",
+    "observer": "https://livestream.openjsf.org"
+  },
+  "invited": [
+    "OpenJS Foundation Cross Project Council",
+    "OpenJS Foundation Project Maintainers",
+    "OpenJS Foundation Board of Directors"
+  ]
+}

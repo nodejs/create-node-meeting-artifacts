@@ -1,0 +1,22 @@
+{
+  "name": "Sustainability Collaboration Space",
+  "host": "OpenJS Foundation",
+  "calendar": {
+    "filter": "Sustainability Collaboration Space",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+  },
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "sustainability-collab-space",
+    "agendaLabel": "sustainability-agenda"
+  },
+  "hackmd": {
+    "team": "openjs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/97342926119?password=39c25254-e7a3-4830-be8e-d54d63234bfb"
+  },
+  "invited": [
+    "Sustainability Collab Space Members: @openjs-foundation/sustainability-collaboration-space"
+  ]
+}

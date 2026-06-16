@@ -1,0 +1,22 @@
+{
+  "name": "Package Metadata Interoperability Collab Space",
+  "host": "OpenJS Foundation",
+  "calendar": {
+    "filter": "Package Metadata Interoperability",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+  },
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "package-metadata-interoperability-collab-space",
+    "agendaLabel": "package-metadata-agenda"
+  },
+  "hackmd": {
+    "team": "openjs"
+  },
+  "joining": {
+    "observer": "https://livestream.openjsf.org"
+  },
+  "invited": [
+    "Package Metadata Interoperability Collab Space Members: @openjs/package-metadata-interop"
+  ]
+}

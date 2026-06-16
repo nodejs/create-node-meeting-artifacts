@@ -1,0 +1,27 @@
+{
+  "name": "Security Collab Space",
+  "host": "OpenJS Foundation",
+  "calendar": {
+    "filter": "Security Collab Space meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+  },
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "security-collab-space",
+    "agendaLabel": "security-agenda"
+  },
+  "hackmd": {
+    "team": "openjs"
+  },
+  "joining": {
+    "participant": "https://zoom.us/j/94497273832",
+    "observer": "https://livestream.openjsf.org"
+  },
+  "invited": [
+    "OpenJS Foundation Security Collab Space Members",
+    "OpenJS Foundation Cross Project Council",
+    "OpenJS Foundation Project Maintainers",
+    "OpenJS Foundation Board of Directors",
+    "All are welcome"
+  ]
+}

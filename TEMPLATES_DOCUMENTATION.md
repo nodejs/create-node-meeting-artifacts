@@ -1,193 +1,157 @@
-This document contains empty versions of each template needed to successfully create meeting artifacts for a Committee, Working Group, Initiative, or Team. These documents need to go in the [/templates](./templates) directory in this repository.
+# Meeting Configuration Reference
 
-## Template Variables
+Every meeting group is described by a single JSON file in the
+[`meetings/`](./meetings) directory, named `<group>.meeting.json` — for example,
+`tsc.meeting.json`. Each file follows the **identical format** documented below.
 
-There are several variables in the documents that need to be configured:
+All meeting artifacts — both the GitHub issue and the HackMD minutes — are
+rendered from one shared template,
+[`templates/meeting.mustache`](./templates/meeting.mustache), so every group's
+issue and notes share the same structure.
 
-- **`<name>`:** The name of the Committee, Working Group, Initiative, or Team that meeting artifacts are being created for.
-- **`<shortname>`:** The abbreviated or shortened name for a group, used in each filename to connect associated files together.
-- **`<team_name>`:** The name of the GitHub team in the Node.js org.
-- **`<calendar event name>`:** The name of calendar events that mark the group's meeting date/time.
-- **`<repo>`:** The repository of the group.
-- **`<agenda-label>`:** The label for which to search the Node.js GitHub organization, to add items to the group's agenda.
-- **`<issue-label>`:** an optional label for the created issue itself.
-- **`<observer>`:** Name of an observer in a group's meetings.
+## Filename
 
-## Meeting Properties Reference
+The filename stem is the **group identifier** you pass on the command line
+(`npx . <group>`) and the value the workflows use. For example,
+`meetings/tsc.meeting.json` is the `tsc` group.
 
-The following properties are available in meeting base templates and can be used in meeting issue generation:
+## Format
 
-- **`CALENDAR_FILTER`:** The name of calendar events that mark the group's meeting date/time
-- **`ICAL_URL`:** The ICAL URL for a given meetings' calendar
-- **`USER`:** The GitHub username/organization (typically `nodejs`)
-- **`REPO`:** The repository name where meeting issues are created
-- **`GROUP_NAME`:** The full name of the Committee, Working Group, Initiative, or Team
-- **`AGENDA_TAG`:** The label used to search for agenda items in GitHub issues and PRs
-- **`HOST`:** Meeting host information
-- **`JOINING_INSTRUCTIONS`:** Instructions for joining the meeting (Zoom links, YouTube streams, etc.)
-- **`ISSUE_LABEL`:** Optional label to apply to the created meeting issue
-
-These properties are defined in the `meeting_base_<shortname>` template files and are substituted when generating meeting issues.
-
-# Invited
-
-The [GitHub Team](https://help.github.com/articles/about-teams/) to invite. The @mention should be a GitHub Team whose members are all invidiuals who are always invited.
-
-**File:** `invited_<shortname>`
-
-```
-* <name> Members: @nodejs/<team_name>
-```
-
-## Invited Example
-
-**File:** `invited_commcomm`
-
-```
-* CommComm Members: @nodejs/community-committee
+```json
+{
+  "name": "Technical Steering Committee (TSC)",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js TSC Meeting",
+    "url": "https://calendar.google.com/calendar/ical/<id>/public/basic.ics"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "TSC",
+    "agendaLabel": "tsc-agenda",
+    "issueLabels": ["tsc-meeting"]
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom.us/j/611357642",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live",
+    "notes": "Regular password."
+  },
+  "invited": ["@nodejs/tsc"],
+  "observers": [],
+  "agenda": []
+}
 ```
 
-# Meeting Base
+## Fields
 
-A base of metadata and some content for the issue to be created on time, with agenda items automatically created.
+### Top level
 
-**File:** `meeting_base_<shortname>`
+| Field       | Required | Description                                                              |
+| ----------- | -------- | ------------------------------------------------------------------------ |
+| `name`      | ✅       | Human-readable group name, used in the meeting title.                    |
+| `host`      | ❌       | Meeting host. Defaults to `"Node.js"`. Use `"OpenJS Foundation"` etc.    |
+| `calendar`  | ✅       | Calendar lookup configuration (see below).                               |
+| `github`    | ✅       | GitHub configuration (see below).                                        |
+| `hackmd`    | ✅       | HackMD configuration (see below).                                        |
+| `joining`   | ✅       | How to join/observe the meeting (see below).                             |
+| `invited`   | ✅       | Array of invited attendees (GitHub team mentions or names).              |
+| `observers` | ❌       | Array of standing observers. Defaults to `[]`.                           |
+| `agenda`    | ❌       | Array of manually-curated agenda sections (see below). Defaults to `[]`. |
 
-```
-CALENDAR_FILTER="<calendar event name>"
-ICAL_URL="<ical url>"
-USER="nodejs"
-REPO="<repo>"
-GROUP_NAME="<name>"
-AGENDA_TAG=<agenda-label>
-JOINING_INSTRUCTIONS="
+### `calendar`
 
-* link for participants: Will be added a few minutes before meeting starts
-* For those who just want to watch: https://www.youtube.com/channel/UCQPYJluYC_sn_Qz_XE-YbTQ/live"
-```
+| Field    | Required | Description                                                                               |
+| -------- | -------- | ----------------------------------------------------------------------------------------- |
+| `filter` | ✅       | Text matched against calendar event summaries/descriptions.                               |
+| `url`    | ✅       | The iCal feed URL searched for the next meeting occurrence.                               |
+| `page`   | ❌       | Public "add to your calendar" page linked from the minutes. Defaults by host (see below). |
 
-## Meeting Base Example
+The `page` default is `https://calendar.openjsf.org` when `host` is
+`"OpenJS Foundation"`, otherwise `https://nodejs.org/calendar`.
 
-**File:** `meeting_base_commcomm`
+### `github`
 
-```
-CALENDAR_FILTER="Node.js Community Committee"
-ICAL_URL="<...>"
-USER="nodejs"
-REPO="community-committee"
-GROUP_NAME="Community Committee"
-AGENDA_TAG=cc-agenda
-JOINING_INSTRUCTIONS="
+| Field         | Required | Description                                                        |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `owner`       | ✅       | Organization/user that owns the meeting repository.                |
+| `repo`        | ✅       | Repository where the meeting issue is created.                     |
+| `agendaLabel` | ❌       | Label used to collect agenda issues. Defaults to `<group>-agenda`. |
+| `issueLabels` | ❌       | Labels applied to the created meeting issue.                       |
 
-* link for participants: Will be added a few minutes before meeting starts
-* For those who just want to watch: https://www.youtube.com/channel/UCQPYJluYC_sn_Qz_XE-YbTQ/live"
-```
+Agenda items are gathered from issues and pull requests across the entire
+`owner` organization that carry the `agendaLabel`.
 
-# Minutes Base
+### `hackmd`
 
-A basic outline for the meeting minutes to be autogenerated in Google Docs. The only basic change from the default template is the message about what label agenda items are extracted from.
+| Field  | Required | Description                                        |
+| ------ | -------- | -------------------------------------------------- |
+| `team` | ✅       | HackMD team the minutes document is created under. |
 
-**File:** `minutes_base_<shortname>`
+### `joining`
 
-```
-## Links
+| Field         | Required | Description                                                   |
+| ------------- | -------- | ------------------------------------------------------------- |
+| `participant` | ❌       | Where participants join (a URL or a short instruction).       |
+| `sessions`    | ❌       | Alternating sessions with per-session join links (see below). |
+| `observer`    | ❌       | Where observers watch the livestream (a URL).                 |
+| `notes`       | ❌       | Any additional joining notes (e.g. "Regular password.").      |
 
-* **Recording**:
-* **GitHub Issue**: $GITHUB_ISSUE$
-* **Minutes**: $MINUTES_DOC$
+#### Alternating sessions
 
-## Present
+Some groups alternate between time slots that each have their own join link — for
+example, the TSC rotates between a 13:00 UTC and a 17:00 UTC slot, each running
+every two weeks. Model these with `joining.sessions` instead of a single
+`participant`:
 
-$INVITED$
-$OBSERVERS$
-
-## Agenda
-
-## Announcements
-
-*Extracted from **<agenda-label>** labelled issues and pull requests from the **nodejs org** prior to the meeting.
-
-$AGENDA_CONTENT$
-
-## Q&A, Other
-
-## Upcoming Meetings
-
-* **Node.js Foundation Calendar**: https://nodejs.org/calendar
-
-Click `Add to Google Calendar` at the bottom left to add to your own Google calendar.
-
-```
-
-## Minutes Base Example
-
-**File:** `minutes_base_commcomm`
-
+```json
+"joining": {
+  "observer": "https://www.youtube.com/c/nodejs+foundation/live",
+  "sessions": [
+    { "time": "13:00", "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/94552847907?password=..." },
+    { "time": "17:00", "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/96540765177?password=..." }
+  ]
+}
 ```
 
+`time` is the **UTC** time of day (`HH:MM`). When the tool finds the next
+occurrence on the calendar, it selects the session whose `time` matches that
+occurrence's UTC time and shows its link. If no session matches (such as a
+`--dry-run`, which has no real occurrence), every session is listed.
 
-## Links
+| Field         | Required | Description                                 |
+| ------------- | -------- | ------------------------------------------- |
+| `time`        | ✅       | UTC time of day in `HH:MM` form.            |
+| `participant` | ✅       | Where participants join this session (URL). |
 
-* **Recording**:
-* **GitHub Issue**: $GITHUB_ISSUE$
-* **Minutes**: $MINUTES_DOC$
+### `agenda` (manual sections)
 
-## Present
+Use this for groups that maintain curated, recurring sections in addition to the
+label-driven agenda — for example, the TSC's reminders, the CPC's working-group
+updates, or the Security WG's standing review items. These sections render in the
+**minutes only** (the GitHub issue stays focused on the label-driven agenda and
+joining details), and they appear before the label-driven "Issues and Pull
+Requests" section. A section with an empty `items` array renders just its heading
+(useful for live-filled sections like "Strategic Initiatives"). Each section is:
 
-$INVITED$
-$OBSERVERS$
+| Field         | Required | Description                          |
+| ------------- | -------- | ------------------------------------ |
+| `title`       | ✅       | Section heading.                     |
+| `description` | ❌       | Text rendered under the heading.     |
+| `items`       | ✅       | Bullet list items (typically links). |
 
-## Agenda
+Example:
 
-## Announcements
-
-*Extracted from **cc-agenda** labelled issues and pull requests from the **nodejs org** prior to the meeting.
-
-$AGENDA_CONTENT$
-
-## Q&A, Other
-
-## Upcoming Meetings
-
-* **Node.js Foundation Calendar**: https://nodejs.org/calendar
-
-Click `Add to Google Calendar` at the bottom left to add to your own Google calendar.
-```
-
-# Observers
-
-List meeting observers who will consistently attend meetings _as observers_.
-**File:** `observers_<shortname>`
-
-```
-* <observer>
-* <observer>
-* <observer>
-(...)
-```
-
-## Observers Example
-
-**File:** `observers_commcomm`
-
-```
-* @therebelrobot (Oz Haven - observer)
-* @ParidelPooya (Pooya Paridel - observer)
-* @rykerrumsey (Ryker Rumsey - observer)
-* @baez (Behzad Karim - observer)
-* @BinarySo1o (Therese Stirling - observer)
-* @amiller-gh (Adam Miller - observer)
-* @yosuke-furukawa (Yosuke Furukawa - observer)
-* @Maurice-Hayward (Maurice Hayward - observer)
-* @mikehostetler (Mike Hostetler - observer)
-* @sarahkconway (Sarah Conway - observer)
-* @Tiriel (Benjamin Zaslavsky - observer)
-* @DiegoZoracKy (Diego ZoracKy - observer)
-* @ZibbyKeaton (Zibby Keaton - observer)
-* @tobyfarley (Toby Farley - observer)
-* @Bamieh (Ahmad Bamieh - observer)
-* @pchrysa (Chrysa - observer)
-* @foadlab (observer)
-* @codeekage (Abraham Agiri - observer)
-* @Voskan (Voskan Voskanyan - observer)
+```json
+"agenda": [
+  {
+    "title": "Regular Reviews",
+    "description": "Please review our standing list before the meeting:",
+    "items": [
+      "https://github.com/nodejs/TSC/labels/tsc-review"
+    ]
+  }
+]
 ```

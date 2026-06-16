@@ -1,0 +1,19 @@
+{
+  "name": "Test Runner",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js Test Runner",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "test-runner"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/95769812407?password=884bba7b-1b1e-490f-bfc3-2eff14e35159"
+  },
+  "invited": ["@nodejs/test_runner"]
+}
