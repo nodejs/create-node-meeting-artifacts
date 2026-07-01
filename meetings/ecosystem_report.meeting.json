@@ -1,0 +1,20 @@
+{
+  "name": "Ecosystem Report Collab Space",
+  "host": "OpenJS Foundation",
+  "calendar": {
+    "filter": "Ecosystem Report Collab Space",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a0941000002wBygAAE"
+  },
+  "github": {
+    "owner": "openjs-foundation",
+    "repo": "ecosystem-report-collab-space",
+    "agendaLabel": "ecosystem-report-agenda"
+  },
+  "hackmd": {
+    "team": "openjs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/93477817392?password=d91f112c-4840-48a6-8c30-1ce94cc0e418"
+  },
+  "invited": ["Ecosystem Report Collab Space Members: @openjs/ecosystem-report"]
+}

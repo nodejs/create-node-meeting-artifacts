@@ -58,18 +58,37 @@ export const createMockClient = (overrides = {}) => {
   };
 };
 
-export const createMeetingConfig = (overrides = {}) => ({
-  properties: {
-    USER: 'nodejs',
-    REPO: 'node',
-    ISSUE_LABEL: 'meeting',
-    CALENDAR_FILTER: 'Node.js',
-    ...overrides,
+export const createMeetingConfig = ({
+  github = {},
+  calendar = {},
+  ...overrides
+} = {}) => ({
+  group: 'node',
+  name: 'Node.js',
+  host: 'Node.js',
+  calendar: {
+    filter: 'Node.js',
+    url: 'https://example.com/calendar.ics',
+    ...calendar,
   },
+  github: {
+    owner: 'nodejs',
+    repo: 'node',
+    agendaLabel: 'node-agenda',
+    issueLabels: ['meeting'],
+    ...github,
+  },
+  hackmd: { team: 'openjs-nodejs' },
+  joining: { participant: 'https://zoom.us/j/1' },
+  invited: ['@nodejs/collaborators'],
+  observers: [],
+  agenda: [],
+  ...overrides,
 });
 
 export const createIssue = (number, repoPath) => ({
   number,
   title: `Issue ${number}`,
+  html_url: `https://github.com/${repoPath}/issues/${number}`,
   repository_url: `https://api.github.com/repos/${repoPath}`,
 });

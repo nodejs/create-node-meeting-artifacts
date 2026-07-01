@@ -1,15 +1,13 @@
-// Default configuration values
-export const DEFAULT_CONFIG = {
-  // Default GitHub organization name
-  githubOrg: 'nodejs',
-  // Default Host of the Meeting
-  host: 'Node.js',
-};
+// Default host used in meeting titles when a config does not set one
+export const DEFAULT_HOST = 'Node.js';
 
-// Time constants for date calculations
-export const TIME_CONSTANTS = {
-  // Week in milliseconds for calendar search
-  WEEK_IN_MS: 7 * 24 * 60 * 60 * 1000,
+// Host that uses the OpenJS Foundation public calendar
+export const OPENJS_HOST = 'OpenJS Foundation';
+
+// Public "add to your calendar" pages linked from the minutes
+export const CALENDAR_PAGES = {
+  node: 'https://nodejs.org/calendar',
+  openjs: 'https://calendar.openjsf.org',
 };
 
 // Relevant Timezones for Date manipulation

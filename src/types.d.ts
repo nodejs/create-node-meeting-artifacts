@@ -1,17 +1,23 @@
+import type { RestEndpointMethodTypes } from '@octokit/rest';
+
 /**
- * Application configuration object
+ * A GitHub issue as returned by the REST API.
+ */
+export type GitHubIssue =
+  RestEndpointMethodTypes['issues']['create']['response']['data'];
+
+/**
+ * Environment configuration object (credentials read from the environment).
  */
 export interface EnvironmentConfig {
   /** GitHub personal access token */
   githubToken: string;
   /** HackMD API configuration */
   hackmd: HackMDConfig;
-  /** Directory paths configuration */
-  directories: DirectoryConfig;
 }
 
 /**
- * CLI configuration object
+ * CLI flags parsed from the command line.
  */
 export interface CLIConfig {
   verbose: boolean;
@@ -23,7 +29,7 @@ export interface CLIConfig {
 export type AppConfig = EnvironmentConfig & CLIConfig;
 
 /**
- * HackMD API configuration
+ * HackMD API configuration.
  */
 export interface HackMDConfig {
   /** HackMD API token */
@@ -31,49 +37,93 @@ export interface HackMDConfig {
 }
 
 /**
- * Directory paths configuration
+ * A single repository's worth of agenda issues, grouped for rendering.
  */
-export interface DirectoryConfig {
-  /** Templates directory path */
-  templates: string;
+export interface AgendaGroup {
+  /** Repository in `owner/name` form */
+  repo: string;
+  /** Issues/PRs labelled for the agenda within this repository */
+  issues: GitHubIssue[];
 }
 
 /**
- * Meeting configuration object parsed from templates
+ * A manually-curated agenda section declared in a meeting config.
+ */
+export interface AgendaSection {
+  /** Section heading */
+  title: string;
+  /** Optional descriptive text rendered under the heading */
+  description?: string;
+  /** Bullet list items (typically links) */
+  items: string[];
+}
+
+/**
+ * One alternating meeting session, identified by its UTC time of day.
+ */
+export interface MeetingSession {
+  /** UTC time of day in `HH:MM` form, matched against the occurrence */
+  time: string;
+  /** Where participants join this session (URL) */
+  participant: string;
+}
+
+/**
+ * A meeting configuration, loaded from `meetings/<group>.meeting.json`.
+ *
+ * Every meeting — regardless of group — is described by this identical shape,
+ * which drives both the GitHub issue and the HackMD minutes.
  */
 export interface MeetingConfig {
-  /** Invited attendees list */
-  invited: string;
-  /** Observers list */
-  observers: string;
-  /** Base meeting information */
-  baseMeetingInfo: string;
-  /** Parsed meeting properties */
-  properties: MeetingProperties;
-}
-
-/**
- * Meeting properties parsed from template file
- */
-export interface MeetingProperties {
-  /** ICAL to search for events */
-  ICAL_URL?: string;
-  /** Text filter for calendar events */
-  CALENDAR_FILTER?: string;
-  /** GitHub repository owner/user */
-  USER?: string;
-  /** GitHub repository name */
-  REPO?: string;
-  /** Host organization name (e.g. "Node.js", "OpenJS Foundation") */
-  HOST?: string;
-  /** Display name for the meeting group */
-  GROUP_NAME?: string;
-  /** Meeting agenda tag for labeling issues */
-  AGENDA_TAG?: string;
-  /** Optional GitHub issue label */
-  ISSUE_LABEL?: string;
-  /** HackMD team name for creating documents */
-  HACKMD_TEAM_NAME?: string;
-  /** Meeting joining instructions */
-  JOINING_INSTRUCTIONS?: string;
+  /** The group identifier, derived from the config filename */
+  group: string;
+  /** Human-readable group name, e.g. "Technical Steering Committee (TSC)" */
+  name: string;
+  /** Meeting host, e.g. "Node.js" or "OpenJS Foundation" (defaults to Node.js) */
+  host: string;
+  /** Calendar lookup configuration */
+  calendar: {
+    /** Text used to match the calendar event summary/description */
+    filter: string;
+    /** iCal feed URL to search for the next occurrence */
+    url: string;
+    /** Public "add to your calendar" page (defaults based on host) */
+    page?: string;
+  };
+  /** GitHub configuration */
+  github: {
+    /** Organization/user that owns the meeting repository */
+    owner: string;
+    /** Repository where the meeting issue is created */
+    repo: string;
+    /** Label used to collect agenda issues (defaults to `<group>-agenda`) */
+    agendaLabel: string;
+    /** Optional labels applied to the created meeting issue */
+    issueLabels?: string[];
+  };
+  /** HackMD configuration */
+  hackmd: {
+    /** HackMD team name the minutes document is created under */
+    team: string;
+  };
+  /** How to join/observe the meeting */
+  joining: {
+    /** Where participants join (URL or short instruction) */
+    participant?: string;
+    /**
+     * Alternating sessions, each with its own join link, selected by the
+     * occurrence's UTC time of day (e.g. a 13:00 and a 17:00 slot).
+     */
+    sessions?: MeetingSession[];
+    /** Where observers watch the livestream (URL) */
+    observer?: string;
+    /** Any additional joining notes */
+    notes?: string;
+  };
+  /** People/teams always invited */
+  invited: string[];
+  /** People/teams attending as observers (optional) */
+  observers?: string[];
+  /** Manually-curated agenda sections (optional) */
+  agenda?: AgendaSection[];
 }

@@ -17,12 +17,16 @@ describe('github.mjs', () => {
         createIssue(3, 'nodejs/nodejs.org'),
       ]);
 
-      assert.deepStrictEqual(Object.keys(result), [
-        'nodejs/node',
-        'nodejs/nodejs.org',
-      ]);
-      assert.strictEqual(result['nodejs/node'].length, 2);
-      assert.strictEqual(result['nodejs/nodejs.org'].length, 1);
+      assert.deepStrictEqual(
+        result.map(group => group.repo),
+        ['nodejs/node', 'nodejs/nodejs.org']
+      );
+      assert.strictEqual(result[0].issues.length, 2);
+      assert.strictEqual(result[1].issues.length, 1);
+    });
+
+    it('should return an empty array for no issues', () => {
+      assert.deepStrictEqual(github.sortIssuesByRepo([]), []);
     });
   });
 
@@ -50,35 +54,25 @@ describe('github.mjs', () => {
       ]);
     });
 
-    it('should include issue label when provided', async () => {
+    it('should include issue labels when provided', async () => {
       const { client, create } = createMockClient();
 
       await github.createGitHubIssue(
         client,
-        createMeetingConfig(),
+        createMeetingConfig({ github: { issueLabels: ['cpc-meeting'] } }),
         'Title',
         'Content'
       );
 
-      assert.deepStrictEqual(create(), [
-        [
-          {
-            body: 'Content',
-            labels: ['meeting'],
-            owner: 'nodejs',
-            repo: 'node',
-            title: 'Title',
-          },
-        ],
-      ]);
+      assert.deepStrictEqual(create()[0][0].labels, ['cpc-meeting']);
     });
 
-    it('should not include labels when ISSUE_LABEL is not provided', async () => {
+    it('should not include labels when issueLabels is not provided', async () => {
       const { client, create } = createMockClient();
 
       await github.createGitHubIssue(
         client,
-        createMeetingConfig({ ISSUE_LABEL: undefined }),
+        createMeetingConfig({ github: { issueLabels: undefined } }),
         'Title',
         'Content'
       );
@@ -96,27 +90,20 @@ describe('github.mjs', () => {
       ]);
     });
 
-    it('should use default org when USER is not provided', async () => {
+    it('should use the configured owner and repo', async () => {
       const { client, create } = createMockClient();
 
       await github.createGitHubIssue(
         client,
-        createMeetingConfig({ USER: undefined }),
+        createMeetingConfig({
+          github: { owner: 'openjs-foundation', repo: 'standards' },
+        }),
         'Title',
         'Content'
       );
 
-      assert.deepStrictEqual(create(), [
-        [
-          {
-            body: 'Content',
-            labels: ['meeting'],
-            owner: 'nodejs',
-            repo: 'node',
-            title: 'Title',
-          },
-        ],
-      ]);
+      assert.strictEqual(create()[0][0].owner, 'openjs-foundation');
+      assert.strictEqual(create()[0][0].repo, 'standards');
     });
   });
 
@@ -173,46 +160,21 @@ describe('github.mjs', () => {
       assert.strictEqual(result, undefined);
     });
 
-    it('should use default org when USER not provided', async () => {
+    it('should build the query from the configured owner and repo', async () => {
       const { client, request } = createMockClient();
 
       await github.findGitHubIssueByTitle(
         client,
         'Test',
-        createMeetingConfig({ USER: undefined })
+        createMeetingConfig({
+          github: { owner: 'openjs-foundation', repo: 'standards' },
+        })
       );
 
-      assert.deepStrictEqual(request(), [
-        [
-          'GET /search/issues',
-          {
-            advanced_search: true,
-            per_page: 1,
-            q: 'in:title repo:"nodejs/node" "Test"',
-          },
-        ],
-      ]);
-    });
-
-    it('should search for open issues only', async () => {
-      const { client, request } = createMockClient();
-
-      await github.findGitHubIssueByTitle(
-        client,
-        'Test',
-        createMeetingConfig()
+      assert.strictEqual(
+        request()[0][1].q,
+        'in:title repo:"openjs-foundation/standards" "Test"'
       );
-
-      assert.deepStrictEqual(request(), [
-        [
-          'GET /search/issues',
-          {
-            advanced_search: true,
-            per_page: 1,
-            q: 'in:title repo:"nodejs/node" "Test"',
-          },
-        ],
-      ]);
     });
   });
 
@@ -239,14 +201,16 @@ describe('github.mjs', () => {
       ]);
     });
 
-    it('should use default org when USER not provided', async () => {
+    it('should use the configured owner and repo', async () => {
       const { client, update } = createMockClient();
 
       await github.updateGitHubIssue(
         client,
         1,
         'Content',
-        createMeetingConfig({ USER: undefined })
+        createMeetingConfig({
+          github: { owner: 'openjs-foundation', repo: 'standards' },
+        })
       );
 
       assert.deepStrictEqual(update(), [
@@ -254,8 +218,8 @@ describe('github.mjs', () => {
           {
             body: 'Content',
             issue_number: 1,
-            owner: 'nodejs',
-            repo: 'node',
+            owner: 'openjs-foundation',
+            repo: 'standards',
           },
         ],
       ]);
@@ -263,13 +227,12 @@ describe('github.mjs', () => {
   });
 
   describe('getAgendaIssues', () => {
-    it('should search for issues with agenda label', async () => {
+    it('should search for issues with the agenda label', async () => {
       const { client, paginate } = createMockClient();
 
       await github.getAgendaIssues(
         client,
-        { meetingGroup: 'tsc' },
-        createMeetingConfig({ AGENDA_TAG: 'some-agenda' })
+        createMeetingConfig({ github: { agendaLabel: 'some-agenda' } })
       );
 
       assert.deepStrictEqual(paginate(), [
@@ -283,13 +246,17 @@ describe('github.mjs', () => {
       ]);
     });
 
-    it('should use default org when USER not provided', async () => {
+    it('should use the configured owner', async () => {
       const { client, paginate } = createMockClient();
 
       await github.getAgendaIssues(
         client,
-        { meetingGroup: 'tsc' },
-        createMeetingConfig({ USER: undefined, AGENDA_TAG: 'tsc-agenda' })
+        createMeetingConfig({
+          github: {
+            owner: 'openjs-foundation',
+            agendaLabel: 'standards-agenda',
+          },
+        })
       );
 
       assert.deepStrictEqual(paginate(), [
@@ -297,33 +264,13 @@ describe('github.mjs', () => {
           'GET /search/issues',
           {
             advanced_search: true,
-            q: 'is:open label:tsc-agenda org:nodejs',
+            q: 'is:open label:standards-agenda org:openjs-foundation',
           },
         ],
       ]);
     });
 
-    it('should construct default agenda tag from meetingGroup when not provided', async () => {
-      const { client, paginate } = createMockClient();
-
-      await github.getAgendaIssues(
-        client,
-        { meetingGroup: 'tsc' },
-        createMeetingConfig({ AGENDA_TAG: undefined })
-      );
-
-      assert.deepStrictEqual(paginate(), [
-        [
-          'GET /search/issues',
-          {
-            advanced_search: true,
-            q: 'is:open label:tsc-agenda org:nodejs',
-          },
-        ],
-      ]);
-    });
-
-    it('should return sorted issues by repo', async () => {
+    it('should return issues grouped by repo', async () => {
       const { client } = createMockClient({
         paginate: [
           createIssue(1, 'nodejs/node'),
@@ -333,12 +280,13 @@ describe('github.mjs', () => {
 
       const result = await github.getAgendaIssues(
         client,
-        { meetingGroup: 'tsc' },
-        createMeetingConfig({ AGENDA_TAG: 'tsc-agenda' })
+        createMeetingConfig()
       );
 
-      assert.ok(result['nodejs/node']);
-      assert.ok(result['nodejs/nodejs.org']);
+      assert.deepStrictEqual(
+        result.map(group => group.repo),
+        ['nodejs/node', 'nodejs/nodejs.org']
+      );
     });
   });
 
@@ -418,25 +366,25 @@ describe('github.mjs', () => {
       assert.deepStrictEqual(update(), []);
     });
 
-    it('should force update when force flag is true', async () => {
+    it('should create a new issue when forced', async () => {
       const existingIssue = {
         number: 1,
         title: 'Existing Issue',
         body: 'Same content',
       };
-      const { client, update } = createMockClient({
+      const { client, create } = createMockClient({
         request: { items: [existingIssue] },
       });
 
       await github.createOrUpdateGitHubIssue(
         client,
-        { force: false },
+        { force: true },
         createMeetingConfig(),
         'Existing Issue',
         'Same content'
       );
 
-      assert.deepStrictEqual(update(), []);
+      assert.strictEqual(create().length, 1);
     });
   });
 });

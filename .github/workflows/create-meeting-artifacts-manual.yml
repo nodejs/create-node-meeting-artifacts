@@ -42,7 +42,7 @@ jobs:
         id: read-vars
         run: |
           meeting_group="${{ inputs.meeting_group }}"
-          user=$(grep '^USER=' "templates/meeting_base_${meeting_group}" | cut -d'=' -f2 | xargs)
+          user=$(jq -r '.github.owner' "meetings/${meeting_group}.meeting.json")
           echo "user=$user" >> $GITHUB_OUTPUT
 
       - name: Create GitHub App Token
@@ -66,7 +66,6 @@ jobs:
         with:
           name: meeting-artifacts-${{ inputs.meeting_group || 'tsc' }}
           path: |
-            ~/.make-node-meeting/
             *.md
           retention-days: 7
           if-no-files-found: ignore

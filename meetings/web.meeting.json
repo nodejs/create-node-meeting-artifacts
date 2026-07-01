@@ -1,0 +1,20 @@
+{
+  "name": "Web Team",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Web Team Monthly",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "web-team",
+    "agendaLabel": "web-agenda"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "Check LFX for your invite link. If you are having issues, reach out to @avivkeller."
+  },
+  "invited": ["@nodejs/web"]
+}

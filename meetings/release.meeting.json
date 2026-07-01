@@ -1,0 +1,19 @@
+{
+  "name": "Release WorkGroup",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js Release Working Group Monthly Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "Release"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/96075006319?password=532f2ca8-9159-4002-8f55-55533138b68e"
+  },
+  "invited": ["Release team: @nodejs/release", "LTS team: @nodejs/lts"]
+}

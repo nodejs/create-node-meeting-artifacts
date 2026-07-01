@@ -1,0 +1,21 @@
+{
+  "name": "Build WorkGroup",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js Build Working Group Tri-Weekly Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "build",
+    "agendaLabel": "build-agenda"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/97490955692?password=3ea54b47-0782-47a3-9a09-bdd4070d9ef2",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live"
+  },
+  "invited": ["Build team: @nodejs/build"]
+}

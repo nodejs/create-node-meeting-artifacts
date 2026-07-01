@@ -24,10 +24,10 @@ export const getNextWeek = (start = new Date()) => {
 /**
  * Finds the next meeting event in any iCal feed for the current week
  * @param {ical.CalendarComponent[]} allEvents - The events
- * @param {import('./types').MeetingConfig} meetingConfig - Meeting configuration object
+ * @param {import('./types.d.ts').MeetingConfig} meeting - Meeting configuration object
  * @returns {Promise<Date|null>} The date of the next meeting, or null if no meeting is found
  */
-export const findNextMeetingDate = async (allEvents, { properties }) => {
+export const findNextMeetingDate = async (allEvents, { calendar }) => {
   const [weekStart, weekEnd] = getNextWeek();
 
   const filteredEvents = allEvents.filter(
@@ -35,7 +35,7 @@ export const findNextMeetingDate = async (allEvents, { properties }) => {
       // The event must be recurring
       event.rrule &&
       // The event must match our filter
-      (event.summary || event.description)?.includes(properties.CALENDAR_FILTER)
+      (event.summary || event.description)?.includes(calendar.filter)
   );
 
   for (const event of filteredEvents) {
