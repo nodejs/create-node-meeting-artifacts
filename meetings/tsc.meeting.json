@@ -2,7 +2,7 @@
   "name": "Technical Steering Committee (TSC)",
   "host": "Node.js",
   "calendar": {
-    "filter": "Node.js TSC Meeting",
+    "filter": "Node.js Technical Steering Committee Weekly Meeting",
     "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
   },
   "github": {
