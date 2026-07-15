@@ -56,8 +56,7 @@ export const generateMeetingTitle = (meeting, meetingDate) => {
  * @param {string} title - The raw issue title
  * @returns {string} The escaped title
  */
-const escapeTitle = title =>
-  title.replace(/(?<!\\)(\\\\)*([[\]])/g, '$1\\$2');
+const escapeTitle = title => title.replace(/(?<!\\)(\\\\)*([[\]])/g, '$1\\$2');
 
 /**
  * Resolves the public "add to your calendar" page for a meeting
