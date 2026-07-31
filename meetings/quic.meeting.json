@@ -1,0 +1,21 @@
+{
+  "name": "QUIC Team",
+  "host": "Node.js",
+  "calendar": {
+    "filter": "Node.js QUIC Bi-Weekly Meeting",
+    "url": "https://webcal.prod.itx.linuxfoundation.org/lfx/a092M00001IV4HSQA1"
+  },
+  "github": {
+    "owner": "nodejs",
+    "repo": "node",
+    "agendaLabel": "quic-agenda"
+  },
+  "hackmd": {
+    "team": "openjs-nodejs"
+  },
+  "joining": {
+    "participant": "https://zoom-lfx.platform.linuxfoundation.org/meeting/97572108677?password=4aef9ed5-c209-49bf-a996-919943d5147d",
+    "observer": "https://www.youtube.com/c/nodejs+foundation/live"
+  },
+  "invited": ["@nodejs/quic"]
+}
