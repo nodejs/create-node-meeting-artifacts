@@ -56,12 +56,6 @@
   ],
   "agenda": [
     {
-      "title": "Reminders",
-      "items": [
-        "Remember to nominate people for the [contributor spotlight](https://github.com/nodejs/node/blob/main/doc/contributing/reconizing-contributors.md#bi-monthly-contributor-spotlight)"
-      ]
-    },
-    {
       "title": "Strategic Initiatives",
       "items": []
     }
